@@ -164,21 +164,21 @@
 
         <section id="login" class="tab-content">
             <div class="auth-container">
-                <form class="auth-form" onsubmit="event.preventDefault(); alert('Para que el Login funcione, necesitas conectar esto a tu API en el VPS.');">
+                <form class="auth-form" id="form-login">
                     <h2>Iniciar Sesión</h2>
-                    <input type="email" placeholder="Correo Electrónico" required>
-                    <input type="password" placeholder="Contraseña" required>
+                    <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
+                    <input type="password" id="login-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-primary">Entrar</button>
                 </form>
 
                 <div class="divider"></div>
 
-                <form class="auth-form" onsubmit="event.preventDefault(); alert('Para que el Registro funcione, necesitas conectar esto a tu API en el VPS.');">
+                <form class="auth-form" id="form-registro">
                     <h2>Crear Cuenta</h2>
-                    <input type="text" placeholder="Nombre Completo" required>
-                    <input type="text" placeholder="Nombre de Usuario" required>
-                    <input type="email" placeholder="Correo Electrónico" required>
-                    <input type="password" placeholder="Contraseña" required>
+                    <input type="text" id="reg-nombre" placeholder="Nombre Completo" required>
+                    <input type="text" id="reg-usuario" placeholder="Nombre de Usuario" required>
+                    <input type="email" id="reg-correo" placeholder="Correo Electrónico" required>
+                    <input type="password" id="reg-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-secondary">Registrarse</button>
                 </form>
             </div>
@@ -214,6 +214,64 @@
                 node.classList.add('hidden');
             }
         }
+
+        const API_URL = 'http://45.151.123.75/api';
+
+        document.getElementById('form-registro').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const data = {
+                nombre_completo: document.getElementById('reg-nombre').value,
+                usuario: document.getElementById('reg-usuario').value,
+                correo: document.getElementById('reg-correo').value,
+                contrasena: document.getElementById('reg-contrasena').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/registro.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('¡Registro exitoso! Ya puedes iniciar sesión.');
+                    document.getElementById('form-registro').reset();
+                    openTab('login');
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error de conexión con el servidor. Revisa que tu VPS esté encendido.');
+            }
+        });
+
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                correo: document.getElementById('login-correo').value,
+                contrasena: document.getElementById('login-contrasena').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/login.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('¡Bienvenido ' + result.nombre + '!');
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error de conexión con el servidor. Revisa que tu VPS esté encendido.');
+            }
+        });
     </script>
 </body>
 </html>
