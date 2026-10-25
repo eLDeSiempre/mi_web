@@ -51,15 +51,41 @@
             position: relative;
         }
 
-        #matrix-canvas {
+        /* NUEVO FONDO: REJILLA CYBERPUNK CON RESPLANDOR */
+        #cyber-grid {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.15;
+            background-image: 
+                linear-gradient(rgba(242, 201, 76, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(242, 201, 76, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
         }
 
+        /* RESPLANDOR EN MOVIMIENTO LENTO */
+        #cyber-glow {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 120vmax; height: 120vmax;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(242, 201, 76, 0.06) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            animation: pulseGlow 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.4; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+        }
+
+        /* SCANLINES MUY SUTILES (MANTENIDAS PARA EL LOOK CRT) */
         body::before {
             content: '';
             position: fixed;
@@ -71,11 +97,13 @@
                 to bottom,
                 rgba(0, 0, 0, 0) 0px,
                 rgba(0, 0, 0, 0) 2px,
-                rgba(0, 0, 0, 0.25) 3px,
+                rgba(0, 0, 0, 0.2) 3px,
                 rgba(0, 0, 0, 0) 4px
             );
             mix-blend-mode: multiply;
         }
+        
+        /* VIÑETA MUY SUTIL PARA CENTRAR LA ATENCIÓN */
         body::after {
             content: '';
             position: fixed;
@@ -85,8 +113,8 @@
             z-index: 1;
             background: radial-gradient(
                 ellipse at center,
-                rgba(0, 0, 0, 0) 40%,
-                rgba(0, 0, 0, 0.7) 100%
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.6) 100%
             );
         }
 
@@ -549,8 +577,11 @@
 </head>
 <body>
 
+    <div id="cyber-grid"></div>
+    <div id="cyber-glow"></div>
+
     <div id="boot-screen">
-        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.0...</div>
+        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.1...</div>
         <div class="boot-line boot-ok">[ OK ] Montando /dev/secure</div>
         <div class="boot-line boot-ok">[ OK ] Cargando módulos de red dorados</div>
         <div class="boot-line boot-ok">[ OK ] Conectando a api.eldesiempre.es...</div>
@@ -558,8 +589,6 @@
         <div class="boot-line boot-ok">[ OK ] Sistema listo.</div>
         <div class="boot-line boot-accent">&gt; Accediendo a la terminal...</div>
     </div>
-
-    <canvas id="matrix-canvas"></canvas>
 
     <header>
         <div class="logo-container" onclick="openTab('inicio')">
@@ -750,9 +779,7 @@
 
         <section id="perfil" class="tab-content">
             <h2>Mi Perfil Profesional</h2>
-            <div class="profile-card" id="profile-card">
-                <!-- Renderizado dinámico vía JS -->
-            </div>
+            <div class="profile-card" id="profile-card"></div>
         </section>
 
         <section id="chat" class="tab-content">
@@ -834,49 +861,6 @@
             };
             tick();
             setInterval(tick, 1000);
-        })();
-
-        (function matrixRain() {
-            const canvas = document.getElementById('matrix-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let width, height, columns, drops;
-            const chars = 'アカサタナハマヤラワ0123456789ABCDEFabcdef<>/\\$#@!*+=';
-            const fontSize = 16;
-            const speed = 0.18;
-
-            const rootStyles = getComputedStyle(document.documentElement);
-            const accentColor = rootStyles.getPropertyValue('--logo-primary').trim() || '#f2c94c';
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-                columns = Math.floor(width / fontSize);
-                drops = new Array(columns).fill(1);
-            }
-            resize();
-            window.addEventListener('resize', resize);
-
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, width, height);
-                ctx.fillStyle = accentColor;
-                ctx.font = fontSize + 'px "Hack", monospace';
-                for (let i = 0; i < drops.length; i++) {
-                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    if (drops[i] * fontSize > height && Math.random() > 0.98) {
-                        drops[i] = 0;
-                    }
-                    drops[i] += speed;
-                }
-            }
-
-            function loop() {
-                if (!document.hidden) draw();
-                requestAnimationFrame(loop);
-            }
-            loop();
         })();
 
         function openTab(tabId) {
