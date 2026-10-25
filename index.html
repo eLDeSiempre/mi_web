@@ -285,11 +285,230 @@
         .auth-form input { padding: 12px; background: #000; border: 1px solid var(--border); color: var(--text-bright); font-size: 14px; transition: 0.3s; }
         .auth-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 20%, transparent); background: #050505; }
 
-        .profile-card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; text-align: center; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .profile-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 30px;
+            transition: 0.3s;
+            position: relative;
+        }
         .profile-card:hover { box-shadow: 0 0 25px color-mix(in srgb, var(--accent) 15%, transparent); }
-        .profile-card h2 { border: none; justify-content: center; }
-        .profile-card h2::after { content: ''; }
-        .profile-card p { font-size: 1.1rem; color: var(--text-bright); }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px dashed var(--border-dashed);
+            padding-bottom: 20px;
+        }
+        .profile-header h2 {
+            border: none;
+            margin: 0;
+            padding: 0;
+            color: var(--accent);
+            font-size: 1.6rem;
+        }
+        .profile-header h2::before { content: ''; }
+        .profile-header h2::after { content: ''; }
+
+        .profile-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-top: 5px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .profile-actions .btn-primary,
+        .profile-actions .btn-secondary {
+            padding: 8px 16px;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .profile-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-dashed);
+        }
+        .profile-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .profile-label {
+            display: block;
+            font-size: 11px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .profile-label::before { content: '$ '; color: var(--logo-secondary); }
+
+        .profile-value {
+            color: var(--text-bright);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .profile-value.empty {
+            color: var(--text-main);
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        .profile-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .profile-skill-tag {
+            background: color-mix(in srgb, var(--accent) 8%, #000);
+            border: 1px solid var(--accent-dim);
+            color: var(--accent);
+            padding: 4px 10px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .profile-skill-tag:hover {
+            background: color-mix(in srgb, var(--accent) 20%, #000);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+
+        .profile-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .profile-level-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .profile-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid var(--accent-dim);
+            padding: 5px 12px;
+            transition: 0.2s;
+        }
+        .profile-links a:hover {
+            background: color-mix(in srgb, var(--accent) 15%, #000);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 40%, transparent);
+        }
+
+        .profile-edit-input,
+        .profile-edit-textarea,
+        .profile-edit-select {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--text-bright);
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.3s;
+            resize: vertical;
+        }
+        .profile-edit-input:focus,
+        .profile-edit-textarea:focus,
+        .profile-edit-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 20%, transparent);
+        }
+        .profile-edit-textarea {
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        .profile-edit-skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .profile-edit-skill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: color-mix(in srgb, var(--accent) 10%, #000);
+            border: 1px solid var(--accent-dim);
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+        .profile-edit-skill button {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            padding: 0 2px;
+            transition: 0.2s;
+        }
+        .profile-edit-skill button:hover {
+            color: #ff5555;
+            text-shadow: 0 0 8px #ff5555;
+        }
+
+        .profile-add-skill {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .profile-add-skill input {
+            flex: 1;
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--text-bright);
+            padding: 8px 10px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .profile-add-skill input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .profile-add-skill button {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 14px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .profile-add-skill button:hover {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
 
         .chat-container { background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; height: 500px; transition: 0.3s; }
         .chat-container:hover { border-color: var(--accent-dim); }
@@ -324,13 +543,14 @@
             .btn-primary, .btn-secondary { width: 100%; margin: 5px 0; text-align: center; }
             .auth-form { max-width: 100%; }
             .hud-bar { display: none; }
+            .profile-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
     <div id="boot-screen">
-        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v2.9...</div>
+        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.0...</div>
         <div class="boot-line boot-ok">[ OK ] Montando /dev/secure</div>
         <div class="boot-line boot-ok">[ OK ] Cargando módulos de red dorados</div>
         <div class="boot-line boot-ok">[ OK ] Conectando a api.eldesiempre.es...</div>
@@ -529,13 +749,9 @@
         </section>
 
         <section id="perfil" class="tab-content">
-            <h2>Mi Perfil</h2>
-            <div class="profile-card">
-                <h2 style="color: var(--accent);">@<span id="perfil-usuario">usuario</span></h2>
-                <p>Bienvenido de nuevo, <strong id="perfil-nombre">Nombre</strong>.</p>
-                <br>
-                <p style="font-size: 0.9rem; color: var(--text-main);">Nivel de acceso: <span style="color:var(--accent)">Novato</span></p>
-                <p style="font-size: 0.9rem; color: var(--text-main);">Estado de la cuenta: <span style="color:var(--logo-primary);">Verificada</span></p>
+            <h2>Mi Perfil Profesional</h2>
+            <div class="profile-card" id="profile-card">
+                <!-- Renderizado dinámico vía JS -->
             </div>
         </section>
 
@@ -581,6 +797,8 @@
         const API_URL = 'https://api.eldesiempre.es/api';
         let usuarioLogueado = null;
         let unsubscribeChat = null;
+        let editandoPerfil = false;
+        let perfilTemp = null;
 
         window.addEventListener('load', () => {
             const boot = document.getElementById('boot-screen');
@@ -668,6 +886,10 @@
             const activeBtn = document.querySelector(`.nav-btn[onclick="openTab('${tabId}')"]`);
             if (activeBtn) activeBtn.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (tabId === 'perfil') {
+                renderPerfil();
+            }
         }
 
         function toggleNode(nodeId) {
@@ -705,6 +927,248 @@
             }
         }
 
+        function obtenerClavePerfil() {
+            if (!usuarioLogueado) return null;
+            return 'eldesiempre_perfil_' + usuarioLogueado.usuario;
+        }
+
+        function cargarPerfil() {
+            const clave = obtenerClavePerfil();
+            let perfil = null;
+            if (clave) {
+                try {
+                    const raw = localStorage.getItem(clave);
+                    if (raw) perfil = JSON.parse(raw);
+                } catch (e) { console.error('Error leyendo perfil:', e); }
+            }
+            if (!perfil) {
+                perfil = {
+                    bio: '',
+                    skills: [],
+                    anios: 0,
+                    nivel: 'Novato',
+                    especialidad: '',
+                    github: '',
+                    htb: '',
+                    thm: '',
+                    linkedin: ''
+                };
+            }
+            return perfil;
+        }
+
+        function guardarPerfil(perfil) {
+            const clave = obtenerClavePerfil();
+            if (!clave) return;
+            try {
+                localStorage.setItem(clave, JSON.stringify(perfil));
+            } catch (e) { console.error('Error guardando perfil:', e); }
+        }
+
+        function escaparHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderPerfil() {
+            const contenedor = document.getElementById('profile-card');
+            if (!contenedor || !usuarioLogueado) return;
+
+            const perfil = cargarPerfil();
+
+            if (!editandoPerfil) {
+                contenedor.innerHTML = `
+                    <div class="profile-header">
+                        <div>
+                            <h2>@${escaparHTML(usuarioLogueado.usuario)}</h2>
+                            <div class="profile-subtitle">${escaparHTML(usuarioLogueado.nombre)} · ${perfil.nivel}</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn-primary" onclick="iniciarEdicionPerfil()">[ EDITAR PERFIL ]</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">bio</span>
+                        <div class="profile-value ${perfil.bio ? '' : 'empty'}">${perfil.bio ? escaparHTML(perfil.bio) : 'Sin presentación todavía. Pulsa [ EDITAR PERFIL ] para añadir una.'}</div>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">skills</span>
+                        ${perfil.skills.length > 0
+                            ? `<div class="profile-skills">${perfil.skills.map(s => `<span class="profile-skill-tag">${escaparHTML(s)}</span>`).join('')}</div>`
+                            : `<div class="profile-value empty">Añade tus puntos fuertes desde el editor.</div>`
+                        }
+                    </div>
+
+                    <div class="profile-grid-2">
+                        <div class="profile-section">
+                            <span class="profile-label">experiencia_hacking</span>
+                            <div class="profile-value">
+                                ${perfil.anios} año${perfil.anios === 1 ? '' : 's'} ·
+                                <span class="profile-level-badge">${escaparHTML(perfil.nivel)}</span>
+                            </div>
+                        </div>
+                        <div class="profile-section">
+                            <span class="profile-label">especialidad</span>
+                            <div class="profile-value ${perfil.especialidad ? '' : 'empty'}">${perfil.especialidad ? escaparHTML(perfil.especialidad) : 'No definida'}</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">enlaces</span>
+                        ${(perfil.github || perfil.htb || perfil.thm || perfil.linkedin)
+                            ? `<div class="profile-links">
+                                ${perfil.github ? `<a href="${escaparHTML(perfil.github)}" target="_blank" rel="noopener noreferrer">GitHub</a>` : ''}
+                                ${perfil.htb ? `<a href="${escaparHTML(perfil.htb)}" target="_blank" rel="noopener noreferrer">HackTheBox</a>` : ''}
+                                ${perfil.thm ? `<a href="${escaparHTML(perfil.thm)}" target="_blank" rel="noopener noreferrer">TryHackMe</a>` : ''}
+                                ${perfil.linkedin ? `<a href="${escaparHTML(perfil.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>` : ''}
+                            </div>`
+                            : `<div class="profile-value empty">Sin enlaces añadidos.</div>`
+                        }
+                    </div>
+                `;
+            } else {
+                const p = perfilTemp || perfil;
+                contenedor.innerHTML = `
+                    <div class="profile-header">
+                        <div>
+                            <h2>@${escaparHTML(usuarioLogueado.usuario)}</h2>
+                            <div class="profile-subtitle">Editando perfil...</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn-primary" onclick="guardarEdicionPerfil()">[ GUARDAR ]</button>
+                            <button class="btn-secondary" onclick="cancelarEdicionPerfil()">[ CANCELAR ]</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">bio</span>
+                        <textarea class="profile-edit-textarea" id="edit-bio" placeholder="Cuéntanos quién eres, qué te motiva en el hacking ético...">${escaparHTML(p.bio)}</textarea>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">skills</span>
+                        <div class="profile-edit-skills-list" id="edit-skills-list">
+                            ${p.skills.map((s, idx) => `
+                                <span class="profile-edit-skill">
+                                    ${escaparHTML(s)}
+                                    <button type="button" onclick="eliminarSkillTemp(${idx})" title="Eliminar">×</button>
+                                </span>
+                            `).join('')}
+                        </div>
+                        <div class="profile-add-skill">
+                            <input type="text" id="nueva-skill-input" placeholder="Ej: Pentesting, Redes, OSINT..." maxlength="30">
+                            <button type="button" onclick="agregarSkillTemp()">[ AÑADIR ]</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-grid-2">
+                        <div class="profile-section">
+                            <span class="profile-label">años_de_experiencia</span>
+                            <input type="number" class="profile-edit-input" id="edit-anios" min="0" max="50" value="${p.anios}">
+                        </div>
+                        <div class="profile-section">
+                            <span class="profile-label">nivel</span>
+                            <select class="profile-edit-select" id="edit-nivel">
+                                <option value="Novato" ${p.nivel === 'Novato' ? 'selected' : ''}>Novato</option>
+                                <option value="Intermedio" ${p.nivel === 'Intermedio' ? 'selected' : ''}>Intermedio</option>
+                                <option value="Avanzado" ${p.nivel === 'Avanzado' ? 'selected' : ''}>Avanzado</option>
+                                <option value="Experto" ${p.nivel === 'Experto' ? 'selected' : ''}>Experto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">especialidad_principal</span>
+                        <input type="text" class="profile-edit-input" id="edit-especialidad" placeholder="Ej: Pentesting Web, Análisis de Malware..." maxlength="60" value="${escaparHTML(p.especialidad)}">
+                    </div>
+
+                    <div class="profile-section">
+                        <span class="profile-label">enlaces</span>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="url" class="profile-edit-input" id="edit-github" placeholder="GitHub (https://github.com/...)" value="${escaparHTML(p.github)}">
+                            <input type="url" class="profile-edit-input" id="edit-htb" placeholder="HackTheBox (https://app.hackthebox.com/profile/...)" value="${escaparHTML(p.htb)}">
+                            <input type="url" class="profile-edit-input" id="edit-thm" placeholder="TryHackMe (https://tryhackme.com/p/...)" value="${escaparHTML(p.thm)}">
+                            <input type="url" class="profile-edit-input" id="edit-linkedin" placeholder="LinkedIn (https://linkedin.com/in/...)" value="${escaparHTML(p.linkedin)}">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function iniciarEdicionPerfil() {
+            if (!usuarioLogueado) return;
+            editandoPerfil = true;
+            perfilTemp = cargarPerfil();
+            perfilTemp.skills = [...perfilTemp.skills];
+            renderPerfil();
+        }
+
+        function cancelarEdicionPerfil() {
+            editandoPerfil = false;
+            perfilTemp = null;
+            renderPerfil();
+        }
+
+        function agregarSkillTemp() {
+            const input = document.getElementById('nueva-skill-input');
+            if (!input || !perfilTemp) return;
+            const valor = input.value.trim();
+            if (!valor) return;
+            if (perfilTemp.skills.length >= 20) {
+                alert('Máximo 20 habilidades.');
+                return;
+            }
+            if (perfilTemp.skills.some(s => s.toLowerCase() === valor.toLowerCase())) {
+                alert('Esa habilidad ya está en la lista.');
+                return;
+            }
+            perfilTemp.skills.push(valor);
+            input.value = '';
+            renderPerfil();
+        }
+
+        function eliminarSkillTemp(idx) {
+            if (!perfilTemp) return;
+            perfilTemp.skills.splice(idx, 1);
+            renderPerfil();
+        }
+
+        function guardarEdicionPerfil() {
+            if (!perfilTemp) return;
+            const bio = document.getElementById('edit-bio').value.trim();
+            const anios = parseInt(document.getElementById('edit-anios').value) || 0;
+            const nivel = document.getElementById('edit-nivel').value;
+            const especialidad = document.getElementById('edit-especialidad').value.trim();
+            const github = document.getElementById('edit-github').value.trim();
+            const htb = document.getElementById('edit-htb').value.trim();
+            const thm = document.getElementById('edit-thm').value.trim();
+            const linkedin = document.getElementById('edit-linkedin').value.trim();
+
+            const perfilFinal = {
+                bio,
+                skills: [...perfilTemp.skills],
+                anios,
+                nivel,
+                especialidad,
+                github,
+                htb,
+                thm,
+                linkedin
+            };
+
+            guardarPerfil(perfilFinal);
+            editandoPerfil = false;
+            perfilTemp = null;
+            renderPerfil();
+        }
+
         function comprobarSesion() {
             const sesionGuardada = localStorage.getItem('eldesiempre_user');
             const hudDot = document.getElementById('hud-dot');
@@ -716,8 +1180,6 @@
                 document.getElementById('nav-chat-btn').style.display = 'block';
                 document.getElementById('nav-perfil-btn').style.display = 'block';
                 document.getElementById('nav-logout-btn').style.display = 'block';
-                document.getElementById('perfil-usuario').innerText = usuarioLogueado.usuario;
-                document.getElementById('perfil-nombre').innerText = usuarioLogueado.nombre;
                 if (hudDot && hudText) {
                     hudDot.className = 'hud-dot online';
                     hudText.innerText = 'ONLINE';
