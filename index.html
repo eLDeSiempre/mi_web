@@ -51,7 +51,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: calc(15px + var(--safe-top)) 5% 15px 5%;
+            padding: calc(10px + var(--safe-top)) 5% 10px 5%;
             background: var(--bg-color);
             border-bottom: 1px dashed var(--border-dashed);
             position: sticky;
@@ -61,22 +61,35 @@
             flex-wrap: wrap;
         }
 
-        .logo {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-bright);
-            letter-spacing: 1px;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             cursor: pointer;
             transition: 0.2s;
         }
-        .logo:hover { text-shadow: 0 0 8px rgba(230, 0, 0, 0.5); }
-        .logo span { color: var(--accent); }
-        .logo::after { content: "_"; animation: blink 1s step-end infinite; }
+        
+        .logo-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-bright);
+            letter-spacing: 1px;
+        }
+        .logo-text span { color: var(--accent); }
+        .logo-text::after { content: "_"; animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
         nav {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: flex-end;
             flex: 1;
@@ -86,7 +99,7 @@
             background: none;
             border: none;
             color: var(--text-main);
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.1s;
             padding: 5px 0;
@@ -281,7 +294,7 @@
 
         @media (max-width: 768px) {
             header { justify-content: center; padding-bottom: 10px; }
-            .logo { width: 100%; text-align: center; margin-bottom: 15px; }
+            .logo-container { width: 100%; justify-content: center; margin-bottom: 10px; }
             nav { width: 100%; justify-content: center; gap: 12px; }
             .nav-btn { font-size: 13px; }
             .container { padding: 20px 4%; }
@@ -293,7 +306,11 @@
 <body>
 
     <header>
-        <div class="logo" onclick="openTab('inicio')">root@eLDeSiempre:~#<span></span></div>
+        <div class="logo-container" onclick="openTab('inicio')">
+            <!-- Si el logo no carga, se oculta automáticamente y deja el texto -->
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">root@eLDeSiempre:~#<span></span></div>
+        </div>
         <nav>
             <button class="nav-btn" onclick="openTab('aprender')">Academia</button>
             <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
@@ -483,7 +500,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { initializeFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAYF84I5y_eatvOViLgF1lvSu-9yBrRkxY",
@@ -495,9 +512,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        
-        // Forzamos Long Polling para evitar bloqueos de red
-        const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+        const db = getFirestore(app);
 
         window.firebaseDB = db;
         window.firebaseCollection = collection;
@@ -552,7 +567,12 @@
                 document.getElementById('perfil-usuario').innerText = usuarioLogueado.usuario;
                 document.getElementById('perfil-nombre').innerText = usuarioLogueado.nombre;
                 
-                iniciarChat();
+                let checkFirebase = setInterval(() => {
+                    if (window.firebaseDB) {
+                        clearInterval(checkFirebase);
+                        iniciarChat();
+                    }
+                }, 100);
             }
         }
 
