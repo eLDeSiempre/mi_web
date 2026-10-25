@@ -47,6 +47,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
         }
 
+        /* CABECERA */
         header {
             display: flex;
             justify-content: space-between;
@@ -66,15 +67,22 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
         
+        .logo-container:hover .logo-img {
+            box-shadow: 0 0 15px var(--accent);
+            border-color: var(--accent);
+            transform: rotate(15deg) scale(1.1);
+        }
+
         .logo-img {
             width: 35px;
             height: 35px;
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
 
         .logo-text {
@@ -82,6 +90,10 @@
             font-weight: 600;
             color: var(--text-bright);
             letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .logo-container:hover .logo-text {
+            text-shadow: 0 0 10px var(--accent);
         }
         .logo-text span { color: var(--accent); }
         .logo-text::after { content: "_"; animation: blink 1s step-end infinite; }
@@ -95,23 +107,51 @@
             flex: 1;
         }
 
+        /* MENÚ CON EFECTO NEÓN */
         .nav-btn {
             background: none;
             border: none;
             color: var(--text-main);
             font-size: 13px;
             cursor: pointer;
-            transition: 0.1s;
+            transition: all 0.2s ease;
             padding: 5px 0;
             text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
         }
         
-        .nav-btn::before { content: './'; color: transparent; margin-right: 2px; }
+        .nav-btn::before { 
+            content: './'; 
+            color: transparent; 
+            margin-right: 2px; 
+            transition: color 0.2s;
+        }
         .nav-btn:hover::before, .nav-btn.active::before { color: var(--accent); }
-        .nav-btn:hover, .nav-btn.active { color: var(--text-bright); }
+        
+        .nav-btn:hover, .nav-btn.active { 
+            color: var(--text-bright); 
+            text-shadow: 0 0 8px var(--accent); 
+            letter-spacing: 1.5px;
+        }
+        
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 100%; height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        .nav-btn:hover::after, .nav-btn.active::after {
+            transform: scaleX(1);
+            box-shadow: 0 0 10px var(--accent);
+        }
         
         .btn-login { color: var(--accent); }
-        .btn-login:hover { text-shadow: 0 0 5px var(--accent-dim); }
+        .btn-login:hover { text-shadow: 0 0 10px var(--accent); }
 
         .container {
             padding: 40px 5%;
@@ -134,6 +174,11 @@
             text-transform: uppercase;
             border-bottom: 1px dashed var(--border-dashed);
             padding-bottom: 10px;
+            transition: 0.3s;
+        }
+        h2:hover {
+            border-bottom-color: var(--accent);
+            text-shadow: 0 0 10px rgba(230,0,0,0.3);
         }
         h2::before { content: '#'; color: var(--accent); margin-right: 8px;}
         
@@ -150,6 +195,11 @@
             margin-bottom: 20px;
             line-height: 1.3;
             text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .hero h1:hover {
+            text-shadow: 0 0 20px rgba(230, 0, 0, 0.6);
+            color: #fff;
         }
         .hero h1::before { content: "> "; color: var(--accent); }
         
@@ -160,24 +210,61 @@
             margin: 0 0 30px 0;
             border-left: 2px solid var(--border);
             padding-left: 15px;
+            transition: 0.3s;
+        }
+        .hero p:hover {
+            border-left-color: var(--accent);
+            color: var(--text-bright);
+            padding-left: 20px;
         }
 
+        /* BOTONES CON EFECTO HACKER */
         .btn-primary, .btn-secondary {
             padding: 12px 24px;
             font-size: 14px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             border: 1px solid var(--border);
             margin: 5px 10px 5px 0;
             background: var(--card-bg);
             color: var(--text-bright);
             text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
         
-        .btn-primary { border-color: var(--accent); color: var(--accent); }
-        .btn-primary:hover { background: var(--accent); color: var(--bg-color); }
-        .btn-secondary:hover { border-color: var(--text-bright); color: var(--bg-color); background: var(--text-bright); }
+        .btn-primary::after, .btn-secondary::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: 0.4s;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::after, .btn-secondary:hover::after {
+            left: 100%;
+        }
 
+        .btn-primary { border-color: var(--accent); color: var(--accent); }
+        .btn-primary:hover { 
+            background: var(--accent); 
+            color: var(--bg-color); 
+            box-shadow: 0 0 25px rgba(230, 0, 0, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary:hover { 
+            border-color: var(--text-bright); 
+            color: var(--bg-color); 
+            background: var(--text-bright); 
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+        }
+
+        /* TARJETAS */
         .grid-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -189,42 +276,91 @@
             padding: 20px;
             border: 1px solid var(--border);
             border-left: 2px solid var(--accent);
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .card:hover { border-color: var(--text-bright); border-left-color: var(--accent); }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        .card:hover::before { transform: scaleX(1); }
+        .card:hover { 
+            border-color: var(--accent); 
+            border-left-width: 4px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(230, 0, 0, 0.15);
+        }
 
+        /* DESPLEGABLE ACADEMIA */
         .diagram { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
         .node {
             background: var(--card-bg);
             border: 1px solid var(--border);
             padding: 15px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             border-bottom: none;
         }
         .node:last-of-type { border-bottom: 1px solid var(--border); }
-        .node:hover { background: #111; }
-        .node h3 { font-size: 1rem; margin: 0; }
-        .node h3::before { content: "[+] "; color: var(--accent); }
+        .node:hover { 
+            background: #111; 
+            border-left: 2px solid var(--accent);
+            padding-left: 20px;
+        }
+        .node h3 { font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 10px; }
         
+        .node h3::before { 
+            content: "[>]"; 
+            color: var(--accent); 
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        
+        .node.open h3::before {
+            transform: rotate(90deg);
+        }
+
         .node-content {
             background: #000;
             border: 1px solid var(--border);
             border-top: none;
-            padding: 15px;
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
             font-size: 0.9rem;
+        }
+        
+        .node-content.open {
+            max-height: 1000px;
+            padding: 15px;
             margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            border-left: 2px solid var(--accent);
         }
 
+        /* PREMIUM */
         .premium-box {
             border: 1px solid var(--accent);
             padding: 30px;
             margin-top: 20px;
             background: rgba(230, 0, 0, 0.03);
             border-left: 4px solid var(--accent);
+            transition: 0.3s;
+        }
+        .premium-box:hover {
+            background: rgba(230, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(230, 0, 0, 0.2);
         }
         .premium-box h3 { color: var(--accent); font-size: 1.4rem; margin-bottom: 15px; }
 
+        /* FORMULARIOS */
         .auth-container {
             display: flex;
             flex-wrap: wrap;
@@ -242,6 +378,11 @@
             flex-direction: column;
             gap: 15px;
             position: relative;
+            transition: 0.3s;
+        }
+        .auth-form:hover {
+            border-color: var(--accent-dim);
+            box-shadow: 0 0 20px rgba(230, 0, 0, 0.1);
         }
         
         .auth-form::before {
@@ -252,6 +393,11 @@
             color: var(--text-main);
             font-size: 11px;
             padding: 0 5px;
+            transition: 0.3s;
+        }
+        .auth-form:hover::before {
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent);
         }
 
         .auth-form h2 { border: none; margin-bottom: 0; padding: 0; }
@@ -263,22 +409,36 @@
             border: 1px solid var(--border);
             color: var(--text-bright);
             font-size: 14px;
+            transition: 0.3s;
         }
-        .auth-form input:focus { outline: none; border-color: var(--accent); }
+        .auth-form input:focus { 
+            outline: none; 
+            border-color: var(--accent); 
+            box-shadow: 0 0 15px rgba(230, 0, 0, 0.3);
+            background: #050505;
+        }
 
-        .profile-card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; text-align: center; border-left: 4px solid var(--accent); }
+        /* PERFIL */
+        .profile-card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; text-align: center; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .profile-card:hover { box-shadow: 0 0 25px rgba(230, 0, 0, 0.15); }
         .profile-card h2 { border: none; justify-content: center; }
         .profile-card p { font-size: 1.1rem; color: var(--text-bright); }
         
-        .chat-container { background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; height: 500px; }
+        /* CHAT */
+        .chat-container { background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; height: 500px; transition: 0.3s; }
+        .chat-container:hover { border-color: var(--accent-dim); }
         .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message { background: #111; padding: 10px; border-left: 2px solid var(--accent); max-width: 80%; align-self: flex-start; }
+        .message { background: #111; padding: 10px; border-left: 2px solid var(--accent); max-width: 80%; align-self: flex-start; transition: 0.2s; }
+        .message:hover { background: #1a1a1a; border-left-width: 4px; }
         .message.mine { border-left: none; border-right: 2px solid var(--accent); align-self: flex-end; background: #1a0a0a; text-align: right; }
+        .message.mine:hover { border-right-width: 4px; }
         .message .author { font-size: 11px; color: var(--text-main); margin-bottom: 5px; }
         .message .text { color: var(--text-bright); font-size: 14px; }
         .chat-input-area { display: flex; padding: 15px; border-top: 1px solid var(--border); gap: 10px; }
-        .chat-input-area input { flex: 1; padding: 10px; background: #000; border: 1px solid var(--border); color: var(--text-bright); }
-        .chat-input-area button { padding: 10px 20px; background: var(--accent); color: var(--bg-color); border: none; cursor: pointer; font-weight: bold; }
+        .chat-input-area input { flex: 1; padding: 10px; background: #000; border: 1px solid var(--border); color: var(--text-bright); transition: 0.3s; }
+        .chat-input-area input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(230,0,0,0.2); }
+        .chat-input-area button { padding: 10px 20px; background: var(--accent); color: var(--bg-color); border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .chat-input-area button:hover { background: #ff3333; box-shadow: 0 0 20px var(--accent); transform: scale(1.05); }
 
         footer {
             text-align: center;
@@ -307,7 +467,6 @@
 
     <header>
         <div class="logo-container" onclick="openTab('inicio')">
-            <!-- Si el logo no carga, se oculta automáticamente y deja el texto -->
             <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">root@eLDeSiempre:~#<span></span></div>
         </div>
@@ -342,7 +501,7 @@
                 <div class="node" onclick="toggleNode('node1')">
                     <h3>Módulo 1: ¿Qué es la Ciberseguridad y el Hacking Ético?</h3>
                 </div>
-                <div id="node1" class="node-content hidden">
+                <div id="node1" class="node-content">
                     <p><strong>La Ciberseguridad</strong> consiste en proteger tus dispositivos, cuentas y datos de los peligros de internet (virus, hackers, estafas). Es como ponerle una cerradura a tu casa, pero en el mundo digital.</p>
                     <p><strong>El Hacking Ético</strong> es la práctica de utilizar habilidades de hacking para fines legales y constructivos, ayudando a las empresas a encontrar fallos de seguridad antes de que los malos lo hagan.</p>
                 </div>
@@ -350,7 +509,7 @@
                 <div class="node" onclick="toggleNode('node2')">
                     <h3>Módulo 2: Crear contraseñas a prueba de balas</h3>
                 </div>
-                <div id="node2" class="node-content hidden">
+                <div id="node2" class="node-content">
                     <p>Tu contraseña es la primera línea de defensa. Sigue estas reglas:</p>
                     <ul>
                         <li>Usa al menos 12 caracteres. Mezcla mayúsculas, minúsculas, números y símbolos.</li>
@@ -364,7 +523,7 @@
                 <div class="node" onclick="toggleNode('node3')">
                     <h3>Módulo 3: Virus, Malware y cómo evitarlos</h3>
                 </div>
-                <div id="node3" class="node-content hidden">
+                <div id="node3" class="node-content">
                     <p>Un virus informático (o malware) es un programa diseñado para dañar tu dispositivo o robar información. Para protegerte:</p>
                     <ul>
                         <li>Instala un antivirus confiable y mantenlo actualizado.</li>
@@ -377,7 +536,7 @@
                 <div class="node" onclick="toggleNode('node4')">
                     <h3>Módulo 4: Privacidad y Navegación Anónima</h3>
                 </div>
-                <div id="node4" class="node-content hidden">
+                <div id="node4" class="node-content">
                     <p>Lo que publicas en internet se queda ahí. Protégete:</p>
                     <ul>
                         <li>Configura tus perfiles sociales como privados.</li>
@@ -390,7 +549,7 @@
                 <div class="node" onclick="toggleNode('node5')">
                     <h3>Glosario Básico del Hacker</h3>
                 </div>
-                <div id="node5" class="node-content hidden">
+                <div id="node5" class="node-content">
                     <ul>
                         <li><strong>Phishing:</strong> Engaño para que entregues tus datos haciéndose pasar por una empresa legítima.</li>
                         <li><strong>Malware:</strong> Cualquier software malicioso (virus, gusanos, troyanos).</li>
@@ -405,6 +564,7 @@
         <section id="herramientas" class="tab-content">
             <h2>Repertorio de Herramientas</h2>
             <p>Estamos construyendo un arsenal de herramientas para auditorías y hacking ético. Próximamente disponibles en la plataforma:</p>
+            
             <div class="grid-cards">
                 <div class="card">
                     <h3>Análisis de Red</h3>
@@ -413,6 +573,7 @@
                 <div class="card">
                     <h3>OSINT</h3>
                     <p>Recopilación de información de fuentes abiertas. Búsqueda de identidades y rastros digitales.</p>
+                    <button class="btn-primary" style="margin-top: 15px; font-size: 12px; padding: 8px 12px;" onclick="toggleOSINT()">[ Abrir Framework OSINT ]</button>
                 </div>
                 <div class="card">
                     <h3>CTF y Retos</h3>
@@ -422,6 +583,18 @@
                     <h3>Análisis de Malware</h3>
                     <p>Herramientas básicas para entender cómo funcionan los virus en un entorno seguro y controlado.</p>
                 </div>
+            </div>
+
+            <div id="osint-framework-container" style="display: none; margin-top: 30px; border: 1px solid var(--border); background: #000;">
+                <div style="padding: 15px; border-bottom: 1px dashed var(--border-dashed); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: var(--accent);">[ OSINT Framework ]</h3>
+                    <button class="nav-btn" onclick="toggleOSINT()" style="color: var(--accent); border: 1px solid var(--accent); padding: 5px 10px;">[ Cerrar ]</button>
+                </div>
+                <iframe 
+                    src="https://osintframework.com/" 
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                    style="width: 100%; height: 600px; border: none; background: #fff;">
+                </iframe>
             </div>
         </section>
 
@@ -447,7 +620,7 @@
                     
                     <div style="margin-top: 15px; text-align: center; font-size: 12px; color: var(--text-main);">
                         ¿No tienes cuenta? <br>
-                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block;">[ Crear una nueva cuenta ]</a>
+                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block; transition: 0.3s;" onmouseover="this.style.textShadow='0 0 10px var(--accent)'" onmouseout="this.style.textShadow='none'">[ Crear una nueva cuenta ]</a>
                     </div>
                 </form>
 
@@ -461,7 +634,7 @@
 
                     <div style="margin-top: 15px; text-align: center; font-size: 12px; color: var(--text-main);">
                         ¿Ya tienes cuenta? <br>
-                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block;">[ Iniciar Sesión ]</a>
+                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block; transition: 0.3s;" onmouseover="this.style.textShadow='0 0 10px var(--accent)'" onmouseout="this.style.textShadow='none'">[ Iniciar Sesión ]</a>
                     </div>
                 </form>
 
@@ -538,7 +711,26 @@
         }
 
         function toggleNode(nodeId) {
-            document.getElementById(nodeId).classList.toggle('hidden');
+            const content = document.getElementById(nodeId);
+            const nodeHeader = content.previousElementSibling; 
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                nodeHeader.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                nodeHeader.classList.add('open');
+            }
+        }
+
+        function toggleOSINT() {
+            const container = document.getElementById('osint-framework-container');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                container.style.display = 'none';
+            }
         }
 
         function toggleAuthForms(event) {
