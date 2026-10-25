@@ -66,7 +66,10 @@
             font-weight: 600;
             color: var(--text-bright);
             letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .logo:hover { text-shadow: 0 0 8px rgba(230, 0, 0, 0.5); }
         .logo span { color: var(--accent); }
         .logo::after { content: "_"; animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -214,6 +217,7 @@
             flex-wrap: wrap;
             gap: 30px;
             margin-top: 20px;
+            justify-content: center;
         }
         .auth-form {
             background: var(--card-bg);
@@ -248,9 +252,6 @@
             font-size: 14px;
         }
         .auth-form input:focus { outline: none; border-color: var(--accent); }
-        
-        .divider { width: 1px; background: var(--border); display: none; }
-        @media (min-width: 900px) { .divider { display: block; } }
 
         .profile-card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; text-align: center; border-left: 4px solid var(--accent); }
         .profile-card h2 { border: none; justify-content: center; }
@@ -292,9 +293,8 @@
 <body>
 
     <header>
-        <div class="logo">root@eLDeSiempre:~#<span></span></div>
+        <div class="logo" onclick="openTab('inicio')">root@eLDeSiempre:~#<span></span></div>
         <nav>
-            <button class="nav-btn active" onclick="openTab('inicio')">Inicio</button>
             <button class="nav-btn" onclick="openTab('aprender')">Academia</button>
             <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
             <button class="nav-btn" onclick="openTab('premium')">Premium</button>
@@ -421,23 +421,33 @@
 
         <section id="login" class="tab-content">
             <div class="auth-container">
+                
                 <form class="auth-form" id="form-login">
                     <h2>Iniciar Sesión</h2>
                     <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
                     <input type="password" id="login-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-primary">[ ENTRAR ]</button>
+                    
+                    <div style="margin-top: 15px; text-align: center; font-size: 12px; color: var(--text-main);">
+                        ¿No tienes cuenta? <br>
+                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block;">[ Crear una nueva cuenta ]</a>
+                    </div>
                 </form>
 
-                <div class="divider"></div>
-
-                <form class="auth-form" id="form-registro">
+                <form class="auth-form" id="form-registro" style="display: none;">
                     <h2>Crear Cuenta</h2>
                     <input type="text" id="reg-nombre" placeholder="Nombre Completo" required>
                     <input type="text" id="reg-usuario" placeholder="Nombre de Usuario" required>
                     <input type="email" id="reg-correo" placeholder="Correo Electrónico" required>
                     <input type="password" id="reg-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-secondary">[ REGISTRAR ]</button>
+
+                    <div style="margin-top: 15px; text-align: center; font-size: 12px; color: var(--text-main);">
+                        ¿Ya tienes cuenta? <br>
+                        <a href="#" onclick="toggleAuthForms(event)" style="color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block;">[ Iniciar Sesión ]</a>
+                    </div>
                 </form>
+
             </div>
         </section>
 
@@ -514,6 +524,20 @@
             document.getElementById(nodeId).classList.toggle('hidden');
         }
 
+        function toggleAuthForms(event) {
+            if(event) event.preventDefault();
+            const formLogin = document.getElementById('form-login');
+            const formRegistro = document.getElementById('form-registro');
+            
+            if (formLogin.style.display === 'none') {
+                formLogin.style.display = 'flex';
+                formRegistro.style.display = 'none';
+            } else {
+                formLogin.style.display = 'none';
+                formRegistro.style.display = 'flex';
+            }
+        }
+
         function comprobarSesion() {
             const sesionGuardada = localStorage.getItem('eldesiempre_user');
             if (sesionGuardada) {
@@ -553,6 +577,7 @@
                     alert('¡Registro exitoso! Revisa tu correo para activar la cuenta.');
                     document.getElementById('form-registro').reset();
                     openTab('login');
+                    toggleAuthForms(); // Vuelve al login automáticamente
                 } else {
                     alert('Error: ' + result.message);
                 }
