@@ -483,7 +483,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAYF84I5y_eatvOViLgF1lvSu-9yBrRkxY",
@@ -495,7 +495,9 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        
+        // Forzamos Long Polling para evitar bloqueos de red
+        const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
         window.firebaseDB = db;
         window.firebaseCollection = collection;
@@ -577,7 +579,7 @@
                     alert('¡Registro exitoso! Revisa tu correo para activar la cuenta.');
                     document.getElementById('form-registro').reset();
                     openTab('login');
-                    toggleAuthForms(); // Vuelve al login automáticamente
+                    toggleAuthForms();
                 } else {
                     alert('Error: ' + result.message);
                 }
@@ -630,7 +632,7 @@
                     }
                 });
             } catch (error) {
-                messagesDiv.innerHTML = '<div style="text-align:center; color:red; font-size:12px;">Error al conectar con Firebase.</div>';
+                messagesDiv.innerHTML = '<div style="text-align:center; color:red; font-size:12px;">Error: ' + error.message + '</div>';
                 console.error(error);
             }
 
@@ -655,7 +657,7 @@
                 input.value = '';
             } catch (e) {
                 console.error("Error al enviar mensaje: ", e);
-                alert("No se pudo enviar el mensaje.");
+                alert("No se pudo enviar el mensaje: " + e.message);
             }
         }
 
