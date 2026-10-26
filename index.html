@@ -292,31 +292,32 @@
             font-weight: bold;
         }
 
-        .game-box {
+        .game-terminal {
             background: #000;
             border: 1px solid var(--gold);
-            padding: 20px;
+            padding: 15px;
             border-radius: 5px;
-            text-align: center;
-        }
-        .game-box h3 { color: var(--gold); margin-bottom: 15px; }
-        .game-box p { font-size: 0.9rem; }
-        
-        .phishing-option {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background: #111;
-            color: var(--text-bright);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            text-align: left;
             font-family: 'Fira Code', monospace;
-            transition: 0.3s;
-            word-break: break-all;
+            font-size: 0.85rem;
+            color: var(--text-bright);
+            height: 250px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
         }
-        .phishing-option:hover { border-color: var(--gold); background: #1a1a1a; }
+        .game-terminal .output { white-space: pre-wrap; margin-bottom: 5px; }
+        .game-terminal .input-line { display: flex; align-items: center; }
+        .game-terminal .prompt { color: var(--gold); margin-right: 5px; }
+        .game-terminal input {
+            background: transparent;
+            border: none;
+            color: var(--text-bright);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+        }
 
         .crypto-item {
             display: flex;
@@ -680,30 +681,37 @@
         </section>
 
         <section id="juegos" class="tab-content">
-            <h2>Minijuegos de Hacking</h2>
-            <p>Pon a prueba tus habilidades con estos retos rápidos. Solo para miembros.</p>
+            <h2>Simuladores de Terminal</h2>
+            <p>Aprende practicando. Escribe los comandos en las terminales para superar los retos.</p>
             
             <div class="grid-cards">
                 <div class="card">
-                    <h3>Reto 1: Descifrador César</h3>
-                    <p>El cifrado César desplaza las letras del alfabeto. Adivina la palabra oculta ajustando el desplazamiento.</p>
-                    <div class="game-box">
-                        <p>Palabra cifrada: <strong style="color: var(--gold); font-size: 1.2rem;" id="cesar-word">KHOOR</strong></p>
-                        <input type="range" id="cesar-slider" min="1" max="25" value="1" oninput="descifrarCesar(this.value)" style="width: 100%; accent-color: var(--gold); margin: 15px 0;">
-                        <p>Desplazamiento: <span id="cesar-valor">1</span></p>
-                        <p>Resultado: <strong style="color: var(--gold); font-size: 1.2rem;" id="cesar-result">KHOOR</strong></p>
-                        <button class="btn-primary" onclick="alert('¡Correcto! La palabra era HELLO')">[ Comprobar HELLO ]</button>
+                    <h3>Reto Python: El Saludo</h3>
+                    <p>Objetivo: Usa `print()` para mostrar exactamente la palabra <strong>HACKED</strong> en la pantalla.</p>
+                    <div class="game-terminal" id="python-terminal">
+                        <div class="output">Python 3.10.0 (default, Oct 2026)</div>
+                        <div class="output">Type "help", "copyright", "credits" or "license" for more information.</div>
+                        <div class="output">&gt;&gt;&gt; <span id="python-output"></span></div>
                     </div>
+                    <div class="input-line">
+                        <span class="prompt">&gt;&gt;&gt; </span>
+                        <input type="text" id="python-input" placeholder="print('...')" autocomplete="off">
+                    </div>
+                    <button class="btn-primary" style="margin-top: 10px;" onclick="ejecutarPython()">[ Ejecutar ]</button>
                 </div>
 
                 <div class="card">
-                    <h3>Reto 2: Cazador de Phishing</h3>
-                    <p>¿Cuál de estas dos URLs es la legítima de tu banco (BancoFalso)?</p>
-                    <div class="game-box">
-                        <button class="phishing-option" onclick="verificarPhishing(false)">https://www.bancofalso.com.login-seguro.xyz</button>
-                        <button class="phishing-option" onclick="verificarPhishing(true)">https://www.bancofalso.com</button>
-                        <div id="phishing-result" style="margin-top: 15px; font-weight: bold;"></div>
+                    <h3>Reto Bash: Encuentra la Flag</h3>
+                    <p>Objetivo: Navega por el sistema de archivos usando `ls` y `cat` para encontrar la flag oculta.</p>
+                    <div class="game-terminal" id="bash-terminal">
+                        <div class="output">root@eldesiempre:~#</div>
+                        <div class="output">Bienvenido al simulador de Bash. Usa comandos básicos.</div>
                     </div>
+                    <div class="input-line">
+                        <span class="prompt">root@eldesiempre:~# </span>
+                        <input type="text" id="bash-input" placeholder="ls, cat..." autocomplete="off">
+                    </div>
+                    <button class="btn-primary" style="margin-top: 10px;" onclick="ejecutarBash()">[ Ejecutar ]</button>
                 </div>
             </div>
         </section>
@@ -860,6 +868,15 @@
     <script>
         const API_URL = 'https://api.eldesiempre.es/api';
         let usuarioLogueado = null;
+
+        let bashState = {
+            currentPath: '~',
+            files: {
+                '~': ['notas.txt', 'flag.txt'],
+                '~/notas.txt': 'Recuerda revisar los archivos ocultos.',
+                '~/flag.txt': 'FLAG{3LD3S13MPR3_H4CK3R}'
+            }
+        };
 
         function openTab(tabId) {
             if ((tabId === 'recursos' || tabId === 'juegos' || tabId === 'perfil') && !usuarioLogueado) {
@@ -1062,28 +1079,64 @@
             resultadoDiv.innerHTML = `Posible tipo: <span style="color:var(--gold)">${tipo}</span>`;
         }
 
-        function descifrarCesar(desplazamiento) {
-            const cifrado = "KHOOR";
-            let resultado = "";
-            for (let i = 0; i < cifrado.length; i++) {
-                let codigo = cifrado.charCodeAt(i);
-                if (codigo >= 65 && codigo <= 90) {
-                    resultado += String.fromCharCode(((codigo - 65 - desplazamiento + 26) % 26) + 65);
+        function ejecutarPython() {
+            const input = document.getElementById('python-input').value.trim();
+            const outputDiv = document.getElementById('python-output');
+            const terminal = document.getElementById('python-terminal');
+            
+            if (input === '') return;
+
+            terminal.innerHTML += `<div class="output">&gt;&gt;&gt; ${input}</div>`;
+
+            if (input === 'print("HACKED")' || input === "print('HACKED')") {
+                terminal.innerHTML += `<div class="output" style="color:var(--gold)">HACKED</div>`;
+                terminal.innerHTML += `<div class="output" style="color:green">¡Reto completado! Has aprendido a usar print().</div>`;
+            } else if (input.startsWith('print(')) {
+                const match = input.match(/print\(['"](.*)['"]\)/);
+                if (match) {
+                    terminal.innerHTML += `<div class="output">${match[1]}</div>`;
+                    terminal.innerHTML += `<div class="output" style="color:red">Casi... pero no es la palabra exacta. Intenta de nuevo.</div>`;
                 } else {
-                    resultado += cifrado[i];
+                    terminal.innerHTML += `<div class="output" style="color:red">Error de sintaxis. Usa print("texto").</div>`;
                 }
+            } else {
+                terminal.innerHTML += `<div class="output" style="color:red">Comando no reconocido. Usa print().</div>`;
             }
-            document.getElementById('cesar-valor').innerText = desplazamiento;
-            document.getElementById('cesar-result').innerText = resultado;
+            
+            document.getElementById('python-input').value = '';
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
-        function verificarPhishing(esCorrecto) {
-            const resultadoDiv = document.getElementById('phishing-result');
-            if (esCorrecto) {
-                resultadoDiv.innerHTML = '<span style="color:green">¡Correcto! Esa es la URL legítima.</span>';
+        function ejecutarBash() {
+            const input = document.getElementById('bash-input').value.trim();
+            const terminal = document.getElementById('bash-terminal');
+            
+            if (input === '') return;
+
+            terminal.innerHTML += `<div class="output">root@eldesiempre:${bashState.currentPath}# ${input}</div>`;
+
+            if (input === 'ls') {
+                const files = bashState.files[bashState.currentPath] || [];
+                terminal.innerHTML += `<div class="output">${files.join('    ')}</div>`;
+            } else if (input.startsWith('cat ')) {
+                const file = input.split(' ')[1];
+                const fullPath = bashState.currentPath === '~' ? `~/${file}` : `${bashState.currentPath}/${file}`;
+                if (bashState.files[fullPath]) {
+                    terminal.innerHTML += `<div class="output" style="color:var(--gold)">${bashState.files[fullPath]}</div>`;
+                    if (fullPath === '~/flag.txt') {
+                        terminal.innerHTML += `<div class="output" style="color:green">¡Felicidades! Has encontrado la flag.</div>`;
+                    }
+                } else {
+                    terminal.innerHTML += `<div class="output" style="color:red">cat: ${file}: No such file or directory</div>`;
+                }
+            } else if (input === 'clear') {
+                terminal.innerHTML = `<div class="output">root@eldesiempre:~#</div>`;
             } else {
-                resultadoDiv.innerHTML = '<span style="color:red">¡Incorrecto! Esa URL es un intento de phishing.</span>';
+                terminal.innerHTML += `<div class="output" style="color:red">bash: ${input}: command not found</div>`;
             }
+            
+            document.getElementById('bash-input').value = '';
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
         comprobarSesion();
