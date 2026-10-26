@@ -51,6 +51,47 @@
             background-size: 40px 40px;
         }
 
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-left: 4px solid var(--gold);
+            color: var(--text-bright);
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+            min-width: 250px;
+            max-width: 350px;
+            pointer-events: auto;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .toast.error {
+            border-color: #ff3333;
+            border-left-color: #ff3333;
+        }
+
+        .toast.success {
+            border-color: #00ff66;
+            border-left-color: #00ff66;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -474,6 +515,8 @@
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <div class="modal-overlay" id="disclaimer-modal">
         <div class="modal-content">
             <h2>⚠️ Descargo de Responsabilidad</h2>
@@ -804,13 +847,25 @@
         const API_URL = 'https://api.eldesiempre.es/api';
         let usuarioLogueado = null;
 
+        function mostrarToast(mensaje, tipo = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + tipo;
+            toast.innerText = mensaje;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
         function aceptarDisclaimer() {
             document.getElementById('disclaimer-modal').style.display = 'none';
         }
 
         function openTab(tabId) {
             if ((tabId === 'recursos' || tabId === 'aprender' || tabId === 'perfil') && !usuarioLogueado) {
-                alert("Debes iniciar sesión para acceder a esta sección.");
+                mostrarToast("Debes iniciar sesión para acceder a esta sección.", "error");
                 openTab('login');
                 return;
             }
@@ -827,7 +882,7 @@
             if (usuarioLogueado) {
                 openTab(tabId);
             } else {
-                alert("Debes crear una cuenta o iniciar sesión para entrar aquí.");
+                mostrarToast("Debes crear una cuenta o iniciar sesión para entrar aquí.", "error");
                 openTab('login');
             }
         }
@@ -893,10 +948,10 @@
         function copiarAlPortapapeles(texto, moneda) {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(texto).then(() => {
-                    alert('Dirección de ' + moneda + ' copiada al portapapeles');
+                    mostrarToast('Dirección de ' + moneda + ' copiada al portapapeles', 'success');
                 }).catch(err => {
                     console.error('Error al copiar: ', err);
-                    alert('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+                    mostrarToast('No se pudo copiar automáticamente.', 'error');
                 });
             } else {
                 const textArea = document.createElement("textarea");
@@ -909,10 +964,10 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert('Dirección de ' + moneda + ' copiada al portapapeles');
+                    mostrarToast('Dirección de ' + moneda + ' copiada al portapapeles', 'success');
                 } catch (err) {
                     console.error('Error al copiar: ', err);
-                    alert('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+                    mostrarToast('No se pudo copiar automáticamente.', 'error');
                 }
                 textArea.remove();
             }
@@ -932,14 +987,14 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert('¡Registro exitoso! Revisa tu correo para activar la cuenta.');
+                    mostrarToast('¡Registro exitoso! Revisa tu correo para activar la cuenta.', 'success');
                     document.getElementById('form-registro').reset();
                     openTab('login');
                     toggleAuthForms();
                 } else {
-                    alert('Error: ' + result.message);
+                    mostrarToast('Error: ' + result.message, 'error');
                 }
-            } catch (error) { alert('Error de conexión.'); }
+            } catch (error) { mostrarToast('Error de conexión.', 'error'); }
         });
 
         document.getElementById('form-login').addEventListener('submit', async (e) => {
@@ -954,14 +1009,14 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert('¡Bienvenido ' + result.nombre + '!');
+                    mostrarToast('¡Bienvenido ' + result.nombre + '!', 'success');
                     const userData = { usuario: result.usuario, nombre: result.nombre, correo: data.correo };
                     localStorage.setItem('eldesiempre_user', JSON.stringify(userData));
                     window.location.reload(); 
                 } else {
-                    alert('Error: ' + result.message);
+                    mostrarToast('Error: ' + result.message, 'error');
                 }
-            } catch (error) { alert('Error de conexión.'); }
+            } catch (error) { mostrarToast('Error de conexión.', 'error'); }
         });
 
         function generarDork() {
@@ -970,7 +1025,7 @@
             const resultado = document.getElementById('dork-result');
             
             if (!dominio) {
-                resultado.innerText = "Introduce un dominio válido.";
+                mostrarToast("Introduce un dominio válido.", "error");
                 return;
             }
             
