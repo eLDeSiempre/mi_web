@@ -320,16 +320,21 @@
         .auth-form h2::before { content: ''; }
         .auth-form h2::after { content: ''; }
 
-        .input-wrap { position: relative; display: flex; align-items: center; }
+        .input-wrap { position: relative; display: flex; flex-direction: column; }
         .input-wrap::before {
-            content: 'user@eldesiempre:~$'; position: absolute; left: 10px; top: 50%;
-            transform: translateY(-50%); font-size: 11px; color: var(--accent);
-            pointer-events: none; opacity: 0.6; white-space: nowrap; transition: opacity 0.2s;
+            content: 'user@eldesiempre:~$';
+            font-size: 10px;
+            color: var(--accent);
+            opacity: 0.8;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
         }
-        .input-wrap:focus-within::before { opacity: 1; }
-        .input-wrap input { width: 100%; padding: 12px 12px 12px 165px; }
+        .input-wrap input { 
+            width: 100%; 
+            padding: 12px; 
+        }
 
-        .auth-form input { padding: 12px; background: #000; border: 1px solid var(--border); color: var(--text-bright); font-size: 14px; transition: 0.3s; }
+        .auth-form input { background: #000; border: 1px solid var(--border); color: var(--text-bright); font-size: 14px; transition: 0.3s; }
         .auth-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 20%, transparent); background: #050505; }
 
         .user-area-nav {
@@ -626,7 +631,7 @@
     <div id="cyber-glow"></div>
 
     <div id="boot-screen">
-        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.4...</div>
+        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.5...</div>
         <div class="boot-line boot-ok">[ OK ] Montando /dev/secure</div>
         <div class="boot-line boot-ok">[ OK ] Cargando módulos de red dorados</div>
         <div class="boot-line boot-ok">[ OK ] Conectando a api.eldesiempre.es...</div>
