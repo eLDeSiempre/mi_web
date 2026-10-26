@@ -8,6 +8,7 @@
     <title>root@eLDeSiempre:~#</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
     
     <style>
         :root {
@@ -49,6 +50,45 @@
                 linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.95);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-left: 4px solid var(--gold);
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 5px;
+            text-align: left;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h2 { color: var(--gold); margin-bottom: 15px; font-size: 1.4rem; }
+        .modal-content p { font-size: 0.9rem; margin-bottom: 15px; color: var(--text-main); }
+        .modal-content ul { font-size: 0.85rem; margin-bottom: 20px; color: var(--text-main); }
+        .modal-content button {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--bg-color);
+            border: none;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+        .modal-content button:hover { background: var(--gold-bright); }
 
         header {
             display: flex;
@@ -257,106 +297,6 @@
             min-height: 30px;
         }
 
-        .gen-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-        }
-        .gen-controls label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        .gen-controls input[type="checkbox"] {
-            accent-color: var(--gold);
-            width: 16px;
-            height: 16px;
-        }
-        .gen-slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .gen-slider-container input[type="range"] {
-            flex-grow: 1;
-            accent-color: var(--gold);
-        }
-        .gen-slider-value {
-            min-width: 30px;
-            text-align: right;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        .game-terminal {
-            background: #000;
-            border: 1px solid var(--gold);
-            padding: 15px;
-            border-radius: 5px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: var(--text-bright);
-            height: 250px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-        .game-terminal .output { white-space: pre-wrap; margin-bottom: 5px; }
-        .game-terminal .input-line { display: flex; align-items: center; }
-        .game-terminal .prompt { color: var(--gold); margin-right: 5px; }
-        .game-terminal input {
-            background: transparent;
-            border: none;
-            color: var(--text-bright);
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            width: 100%;
-            outline: none;
-        }
-
-        .crypto-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: border-color 0.3s, background 0.3s;
-        }
-        .crypto-item:hover {
-            border-color: var(--gold);
-            background: #1a1a1a;
-        }
-        .crypto-label {
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
-        .crypto-address {
-            color: var(--text-bright);
-            font-size: 0.7rem;
-            word-break: break-all;
-            margin: 0 10px;
-            flex-grow: 1;
-        }
-        .copy-icon {
-            fill: var(--text-main);
-            width: 16px;
-            height: 16px;
-            transition: fill 0.3s;
-        }
-        .crypto-item:hover .copy-icon {
-            fill: var(--gold);
-        }
-
         .diagram { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
         .node {
             background: var(--card-bg);
@@ -397,16 +337,11 @@
             border-bottom: 1px solid var(--border);
             border-left: 2px solid var(--gold);
         }
-
-        .support-box {
-            border: 1px solid var(--gold-dim);
-            padding: 30px;
-            margin-top: 20px;
-            background: var(--card-bg);
-            transition: border-color 0.3s;
+        
+        .node-content a {
+            display: inline-block;
+            margin-bottom: 5px;
         }
-        .support-box:hover { border-color: var(--gold); }
-        .support-box h3 { color: var(--text-bright); font-size: 1.4rem; margin-bottom: 15px; text-align: center; }
 
         .auth-container {
             display: flex;
@@ -461,15 +396,52 @@
 
         footer {
             text-align: center;
-            padding: 20px 5% calc(20px + var(--safe-bottom)) 5%;
+            padding: 40px 5% calc(20px + var(--safe-bottom)) 5%;
             border-top: 1px solid var(--gold-dim);
             color: var(--text-main);
             margin-top: auto;
             font-size: 12px;
             text-transform: uppercase;
         }
-        footer p::before { content: "/* "; }
-        footer p::after { content: " */"; }
+        
+        .support-footer {
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 5px;
+            text-transform: none;
+        }
+        .support-footer h3 { color: var(--gold); font-size: 1.2rem; margin-bottom: 10px; }
+        .support-footer p { font-size: 0.85rem; color: var(--text-main); margin-bottom: 15px; }
+        .support-footer .paypal-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #0070ba;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .support-footer .crypto-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .support-footer .crypto-item {
+            background: #111;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-bright);
+            transition: border-color 0.3s;
+        }
+        .support-footer .crypto-item:hover { border-color: var(--gold); }
 
         .social-links {
             display: flex;
@@ -485,6 +457,9 @@
             height: 24px;
         }
         .social-icon:hover { fill: var(--gold); transform: scale(1.1); }
+        
+        footer p::before { content: "/* "; }
+        footer p::after { content: " */"; }
 
         @media (max-width: 768px) {
             header { justify-content: center; padding-bottom: 10px; }
@@ -499,6 +474,20 @@
 </head>
 <body>
 
+    <div class="modal-overlay" id="disclaimer-modal">
+        <div class="modal-content">
+            <h2>⚠️ Descargo de Responsabilidad</h2>
+            <p>Antes de acceder a <strong>eLDeSiempre.es</strong>, debes leer y aceptar los siguientes términos:</p>
+            <ul>
+                <li><strong>Uso educativo:</strong> Todo el contenido, herramientas y recursos de esta web están destinados exclusivamente a la educación y al hacking ético.</li>
+                <li><strong>Responsabilidad del usuario:</strong> Eres el único responsable del uso que hagas de la información aquí expuesta. El administrador de esta web no se hace responsable de cualquier acto ilícito o daño derivado del uso de estas herramientas.</li>
+                <li><strong>Legalidad:</strong> Nunca utilices estas técnicas o herramientas contra sistemas para los que no tengas permiso explícito por escrito. El hacking sin autorización es un delito.</li>
+                <li><strong>Concienciación:</strong> Esta plataforma busca concienciar sobre la importancia de la ciberseguridad y formar a futuros profesionales del sector.</li>
+            </ul>
+            <button onclick="aceptarDisclaimer()">Acepto los términos y entro</button>
+        </div>
+    </div>
+
     <header>
         <div class="logo-container" onclick="openTab('inicio')">
             <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
@@ -506,10 +495,9 @@
         </div>
         <nav>
             <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
-            <button class="nav-btn btn-gold" onclick="openTab('premium')">[ Support Me ]</button>
             
             <button class="nav-btn" id="nav-recursos-btn" style="display:none;" onclick="openTab('recursos')">Recursos</button>
-            <button class="nav-btn" id="nav-juegos-btn" style="display:none;" onclick="openTab('juegos')">Juegos</button>
+            <button class="nav-btn" id="nav-aprender-btn" style="display:none;" onclick="openTab('aprender')">Aprender</button>
             <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="openTab('perfil')">Perfil</button>
             
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
@@ -530,7 +518,7 @@
 
         <section id="herramientas" class="tab-content">
             <h2>Laboratorio de Herramientas</h2>
-            <p>Utilidades directas para auditorías y hacking ético. Todas las herramientas se ejecutan de forma segura.</p>
+            <p>Utilidades directas para auditorías y hacking ético. Todas las herramientas se ejecutan de forma segura en tu navegador.</p>
             
             <div class="grid-cards">
                 <div class="card">
@@ -540,27 +528,25 @@
                 </div>
                 
                 <div class="card">
-                    <h3>Generador de Contraseñas</h3>
-                    <div class="gen-controls">
-                        <label><input type="checkbox" id="chk-mayus" checked> Mayúsculas (A-Z)</label>
-                        <label><input type="checkbox" id="chk-minus" checked> Minúsculas (a-z)</label>
-                        <label><input type="checkbox" id="chk-nums" checked> Números (0-9)</label>
-                        <label><input type="checkbox" id="chk-symbols" checked> Símbolos (!@#$%)</label>
-                    </div>
-                    <div class="gen-slider-container">
-                        <input type="range" id="slider-longitud" min="4" max="60" value="16" oninput="document.getElementById('slider-valor').innerText = this.value">
-                        <span class="gen-slider-value" id="slider-valor">16</span>
-                    </div>
-                    <button class="btn-primary" onclick="generarPassword()">[ Generar Contraseña ]</button>
-                    <div id="resultado-password" class="tool-result"></div>
+                    <h3>Generador de Google Dorks</h3>
+                    <p>Genera búsquedas avanzadas en Google para encontrar información expuesta.</p>
+                    <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com">
+                    <select id="dork-type" class="tool-input" style="color: var(--gold);">
+                        <option value="pdf">Documentos PDF</option>
+                        <option value="xls">Hojas de cálculo Excel</option>
+                        <option value="doc">Documentos Word</option>
+                        <option value="env">Archivos de configuración (.env)</option>
+                        <option value="sql">Archivos de base de datos (.sql)</option>
+                    </select>
+                    <button class="btn-primary" onclick="generarDork()">[ Generar Dork ]</button>
+                    <div id="dork-result" class="tool-result" style="font-size: 0.8rem; text-align: left; word-break: break-all;"></div>
                 </div>
-                
+
                 <div class="card">
-                    <h3>Analizador de Hash</h3>
-                    <p>Identifica el tipo de hash (MD5, SHA-1, SHA-256, SHA-512, bcrypt) pegando el texto.</p>
-                    <input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash aquí...">
-                    <button class="btn-primary" onclick="analizarHash()">[ Analizar ]</button>
-                    <div id="resultado-hash" class="tool-result" style="font-weight: bold;"></div>
+                    <h3>Analizador de Metadatos EXIF</h3>
+                    <p>Extrae información oculta (GPS, cámara, fecha) de tus fotos. Procesado 100% local.</p>
+                    <input type="file" id="exif-input" accept="image/*" class="tool-input" style="color: var(--text-main);">
+                    <div id="exif-result" class="tool-result" style="font-size: 0.8rem; text-align: left; min-height: 50px;"></div>
                 </div>
             </div>
 
@@ -680,116 +666,54 @@
             </div>
         </section>
 
-        <section id="juegos" class="tab-content">
-            <h2>Simuladores de Terminal</h2>
-            <p>Aprende practicando. Escribe los comandos en las terminales para superar los retos.</p>
+        <section id="aprender" class="tab-content">
+            <h2>Ruta de Aprendizaje</h2>
+            <p>Selecciona un área para ver los recursos recomendados y empezar a aprender.</p>
             
-            <div class="grid-cards">
-                <div class="card">
-                    <h3>Reto Python: El Saludo</h3>
-                    <p>Objetivo: Usa `print()` para mostrar exactamente la palabra <strong>HACKED</strong> en la pantalla.</p>
-                    <div class="game-terminal" id="python-terminal">
-                        <div class="output">Python 3.10.0 (default, Oct 2026)</div>
-                        <div class="output">Type "help", "copyright", "credits" or "license" for more information.</div>
-                        <div class="output">&gt;&gt;&gt; <span id="python-output"></span></div>
-                    </div>
-                    <div class="input-line">
-                        <span class="prompt">&gt;&gt;&gt; </span>
-                        <input type="text" id="python-input" placeholder="print('...')" autocomplete="off">
-                    </div>
-                    <button class="btn-primary" style="margin-top: 10px;" onclick="ejecutarPython()">[ Ejecutar ]</button>
+            <div class="diagram">
+                <div class="node" onclick="toggleNode('learn1')">
+                    <h3>Python para Hacking</h3>
                 </div>
-
-                <div class="card">
-                    <h3>Reto Bash: Encuentra la Flag</h3>
-                    <p>Objetivo: Navega por el sistema de archivos usando `ls` y `cat` para encontrar la flag oculta.</p>
-                    <div class="game-terminal" id="bash-terminal">
-                        <div class="output">root@eldesiempre:~#</div>
-                        <div class="output">Bienvenido al simulador de Bash. Usa comandos básicos.</div>
-                    </div>
-                    <div class="input-line">
-                        <span class="prompt">root@eldesiempre:~# </span>
-                        <input type="text" id="bash-input" placeholder="ls, cat..." autocomplete="off">
-                    </div>
-                    <button class="btn-primary" style="margin-top: 10px;" onclick="ejecutarBash()">[ Ejecutar ]</button>
+                <div id="learn1" class="node-content">
+                    <p>Aprende a programar scripts y herramientas personalizadas.</p>
+                    <ul>
+                        <li><strong>Curso de Python (Microsoft):</strong> <a href="https://learn.microsoft.com/es-es/training/paths/beginner-python/" target="_blank">[Ir]</a></li>
+                        <li><strong>Python para Hackers (HackTricks):</strong> <a href="https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/python" target="_blank">[Ir]</a></li>
+                    </ul>
                 </div>
-            </div>
-        </section>
-
-        <section id="premium" class="tab-content">
-            <h2>Support Me / Apoya el Proyecto</h2>
-            
-            <div class="support-box">
-                <h3>[ ¿POR QUÉ PEDIR DINERO? ]</h3>
-                <p>Quiero ser totalmente transparente contigo. <strong>eLDeSiempre.es es un proyecto 100% gratuito y sin ánimo de lucro.</strong> No hay empresas detrás, ni anuncios intrusivos. Todo el contenido, los recursos y el código están hechos por mí, invirtiendo mi tiempo libre.</p>
-                <p>Si esta guía te ha ayudado, te ha ahorrado horas de búsqueda o simplemente crees que es un proyecto que merece la pena, puedes ayudarme a cubrir los gastos para que esto siga funcionando y creciendo:</p>
                 
-                <ul style="border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 25px;">
-                    <li><strong>Servidor (VPS):</strong> Necesario para la base de datos de los usuarios.</li>
-                    <li><strong>Dominio web:</strong> Para que la web siga siendo eldesiempre.es.</li>
-                    <li><strong>Correos electrónicos:</strong> Para que puedas verificar tu cuenta.</li>
-                    <li><strong>Desarrollo:</strong> Para pagar el café que me mantiene despierto investigando nuevas herramientas para ti.</li>
-                </ul>
-
-                <p style="text-align: center; font-size: 0.9rem; color: var(--text-main); margin-bottom: 25px;">
-                    Cualquier donación, por pequeña que sea, es un gran apoyo. Si no puedes donar, ¡no pasa nada! Compartir la web con tus amigos o seguirme en mis redes ya es de gran ayuda.
-                </p>
-
-                <div class="social-links" style="margin-bottom: 30px;">
-                    <a href="https://x.com/eLDeSiempre_TTV" target="_blank" title="X (Twitter)">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/__eldesiempre__/" target="_blank" title="Instagram">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                    </a>
-                    <a href="https://www.youtube.com/@eLDeSiempreOfficial" target="_blank" title="YouTube">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    </a>
-                    <a href="https://www.twitch.tv/eldesiempre" target="_blank" title="Twitch">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
-                    </a>
-                    <a href="https://www.tiktok.com/@eldesiempre_ttv" target="_blank" title="TikTok">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/daniel-j-201b1979" target="_blank" title="LinkedIn">
-                        <svg class="social-icon" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
-                    </a>
+                <div class="node" onclick="toggleNode('learn2')">
+                    <h3>Bash & Scripting en Linux</h3>
+                </div>
+                <div id="learn2" class="node-content">
+                    <p>Domina la línea de comandos y automatiza tareas en Linux.</p>
+                    <ul>
+                        <li><strong>Bash Scripting (Microsoft):</strong> <a href="https://learn.microsoft.com/es-es/training/paths/shell/" target="_blank">[Ir]</a></li>
+                        <li><strong>Comandos básicos de Linux:</strong> <a href="https://www.hostinger.es/tutoriales/comandos-de-linux" target="_blank">[Ir]</a></li>
+                    </ul>
                 </div>
 
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-                    <div style="flex: 1; min-width: 250px; border: 1px solid var(--border); padding: 20px; background: #000; text-align: center;">
-                        <h3 style="color: #0070ba; margin-bottom: 15px;">PayPal</h3>
-                        <p style="font-size: 0.85rem; margin-bottom: 15px;">La forma más rápida y segura. Puedes usar tarjeta sin tener cuenta.</p>
-                        <a href="https://www.paypal.biz/ldesiem" target="_blank" class="btn-primary" style="text-decoration: none; display: inline-block;">[ Donar con PayPal ]</a>
-                    </div>
-
-                    <div style="flex: 1; min-width: 250px; border: 1px solid var(--border); padding: 20px; background: #000; text-align: center;">
-                        <h3 style="color: var(--gold); margin-bottom: 15px;">Criptomonedas</h3>
-                        <p style="font-size: 0.85rem; margin-bottom: 15px;">Haz clic en la dirección para copiarla.</p>
-                        
-                        <div id="crypto-list">
-                            <div class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')">
-                                <span class="crypto-label">BTC</span>
-                                <span class="crypto-address">bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320</span>
-                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                            </div>
-                            <div class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')">
-                                <span class="crypto-label">ETH</span>
-                                <span class="crypto-address">0x671233AE15A16ff6424e831504CB6C749345B08D</span>
-                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                            </div>
-                            <div class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')">
-                                <span class="crypto-label">SOL</span>
-                                <span class="crypto-address">7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx</span>
-                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                            </div>
-                        </div>
-                    </div>
+                <div class="node" onclick="toggleNode('learn3')">
+                    <h3>Redes y Protocolos</h3>
+                </div>
+                <div id="learn3" class="node-content">
+                    <p>Entiende cómo se comunican los equipos y cómo atacar/defender redes.</p>
+                    <ul>
+                        <li><strong>Cisco Networking Basics:</strong> <a href="https://www.netacad.com/es/courses/networking-basics" target="_blank">[Ir]</a></li>
+                        <li><strong>Wireshark para principiantes:</strong> <a href="https://www.wireshark.org/docs/wsug_html_chunked/" target="_blank">[Ir]</a></li>
+                    </ul>
                 </div>
 
-                <p style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: var(--text-main);">
-                    * Los pagos son procesados de forma externa. Esta web no guarda ni tiene acceso a tus datos bancarios.
-                </p>
+                <div class="node" onclick="toggleNode('learn4')">
+                    <h3>Seguridad Web</h3>
+                </div>
+                <div id="learn4" class="node-content">
+                    <p>Aprende a encontrar y explotar vulnerabilidades en aplicaciones web.</p>
+                    <ul>
+                        <li><strong>PortSwigger Web Security Academy (Gratis):</strong> <a href="https://portswigger.net/web-security" target="_blank">[Ir]</a></li>
+                        <li><strong>OWASP Top 10:</strong> <a href="https://owasp.org/www-project-top-ten/" target="_blank">[Ir]</a></li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -842,6 +766,17 @@
     </main>
 
     <footer>
+        <div class="support-footer">
+            <h3>☕ Apoya el Proyecto</h3>
+            <p>eLDeSiempre.es es un proyecto gratuito. Si te ha ayudado, puedes invitarme a un café para mantener los servidores y seguir creando contenido.</p>
+            <a href="https://www.paypal.biz/ldesiem" target="_blank" class="paypal-btn">Donar con PayPal</a>
+            <div class="crypto-list">
+                <div class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')">BTC</div>
+                <div class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')">ETH</div>
+                <div class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')">SOL</div>
+            </div>
+        </div>
+
         <div class="social-links">
             <a href="https://x.com/eLDeSiempre_TTV" target="_blank" title="X (Twitter)">
                 <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -869,17 +804,12 @@
         const API_URL = 'https://api.eldesiempre.es/api';
         let usuarioLogueado = null;
 
-        let bashState = {
-            currentPath: '~',
-            files: {
-                '~': ['notas.txt', 'flag.txt'],
-                '~/notas.txt': 'Recuerda revisar los archivos ocultos.',
-                '~/flag.txt': 'FLAG{3LD3S13MPR3_H4CK3R}'
-            }
-        };
+        function aceptarDisclaimer() {
+            document.getElementById('disclaimer-modal').style.display = 'none';
+        }
 
         function openTab(tabId) {
-            if ((tabId === 'recursos' || tabId === 'juegos' || tabId === 'perfil') && !usuarioLogueado) {
+            if ((tabId === 'recursos' || tabId === 'aprender' || tabId === 'perfil') && !usuarioLogueado) {
                 alert("Debes iniciar sesión para acceder a esta sección.");
                 openTab('login');
                 return;
@@ -946,7 +876,7 @@
                 
                 document.getElementById('nav-login-btn').style.display = 'none';
                 document.getElementById('nav-recursos-btn').style.display = 'block';
-                document.getElementById('nav-juegos-btn').style.display = 'block';
+                document.getElementById('nav-aprender-btn').style.display = 'block';
                 document.getElementById('nav-perfil-btn').style.display = 'block';
                 document.getElementById('nav-logout-btn').style.display = 'block';
                 
@@ -1034,110 +964,46 @@
             } catch (error) { alert('Error de conexión.'); }
         });
 
-        function generarPassword() {
-            const longitud = parseInt(document.getElementById('slider-longitud').value);
-            const useMayus = document.getElementById('chk-mayus').checked;
-            const useMinus = document.getElementById('chk-minus').checked;
-            const useNums = document.getElementById('chk-nums').checked;
-            const useSymbols = document.getElementById('chk-symbols').checked;
-
-            if (!useMayus && !useMinus && !useNums && !useSymbols) {
-                alert("Selecciona al menos un tipo de carácter.");
+        function generarDork() {
+            const dominio = document.getElementById('dork-input').value.trim();
+            const tipo = document.getElementById('dork-type').value;
+            const resultado = document.getElementById('dork-result');
+            
+            if (!dominio) {
+                resultado.innerText = "Introduce un dominio válido.";
                 return;
             }
-
-            let charset = "";
-            if (useMayus) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            if (useMinus) charset += "abcdefghijklmnopqrstuvwxyz";
-            if (useNums) charset += "0123456789";
-            if (useSymbols) charset += "!@#$%^&*()_+{}[]";
-
-            let password = "";
-            const valoresAleatorios = new Uint32Array(longitud);
-            window.crypto.getRandomValues(valoresAleatorios);
             
-            for (let i = 0; i < longitud; i++) {
-                password += charset[valoresAleatorios[i] % charset.length];
-            }
-            document.getElementById('resultado-password').innerText = password;
+            const query = `site:${dominio} filetype:${tipo}`;
+            const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            
+            resultado.innerHTML = `<a href="${url}" target="_blank" style="color: var(--gold); text-decoration: underline;">🔍 Buscar: ${query}</a>`;
         }
 
-        function analizarHash() {
-            const hash = document.getElementById('input-hash').value.trim();
-            const resultadoDiv = document.getElementById('resultado-hash');
-            if (!hash) {
-                resultadoDiv.innerText = "Por favor, introduce un hash.";
-                return;
-            }
-            let tipo = "Desconocido";
-            if (/^[a-f0-9]{32}$/i.test(hash)) tipo = "MD5";
-            else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = "SHA-1";
-            else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = "SHA-256";
-            else if (/^[a-f0-9]{128}$/i.test(hash)) tipo = "SHA-512";
-            else if (/^\$2[ayb]\$.{56}$/.test(hash)) tipo = "bcrypt";
+        document.getElementById('exif-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const resultado = document.getElementById('exif-result');
+            if (!file) return;
+
+            resultado.innerHTML = "Analizando metadatos...";
             
-            resultadoDiv.innerHTML = `Posible tipo: <span style="color:var(--gold)">${tipo}</span>`;
-        }
-
-        function ejecutarPython() {
-            const input = document.getElementById('python-input').value.trim();
-            const outputDiv = document.getElementById('python-output');
-            const terminal = document.getElementById('python-terminal');
-            
-            if (input === '') return;
-
-            terminal.innerHTML += `<div class="output">&gt;&gt;&gt; ${input}</div>`;
-
-            if (input === 'print("HACKED")' || input === "print('HACKED')") {
-                terminal.innerHTML += `<div class="output" style="color:var(--gold)">HACKED</div>`;
-                terminal.innerHTML += `<div class="output" style="color:green">¡Reto completado! Has aprendido a usar print().</div>`;
-            } else if (input.startsWith('print(')) {
-                const match = input.match(/print\(['"](.*)['"]\)/);
-                if (match) {
-                    terminal.innerHTML += `<div class="output">${match[1]}</div>`;
-                    terminal.innerHTML += `<div class="output" style="color:red">Casi... pero no es la palabra exacta. Intenta de nuevo.</div>`;
-                } else {
-                    terminal.innerHTML += `<div class="output" style="color:red">Error de sintaxis. Usa print("texto").</div>`;
+            EXIF.getData(file, function() {
+                const allTags = EXIF.getAllTags(this);
+                if (Object.keys(allTags).length === 0) {
+                    resultado.innerHTML = "No se encontraron metadatos EXIF en esta imagen.";
+                    return;
                 }
-            } else {
-                terminal.innerHTML += `<div class="output" style="color:red">Comando no reconocido. Usa print().</div>`;
-            }
-            
-            document.getElementById('python-input').value = '';
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function ejecutarBash() {
-            const input = document.getElementById('bash-input').value.trim();
-            const terminal = document.getElementById('bash-terminal');
-            
-            if (input === '') return;
-
-            terminal.innerHTML += `<div class="output">root@eldesiempre:${bashState.currentPath}# ${input}</div>`;
-
-            if (input === 'ls') {
-                const files = bashState.files[bashState.currentPath] || [];
-                terminal.innerHTML += `<div class="output">${files.join('    ')}</div>`;
-            } else if (input.startsWith('cat ')) {
-                const file = input.split(' ')[1];
-                const fullPath = bashState.currentPath === '~' ? `~/${file}` : `${bashState.currentPath}/${file}`;
-                if (bashState.files[fullPath]) {
-                    terminal.innerHTML += `<div class="output" style="color:var(--gold)">${bashState.files[fullPath]}</div>`;
-                    if (fullPath === '~/flag.txt') {
-                        terminal.innerHTML += `<div class="output" style="color:green">¡Felicidades! Has encontrado la flag.</div>`;
+                
+                let html = "<ul style='list-style: none; padding-left: 0;'>";
+                for (let tag in allTags) {
+                    if (allTags.hasOwnProperty(tag) && allTags[tag] !== "" && tag !== "MakerNote") {
+                        html += `<li style="margin-bottom: 5px;"><strong style="color: var(--gold);">${tag}:</strong> ${allTags[tag]}</li>`;
                     }
-                } else {
-                    terminal.innerHTML += `<div class="output" style="color:red">cat: ${file}: No such file or directory</div>`;
                 }
-            } else if (input === 'clear') {
-                terminal.innerHTML = `<div class="output">root@eldesiempre:~#</div>`;
-            } else {
-                terminal.innerHTML += `<div class="output" style="color:red">bash: ${input}: command not found</div>`;
-            }
-            
-            document.getElementById('bash-input').value = '';
-            terminal.scrollTop = terminal.scrollHeight;
-        }
+                html += "</ul>";
+                resultado.innerHTML = html;
+            });
+        });
 
         comprobarSesion();
     </script>
