@@ -236,6 +236,26 @@
         .card:hover { border-color: var(--gold); transform: translateY(-2px); }
         .card h3 { margin-bottom: 8px; }
         .card p { font-size: 0.9rem; color: var(--text-main); margin-bottom: 15px; flex-grow: 1; }
+        
+        .tool-input {
+            width: 100%; 
+            padding: 10px; 
+            background: #000; 
+            border: 1px solid var(--border); 
+            color: var(--gold); 
+            margin-bottom: 10px;
+            font-family: 'Fira Code', monospace;
+        }
+        .tool-input:focus { outline: none; border-color: var(--gold); }
+        
+        .tool-result {
+            margin-top: 15px; 
+            font-size: 1.1rem; 
+            color: var(--gold); 
+            word-break: break-all; 
+            text-align: center;
+            min-height: 30px;
+        }
 
         .diagram { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
         .node {
@@ -409,25 +429,28 @@
 
         <section id="herramientas" class="tab-content">
             <h2>Laboratorio de Herramientas</h2>
-            <p>Utilidades directas para auditorías y hacking ético. Algunas están disponibles para todos, otras requieren registro.</p>
+            <p>Utilidades directas para auditorías y hacking ético. Todas las herramientas se ejecutan de forma segura.</p>
             
             <div class="grid-cards">
                 <div class="card">
                     <h3>OSINT Framework</h3>
                     <p>Accede directamente al mapa interactivo de herramientas de recolección de información.</p>
-                    <button class="btn-primary" style="margin-top: 15px; font-size: 12px; padding: 8px 12px;" onclick="toggleOSINT()">[ Abrir Framework ]</button>
+                    <button class="btn-primary" onclick="toggleOSINT()">[ Abrir Framework ]</button>
                 </div>
+                
                 <div class="card">
                     <h3>Generador de Contraseñas</h3>
-                    <p>Próximamente: un generador local seguro y offline para tus cuentas.</p>
+                    <p>Genera contraseñas criptográficamente seguras de 16 caracteres en tu propio navegador.</p>
+                    <button class="btn-primary" onclick="generarPassword()">[ Generar Contraseña ]</button>
+                    <div id="resultado-password" class="tool-result"></div>
                 </div>
+                
                 <div class="card">
                     <h3>Analizador de Hash</h3>
-                    <p>Próximamente: identifica el tipo de hash y busca su contraseña en bases de datos públicas.</p>
-                </div>
-                <div class="card">
-                    <h3>Buscador de Filtraciones</h3>
-                    <p>Próximamente: comprueba si tu correo ha sido comprometido en alguna brecha.</p>
+                    <p>Identifica el tipo de hash (MD5, SHA-1, SHA-256, SHA-512, bcrypt) pegando el texto.</p>
+                    <input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash aquí...">
+                    <button class="btn-primary" onclick="analizarHash()">[ Analizar ]</button>
+                    <div id="resultado-hash" class="tool-result" style="font-weight: bold;"></div>
                 </div>
             </div>
 
@@ -814,6 +837,35 @@
                 }
             } catch (error) { alert('Error de conexión.'); }
         });
+
+        function generarPassword() {
+            const longitud = 16;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]";
+            let password = "";
+            const valoresAleatorios = new Uint32Array(longitud);
+            window.crypto.getRandomValues(valoresAleatorios);
+            for (let i = 0; i < longitud; i++) {
+                password += charset[valoresAleatorios[i] % charset.length];
+            }
+            document.getElementById('resultado-password').innerText = password;
+        }
+
+        function analizarHash() {
+            const hash = document.getElementById('input-hash').value.trim();
+            const resultadoDiv = document.getElementById('resultado-hash');
+            if (!hash) {
+                resultadoDiv.innerText = "Por favor, introduce un hash.";
+                return;
+            }
+            let tipo = "Desconocido";
+            if (/^[a-f0-9]{32}$/i.test(hash)) tipo = "MD5";
+            else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = "SHA-1";
+            else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = "SHA-256";
+            else if (/^[a-f0-9]{128}$/i.test(hash)) tipo = "SHA-512";
+            else if (/^\$2[ayb]\$.{56}$/.test(hash)) tipo = "bcrypt";
+            
+            resultadoDiv.innerHTML = `Posible tipo: <span style="color:var(--gold)">${tipo}</span>`;
+        }
 
         comprobarSesion();
     </script>
