@@ -430,10 +430,46 @@
         }
         .auth-form input:focus { outline: none; border-color: var(--gold); }
 
-        .profile-card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; text-align: center; border-left: 4px solid var(--gold); transition: border-color 0.3s; }
+        .profile-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            padding: 30px; 
+            border-left: 4px solid var(--gold); 
+            transition: border-color 0.3s; 
+        }
         .profile-card:hover { border-color: var(--gold); }
-        .profile-card h2 { border: none; justify-content: center; }
+        .profile-card h2 { border: none; justify-content: center; text-align: center; }
         .profile-card p { font-size: 1.1rem; color: var(--text-bright); }
+        
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .profile-form label {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .profile-form input, .profile-form textarea {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--text-bright);
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .profile-form input:focus, .profile-form textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .profile-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
 
         footer {
             text-align: center;
@@ -739,14 +775,39 @@
         </section>
 
         <section id="perfil" class="tab-content">
-            <h2>Mi Perfil</h2>
+            <h2>Mi Perfil Profesional</h2>
             <div class="profile-card">
                 <h2 style="color: var(--gold);">@<span id="perfil-usuario">usuario</span></h2>
                 <p>Bienvenido de nuevo, <strong id="perfil-nombre">Nombre</strong>.</p>
-                <br>
-                <p style="font-size: 0.9rem; color: var(--text-main);">Nivel de acceso: <span style="color:var(--gold)">Miembro Verificado</span></p>
-                <p style="font-size: 0.9rem; color: var(--text-main);">Estado de la cuenta: <span style="color:green;">Activa</span></p>
                 
+                <form class="profile-form" id="form-perfil" style="margin-top: 30px; text-align: left;">
+                    <div>
+                        <label for="perfil-bio">Biografía / Sobre mí</label>
+                        <textarea id="perfil-bio" placeholder="Cuéntanos tu experiencia, intereses o especialidad en ciberseguridad..."></textarea>
+                    </div>
+                    <div>
+                        <label for="perfil-habilidades">Habilidades (separadas por comas)</label>
+                        <input type="text" id="perfil-habilidades" placeholder="Pentesting Web, OSINT, Análisis de Malware...">
+                    </div>
+                    <div>
+                        <label for="perfil-htb">Perfil de HackTheBox (URL)</label>
+                        <input type="url" id="perfil-htb" placeholder="https://app.hackthebox.com/profile/...">
+                    </div>
+                    <div>
+                        <label for="perfil-thm">Perfil de TryHackMe (URL)</label>
+                        <input type="url" id="perfil-thm" placeholder="https://tryhackme.com/p/...">
+                    </div>
+                    <div>
+                        <label for="perfil-github">Perfil de GitHub (URL)</label>
+                        <input type="url" id="perfil-github" placeholder="https://github.com/...">
+                    </div>
+                    <div>
+                        <label for="perfil-linkedin">Perfil de LinkedIn (URL)</label>
+                        <input type="url" id="perfil-linkedin" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">[ Guardar Cambios ]</button>
+                </form>
+
                 <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
                     <p style="font-size: 0.9rem; margin-bottom: 15px;">¿Quieres hablar con otros hackers, resolver dudas y compartir recursos?</p>
                     <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord">[ Unirse al Discord de la Comunidad ]</a>
@@ -966,6 +1027,33 @@
             } catch (error) { mostrarToast('Error de conexión.', 'error'); }
         });
 
+        document.getElementById('form-perfil').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const perfilData = {
+                bio: document.getElementById('perfil-bio').value,
+                habilidades: document.getElementById('perfil-habilidades').value,
+                htb: document.getElementById('perfil-htb').value,
+                thm: document.getElementById('perfil-thm').value,
+                github: document.getElementById('perfil-github').value,
+                linkedin: document.getElementById('perfil-linkedin').value
+            };
+            localStorage.setItem('eldesiempre_perfil', JSON.stringify(perfilData));
+            mostrarToast('Perfil actualizado correctamente.', 'success');
+        });
+
+        function cargarPerfil() {
+            const perfilGuardado = localStorage.getItem('eldesiempre_perfil');
+            if (perfilGuardado) {
+                const perfil = JSON.parse(perfilGuardado);
+                document.getElementById('perfil-bio').value = perfil.bio || '';
+                document.getElementById('perfil-habilidades').value = perfil.habilidades || '';
+                document.getElementById('perfil-htb').value = perfil.htb || '';
+                document.getElementById('perfil-thm').value = perfil.thm || '';
+                document.getElementById('perfil-github').value = perfil.github || '';
+                document.getElementById('perfil-linkedin').value = perfil.linkedin || '';
+            }
+        }
+
         function generarDork() {
             const dominio = document.getElementById('dork-input').value.trim();
             const tipo = document.getElementById('dork-type').value;
@@ -1008,6 +1096,7 @@
         });
 
         comprobarSesion();
+        cargarPerfil();
     </script>
 </body>
 </html>
