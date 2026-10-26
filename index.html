@@ -444,13 +444,6 @@
                     <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
                     <input type="password" id="login-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
-                    
-                    <div style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
-                        <span style="color: #666;">o</span>
-                    </div>
-                    
-                    <button type="button" class="btn-secondary" onclick="solicitarMagicLink()" style="width: 100%; margin: 0 0 20px 0;">Entrar sin contraseña</button>
-                    
                     <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
                 </form>
 
@@ -694,28 +687,6 @@
             window.location.reload(); 
         }
 
-        function solicitarMagicLink() {
-            const correo = document.getElementById('login-correo').value;
-            if (!correo) {
-                mostrarToast("Introduce tu correo electrónico primero.", "error");
-                return;
-            }
-            fetch(`${API_URL}/magic_link.php`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correo: correo })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarToast(result.message, 'success');
-                } else {
-                    mostrarToast('Error: ' + result.message, 'error');
-                }
-            })
-            .catch(() => mostrarToast('Error de conexión.', 'error'));
-        }
-
         document.getElementById('form-registro').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
@@ -824,9 +795,6 @@
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('verificado')) {
                 mostrarToast('¡Cuenta verificada con éxito! Ya tienes la sesión iniciada.', 'success');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } else if (urlParams.has('magic_login')) {
-                mostrarToast('¡Bienvenido! Has iniciado sesión mediante enlace mágico.', 'success');
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         };
