@@ -292,6 +292,32 @@
             font-weight: bold;
         }
 
+        .game-box {
+            background: #000;
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .game-box h3 { color: var(--gold); margin-bottom: 15px; }
+        .game-box p { font-size: 0.9rem; }
+        
+        .phishing-option {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #111;
+            color: var(--text-bright);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Fira Code', monospace;
+            transition: 0.3s;
+            word-break: break-all;
+        }
+        .phishing-option:hover { border-color: var(--gold); background: #1a1a1a; }
+
         .crypto-item {
             display: flex;
             justify-content: space-between;
@@ -482,6 +508,7 @@
             <button class="nav-btn btn-gold" onclick="openTab('premium')">[ Support Me ]</button>
             
             <button class="nav-btn" id="nav-recursos-btn" style="display:none;" onclick="openTab('recursos')">Recursos</button>
+            <button class="nav-btn" id="nav-juegos-btn" style="display:none;" onclick="openTab('juegos')">Juegos</button>
             <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="openTab('perfil')">Perfil</button>
             
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
@@ -652,6 +679,35 @@
             </div>
         </section>
 
+        <section id="juegos" class="tab-content">
+            <h2>Minijuegos de Hacking</h2>
+            <p>Pon a prueba tus habilidades con estos retos rápidos. Solo para miembros.</p>
+            
+            <div class="grid-cards">
+                <div class="card">
+                    <h3>Reto 1: Descifrador César</h3>
+                    <p>El cifrado César desplaza las letras del alfabeto. Adivina la palabra oculta ajustando el desplazamiento.</p>
+                    <div class="game-box">
+                        <p>Palabra cifrada: <strong style="color: var(--gold); font-size: 1.2rem;" id="cesar-word">KHOOR</strong></p>
+                        <input type="range" id="cesar-slider" min="1" max="25" value="1" oninput="descifrarCesar(this.value)" style="width: 100%; accent-color: var(--gold); margin: 15px 0;">
+                        <p>Desplazamiento: <span id="cesar-valor">1</span></p>
+                        <p>Resultado: <strong style="color: var(--gold); font-size: 1.2rem;" id="cesar-result">KHOOR</strong></p>
+                        <button class="btn-primary" onclick="alert('¡Correcto! La palabra era HELLO')">[ Comprobar HELLO ]</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Reto 2: Cazador de Phishing</h3>
+                    <p>¿Cuál de estas dos URLs es la legítima de tu banco (BancoFalso)?</p>
+                    <div class="game-box">
+                        <button class="phishing-option" onclick="verificarPhishing(false)">https://www.bancofalso.com.login-seguro.xyz</button>
+                        <button class="phishing-option" onclick="verificarPhishing(true)">https://www.bancofalso.com</button>
+                        <div id="phishing-result" style="margin-top: 15px; font-weight: bold;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="premium" class="tab-content">
             <h2>Support Me / Apoya el Proyecto</h2>
             
@@ -806,7 +862,7 @@
         let usuarioLogueado = null;
 
         function openTab(tabId) {
-            if ((tabId === 'recursos' || tabId === 'perfil') && !usuarioLogueado) {
+            if ((tabId === 'recursos' || tabId === 'juegos' || tabId === 'perfil') && !usuarioLogueado) {
                 alert("Debes iniciar sesión para acceder a esta sección.");
                 openTab('login');
                 return;
@@ -873,6 +929,7 @@
                 
                 document.getElementById('nav-login-btn').style.display = 'none';
                 document.getElementById('nav-recursos-btn').style.display = 'block';
+                document.getElementById('nav-juegos-btn').style.display = 'block';
                 document.getElementById('nav-perfil-btn').style.display = 'block';
                 document.getElementById('nav-logout-btn').style.display = 'block';
                 
@@ -1003,6 +1060,30 @@
             else if (/^\$2[ayb]\$.{56}$/.test(hash)) tipo = "bcrypt";
             
             resultadoDiv.innerHTML = `Posible tipo: <span style="color:var(--gold)">${tipo}</span>`;
+        }
+
+        function descifrarCesar(desplazamiento) {
+            const cifrado = "KHOOR";
+            let resultado = "";
+            for (let i = 0; i < cifrado.length; i++) {
+                let codigo = cifrado.charCodeAt(i);
+                if (codigo >= 65 && codigo <= 90) {
+                    resultado += String.fromCharCode(((codigo - 65 - desplazamiento + 26) % 26) + 65);
+                } else {
+                    resultado += cifrado[i];
+                }
+            }
+            document.getElementById('cesar-valor').innerText = desplazamiento;
+            document.getElementById('cesar-result').innerText = resultado;
+        }
+
+        function verificarPhishing(esCorrecto) {
+            const resultadoDiv = document.getElementById('phishing-result');
+            if (esCorrecto) {
+                resultadoDiv.innerHTML = '<span style="color:green">¡Correcto! Esa es la URL legítima.</span>';
+            } else {
+                resultadoDiv.innerHTML = '<span style="color:red">¡Incorrecto! Esa URL es un intento de phishing.</span>';
+            }
         }
 
         comprobarSesion();
