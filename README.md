@@ -21,7 +21,7 @@ La estética visual está inspirada en una **Terminal Hacker / Mr. Robot**, con 
 
 ## 📥 Descarga la App
 
-Proimamente...
+Próximamente...
 
 ## 🔗 Enlaces
 
