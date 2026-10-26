@@ -540,7 +540,6 @@
             <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
             
             <button class="nav-btn" id="nav-recursos-btn" style="display:none;" onclick="openTab('recursos')">Recursos</button>
-            <button class="nav-btn" id="nav-aprender-btn" style="display:none;" onclick="openTab('aprender')">Aprender</button>
             <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="openTab('perfil')">Perfil</button>
             
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
@@ -607,7 +606,7 @@
         </section>
 
         <section id="recursos" class="tab-content">
-            <h2>Biblioteca de Recursos (Miembros)</h2>
+            <h2>Árbol de Recursos (Miembros)</h2>
             <p>Haz clic en cada categoría para desplegar los enlaces. Esta guía se actualiza constantemente con lo mejor del sector.</p>
             
             <div class="diagram">
@@ -704,57 +703,6 @@
                         <li><strong>Hackplayers:</strong> La comunidad de seguridad informática más importante de España. <a href="https://www.hackplayers.com/" target="_blank">[Ir]</a></li>
                         <li><strong>DragonJAR:</strong> Foro histórico de seguridad informática en español. <a href="https://www.dragonjar.org/" target="_blank">[Ir]</a></li>
                         <li><strong>Incibe Noticias:</strong> Alertas de seguridad y noticias oficiales del gobierno. <a href="https://www.incibe.es/incibe/sala-de-prensa" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="aprender" class="tab-content">
-            <h2>Ruta de Aprendizaje</h2>
-            <p>Selecciona un área para ver los recursos recomendados y empezar a aprender.</p>
-            
-            <div class="diagram">
-                <div class="node" onclick="toggleNode('learn1')">
-                    <h3>Python para Hacking</h3>
-                </div>
-                <div id="learn1" class="node-content">
-                    <p>Aprende a programar scripts y herramientas personalizadas.</p>
-                    <ul>
-                        <li><strong>Curso de Python (Microsoft):</strong> <a href="https://learn.microsoft.com/es-es/training/paths/get-started-with-python-fundamentals/" target="_blank">[Ir]</a></li>
-                        <li><strong>Python para Hackers (HackTricks):</strong> <a href="https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/python" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-                
-                <div class="node" onclick="toggleNode('learn2')">
-                    <h3>Bash & Scripting en Linux</h3>
-                </div>
-                <div id="learn2" class="node-content">
-                    <p>Domina la línea de comandos y automatiza tareas en Linux.</p>
-                    <ul>
-                        <li><strong>Bash Scripting (Microsoft):</strong> <a href="https://learn.microsoft.com/es-es/training/paths/shell/" target="_blank">[Ir]</a></li>
-                        <li><strong>Comandos básicos de Linux:</strong> <a href="https://www.hostinger.es/tutoriales/comandos-de-linux" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" onclick="toggleNode('learn3')">
-                    <h3>Redes y Protocolos</h3>
-                </div>
-                <div id="learn3" class="node-content">
-                    <p>Entiende cómo se comunican los equipos y cómo atacar/defender redes.</p>
-                    <ul>
-                        <li><strong>Cisco Networking Basics:</strong> <a href="https://www.netacad.com/es/courses/networking-basics" target="_blank">[Ir]</a></li>
-                        <li><strong>Wireshark para principiantes:</strong> <a href="https://www.wireshark.org/docs/wsug_html_chunked/" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" onclick="toggleNode('learn4')">
-                    <h3>Seguridad Web</h3>
-                </div>
-                <div id="learn4" class="node-content">
-                    <p>Aprende a encontrar y explotar vulnerabilidades en aplicaciones web.</p>
-                    <ul>
-                        <li><strong>PortSwigger Web Security Academy (Gratis):</strong> <a href="https://portswigger.net/web-security" target="_blank">[Ir]</a></li>
-                        <li><strong>OWASP Top 10:</strong> <a href="https://owasp.org/www-project-top-ten/" target="_blank">[Ir]</a></li>
                     </ul>
                 </div>
             </div>
@@ -864,7 +812,7 @@
         }
 
         function openTab(tabId) {
-            if ((tabId === 'recursos' || tabId === 'aprender' || tabId === 'perfil') && !usuarioLogueado) {
+            if ((tabId === 'recursos' || tabId === 'perfil') && !usuarioLogueado) {
                 mostrarToast("Debes iniciar sesión para acceder a esta sección.", "error");
                 openTab('login');
                 return;
@@ -931,7 +879,6 @@
                 
                 document.getElementById('nav-login-btn').style.display = 'none';
                 document.getElementById('nav-recursos-btn').style.display = 'block';
-                document.getElementById('nav-aprender-btn').style.display = 'block';
                 document.getElementById('nav-perfil-btn').style.display = 'block';
                 document.getElementById('nav-logout-btn').style.display = 'block';
                 
