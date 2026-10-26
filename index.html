@@ -27,6 +27,9 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left:   env(safe-area-inset-left, 0px);
             --safe-right:  env(safe-area-inset-right, 0px);
+            
+            --status-offline: #ff3333;
+            --status-online:  #22c55e;
         }
 
         * {
@@ -51,7 +54,6 @@
             position: relative;
         }
 
-        /* NUEVO FONDO: REJILLA CYBERPUNK CON RESPLANDOR */
         #cyber-grid {
             position: fixed;
             top: 0; left: 0;
@@ -67,7 +69,6 @@
             -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
         }
 
-        /* RESPLANDOR EN MOVIMIENTO LENTO */
         #cyber-glow {
             position: fixed;
             top: 50%; left: 50%;
@@ -85,7 +86,6 @@
             100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
         }
 
-        /* SCANLINES MUY SUTILES (MANTENIDAS PARA EL LOOK CRT) */
         body::before {
             content: '';
             position: fixed;
@@ -103,7 +103,6 @@
             mix-blend-mode: multiply;
         }
         
-        /* VIÑETA MUY SUTIL PARA CENTRAR LA ATENCIÓN */
         body::after {
             content: '';
             position: fixed;
@@ -173,14 +172,33 @@
 
         .hud-bar { display: flex; align-items: center; gap: 15px; font-size: 11px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
         .hud-status { display: flex; align-items: center; gap: 6px; font-weight: bold; }
-        .hud-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
-        .hud-dot.offline { background: var(--text-main); box-shadow: 0 0 5px var(--text-main); }
-        .hud-dot.online { background: var(--logo-primary); box-shadow: 0 0 10px var(--logo-primary); animation: pulse-dot 1.8s ease-in-out infinite; }
-        @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+        
+        .hud-dot { 
+            width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; 
+        }
+        
+        .hud-dot.offline { 
+            background: var(--status-offline); 
+            box-shadow: 0 0 6px var(--status-offline); 
+        }
+        
+        .hud-dot.online { 
+            background: var(--status-online); 
+            box-shadow: 0 0 10px var(--status-online); 
+            animation: pulse-dot 1.8s ease-in-out infinite; 
+        }
+        
+        @keyframes pulse-dot { 
+            0%, 100% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.5; transform: scale(0.85); } 
+        }
+        
         .hud-time { color: var(--accent); }
 
-        nav { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; flex: 1; }
+        nav { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; flex: 1; align-items: center; }
 
+        .nav-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        
         .nav-btn {
             background: none; border: none; color: var(--text-main); font-size: 13px;
             cursor: pointer; transition: all 0.2s ease; padding: 5px 0;
@@ -194,8 +212,20 @@
             background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
         }
         .nav-btn:hover::after, .nav-btn.active::after { transform: scaleX(1); box-shadow: 0 0 10px var(--accent); }
+        
+        .nav-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 5px;
+            display: none;
+        }
+
         .btn-login { color: var(--accent); }
         .btn-login:hover { text-shadow: 0 0 10px var(--accent); }
+
+        .btn-logout { color: var(--status-offline); }
+        .btn-logout:hover { text-shadow: 0 0 10px var(--status-offline); }
 
         .container { padding: 40px 5%; flex: 1; max-width: 1000px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
 
@@ -248,19 +278,9 @@
         .btn-secondary { border-color: var(--text-main); }
         .btn-secondary:hover { border-color: var(--text-bright); color: var(--bg-color); background: var(--text-bright); box-shadow: 0 0 25px rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
 
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card {
-            background: var(--card-bg); padding: 20px; border: 1px solid var(--border);
-            border-left: 2px solid var(--accent); transition: all 0.3s ease; position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
-        }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
-        .card:hover::before { transform: scaleX(1); }
-        .card:hover { border-color: var(--accent); border-left-width: 4px; transform: translateY(-5px); box-shadow: 0 10px 20px color-mix(in srgb, var(--accent) 10%, transparent); }
-        .card h3 { color: var(--accent); }
-        .card p { flex: 1; font-size: 0.9rem; }
-        .card .tool-list { margin-top: 10px; font-size: 0.85rem; color: var(--text-main); }
-        .card .tool-list li { margin-bottom: 5px; }
+        .tool-list { margin-top: 10px; font-size: 0.9rem; color: var(--text-main); }
+        .tool-list li { margin-bottom: 8px; }
+        .tool-list li strong { color: var(--accent); }
 
         .diagram { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
         .node { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; cursor: pointer; transition: all 0.3s ease; border-bottom: none; }
@@ -269,13 +289,12 @@
         .node h3 { font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 10px; }
         .node h3::before { content: "[>]"; color: var(--accent); transition: transform 0.3s ease; display: inline-block; }
         .node.open h3::before { transform: rotate(90deg); }
+        
         .node-content {
             background: #000; border: 1px solid var(--border); border-top: none; padding: 0 15px;
             max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out; font-size: 0.9rem;
         }
-        .node-content.open { max-height: 1500px; padding: 15px; margin-bottom: 10px; border-bottom: 1px solid var(--border); border-left: 2px solid var(--accent); }
-        .node-content ul { margin-top: 10px; }
-        .node-content li { margin-bottom: 12px; }
+        .node-content.open { max-height: 2000px; padding: 15px; margin-bottom: 10px; border-bottom: 1px solid var(--border); border-left: 2px solid var(--accent); }
 
         .premium-box {
             border: 1px solid var(--accent); padding: 30px; margin-top: 20px;
@@ -312,6 +331,31 @@
 
         .auth-form input { padding: 12px; background: #000; border: 1px solid var(--border); color: var(--text-bright); font-size: 14px; transition: 0.3s; }
         .auth-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 20%, transparent); background: #050505; }
+
+        .user-area-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px dashed var(--border-dashed);
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .user-area-nav .nav-btn {
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+        .user-area-nav .nav-btn.active {
+            border-color: var(--accent);
+            background: color-mix(in srgb, var(--accent) 10%, #000);
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent);
+        }
+        .user-area-nav .nav-btn:hover:not(.active) {
+            border-color: var(--border);
+            color: var(--text-bright);
+        }
 
         .profile-card {
             background: var(--card-bg);
@@ -500,8 +544,8 @@
             transition: 0.2s;
         }
         .profile-edit-skill button:hover {
-            color: #ff5555;
-            text-shadow: 0 0 8px #ff5555;
+            color: var(--status-offline);
+            text-shadow: 0 0 8px var(--status-offline);
         }
 
         .profile-add-skill {
@@ -572,6 +616,7 @@
             .auth-form { max-width: 100%; }
             .hud-bar { display: none; }
             .profile-header { flex-direction: column; align-items: flex-start; }
+            .user-area-nav { justify-content: center; }
         }
     </style>
 </head>
@@ -581,7 +626,7 @@
     <div id="cyber-glow"></div>
 
     <div id="boot-screen">
-        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.1...</div>
+        <div class="boot-line boot-ok">[ OK ] Inicializando kernel eLDeSiempre v3.4...</div>
         <div class="boot-line boot-ok">[ OK ] Montando /dev/secure</div>
         <div class="boot-line boot-ok">[ OK ] Cargando módulos de red dorados</div>
         <div class="boot-line boot-ok">[ OK ] Conectando a api.eldesiempre.es...</div>
@@ -596,13 +641,23 @@
             <div class="logo-text" id="logo-type">root@eLDeSiempre:~#<span></span></div>
         </div>
         <nav>
-            <button class="nav-btn" onclick="openTab('aprender')">Academia</button>
-            <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
-            <button class="nav-btn" onclick="openTab('premium')">Premium</button>
-            <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
-            <button class="nav-btn" id="nav-chat-btn" style="display:none;" onclick="openTab('chat')">Chat</button>
-            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="openTab('perfil')">Perfil</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--logo-primary);" onclick="cerrarSesion()">Salir</button>
+            <div class="nav-group" id="nav-public">
+                <button class="nav-btn" onclick="openTab('aprender')">Academia</button>
+                <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
+                <button class="nav-btn" onclick="openTab('premium')">Premium</button>
+            </div>
+            
+            <div class="nav-divider" id="nav-divider"></div>
+
+            <div class="nav-group" id="nav-private" style="display: none;">
+                <button class="nav-btn" id="nav-perfil-btn" onclick="openTab('perfil')">Mi Perfil</button>
+                <button class="nav-btn" id="nav-chat-btn" onclick="openTab('chat')">Chat</button>
+                <button class="nav-btn btn-logout" id="nav-logout-btn" onclick="cerrarSesion()">Salir</button>
+            </div>
+
+            <div class="nav-group" id="nav-guest">
+                <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
+            </div>
         </nav>
         <div class="hud-bar">
             <div class="hud-status">
@@ -678,11 +733,13 @@
 
         <section id="herramientas" class="tab-content">
             <h2>Repertorio de Herramientas</h2>
-            <p>Arsenal de herramientas para auditorías y hacking ético. Selecciona una categoría para ver las herramientas disponibles.</p>
+            <p>Arsenal de herramientas para auditorías y hacking ético. Haz clic en cada categoría para desplegar las herramientas disponibles.</p>
             
-            <div class="grid-cards">
-                <div class="card">
+            <div class="diagram">
+                <div class="node" onclick="toggleNode('tool-red')">
                     <h3>Análisis de Red</h3>
+                </div>
+                <div id="tool-red" class="node-content">
                     <p>Herramientas para escanear puertos, auditar redes Wi-Fi y detectar intrusos en tu red local o remota.</p>
                     <ul class="tool-list">
                         <li><strong>Nmap:</strong> Escáner de puertos y descubrimiento de hosts. El estándar de facto para mapear redes.</li>
@@ -692,19 +749,23 @@
                     </ul>
                 </div>
 
-                <div class="card">
+                <div class="node" onclick="toggleNode('tool-osint')">
                     <h3>OSINT</h3>
+                </div>
+                <div id="tool-osint" class="node-content">
                     <p>Recopilación de información de fuentes abiertas. Búsqueda de identidades, correos, dominios y rastros digitales.</p>
                     <ul class="tool-list">
                         <li><strong>OSINT Framework:</strong> Directorio curado de recursos gratuitos para investigación digital.</li>
                         <li><strong>theHarvester:</strong> Recolecta correos, subdominios y nombres de empleados de una organización.</li>
                         <li><strong>Shodan:</strong> Motor de búsqueda de dispositivos conectados a Internet (cámaras, routers, servidores).</li>
                     </ul>
-                    <button class="btn-primary" style="margin-top: 15px; font-size: 12px; padding: 8px 12px;" onclick="toggleOSINT()">[ Abrir OSINT Framework ]</button>
+                    <button class="btn-primary" style="margin-top: 15px; font-size: 12px; padding: 8px 12px;" onclick="toggleOSINT(event)">[ Abrir OSINT Framework ]</button>
                 </div>
 
-                <div class="card">
+                <div class="node" onclick="toggleNode('tool-ctf')">
                     <h3>CTF y Retos</h3>
+                </div>
+                <div id="tool-ctf" class="node-content">
                     <p>Entornos de práctica (Capture The Flag) y wargames para poner a prueba tus habilidades de hacking ético.</p>
                     <ul class="tool-list">
                         <li><strong>OverTheWire - Bandit:</strong> Wargame para principiantes absolutos. Enseña comandos básicos de Linux, SSH, permisos y manejo de archivos a través de 34 niveles.</li>
@@ -713,8 +774,10 @@
                     </ul>
                 </div>
 
-                <div class="card">
+                <div class="node" onclick="toggleNode('tool-malware')">
                     <h3>Análisis de Malware</h3>
+                </div>
+                <div id="tool-malware" class="node-content">
                     <p>Herramientas para entender cómo funcionan los virus, troyanos y ransomware en un entorno controlado.</p>
                     <ul class="tool-list">
                         <li><strong>Ghidra:</strong> Suite de ingeniería inversa de la NSA. Descompila binarios para analizar su lógica.</li>
@@ -729,7 +792,7 @@
             <div id="osint-framework-container" style="display: none; margin-top: 30px; border: 1px solid var(--border); background: #000;">
                 <div style="padding: 15px; border-bottom: 1px dashed var(--border-dashed); display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="margin: 0; color: var(--accent);">[ OSINT Framework ]</h3>
-                    <button class="nav-btn" onclick="toggleOSINT()" style="color: var(--accent); border: 1px solid var(--accent); padding: 5px 10px;">[ Cerrar ]</button>
+                    <button class="nav-btn" onclick="toggleOSINT(event)" style="color: var(--accent); border: 1px solid var(--accent); padding: 5px 10px;">[ Cerrar ]</button>
                 </div>
                 <iframe 
                     src="https://osintframework.com/" 
@@ -778,11 +841,21 @@
         </section>
 
         <section id="perfil" class="tab-content">
+            <div class="user-area-nav">
+                <button class="nav-btn active" onclick="openTab('perfil')">[ Mi Perfil ]</button>
+                <button class="nav-btn" onclick="openTab('chat')">[ Sala de Chat ]</button>
+                <button class="nav-btn" onclick="openTab('inicio')">[ Volver al Inicio ]</button>
+            </div>
             <h2>Mi Perfil Profesional</h2>
             <div class="profile-card" id="profile-card"></div>
         </section>
 
         <section id="chat" class="tab-content">
+            <div class="user-area-nav">
+                <button class="nav-btn" onclick="openTab('perfil')">[ Mi Perfil ]</button>
+                <button class="nav-btn active" onclick="openTab('chat')">[ Sala de Chat ]</button>
+                <button class="nav-btn" onclick="openTab('inicio')">[ Volver al Inicio ]</button>
+            </div>
             <h2>Sala de Comunicaciones</h2>
             <div class="chat-container">
                 <div class="chat-messages" id="chat-messages"><div style="text-align:center; color:var(--text-main); font-size:12px;">Conectando al servidor...</div></div>
@@ -864,11 +937,30 @@
         })();
 
         function openTab(tabId) {
+            if ((tabId === 'perfil' || tabId === 'chat') && !usuarioLogueado) {
+                tabId = 'login';
+            }
+
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            
+            const targetTab = document.getElementById(tabId);
+            if (!targetTab) return;
+            
+            targetTab.classList.add('active');
+            
             const activeBtn = document.querySelector(`.nav-btn[onclick="openTab('${tabId}')"]`);
             if (activeBtn) activeBtn.classList.add('active');
+            
+            if (tabId === 'perfil' || tabId === 'chat') {
+                const userAreaBtns = document.querySelectorAll(`#${tabId} .user-area-nav .nav-btn`);
+                userAreaBtns.forEach(btn => {
+                    if (btn.getAttribute('onclick') === `openTab('${tabId}')`) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (tabId === 'perfil') {
@@ -878,19 +970,22 @@
 
         function toggleNode(nodeId) {
             const content = document.getElementById(nodeId);
-            const nodeHeader = content.previousElementSibling;
+            if (!content) return;
+            const nodeHeader = content.previousElementSibling; 
+            
             if (content.classList.contains('open')) {
                 content.classList.remove('open');
-                nodeHeader.classList.remove('open');
+                if (nodeHeader) nodeHeader.classList.remove('open');
             } else {
                 content.classList.add('open');
-                nodeHeader.classList.add('open');
+                if (nodeHeader) nodeHeader.classList.add('open');
             }
         }
 
-        function toggleOSINT() {
+        function toggleOSINT(event) {
+            if (event) event.stopPropagation();
             const container = document.getElementById('osint-framework-container');
-            if (container.style.display === 'none') {
+            if (container.style.display === 'none' || container.style.display === '') {
                 container.style.display = 'block';
                 container.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
@@ -1157,17 +1252,24 @@
             const sesionGuardada = localStorage.getItem('eldesiempre_user');
             const hudDot = document.getElementById('hud-dot');
             const hudText = document.getElementById('hud-status-text');
+            
+            const navPublic = document.getElementById('nav-public');
+            const navPrivate = document.getElementById('nav-private');
+            const navGuest = document.getElementById('nav-guest');
+            const navDivider = document.getElementById('nav-divider');
 
             if (sesionGuardada) {
                 usuarioLogueado = JSON.parse(sesionGuardada);
-                document.getElementById('nav-login-btn').style.display = 'none';
-                document.getElementById('nav-chat-btn').style.display = 'block';
-                document.getElementById('nav-perfil-btn').style.display = 'block';
-                document.getElementById('nav-logout-btn').style.display = 'block';
+                
+                navPublic.style.opacity = '0.6';
+                navPrivate.style.display = 'flex';
+                navGuest.style.display = 'none';
+                navDivider.style.display = 'block';
+
                 if (hudDot && hudText) {
                     hudDot.className = 'hud-dot online';
                     hudText.innerText = 'ONLINE';
-                    hudText.style.color = 'var(--logo-primary)';
+                    hudText.style.color = 'var(--status-online)';
                 }
                 let checkFirebase = setInterval(() => {
                     if (window.firebaseDB) {
@@ -1176,10 +1278,15 @@
                     }
                 }, 100);
             } else {
+                navPublic.style.opacity = '1';
+                navPrivate.style.display = 'none';
+                navGuest.style.display = 'flex';
+                navDivider.style.display = 'none';
+
                 if (hudDot && hudText) {
                     hudDot.className = 'hud-dot offline';
                     hudText.innerText = 'OFFLINE';
-                    hudText.style.color = 'var(--text-main)';
+                    hudText.style.color = 'var(--status-offline)';
                 }
             }
         }
