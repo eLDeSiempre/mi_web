@@ -444,6 +444,13 @@
                     <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
                     <input type="password" id="login-contrasena" placeholder="Contraseña" required>
                     <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+                    
+                    <div style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
+                        <span style="color: #666;">o</span>
+                    </div>
+                    
+                    <button type="button" class="btn-secondary" onclick="solicitarMagicLink()" style="width: 100%; margin: 0 0 20px 0;">Entrar sin contraseña</button>
+                    
                     <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
                 </form>
 
@@ -658,20 +665,56 @@
             }
         }
 
-        function comprobarSesion() {
-            const sesionGuardada = localStorage.getItem('eldesiempre_user');
-            if (sesionGuardada) {
-                usuarioLogueado = JSON.parse(sesionGuardada);
-                document.getElementById('nav-login-btn').style.display = 'none';
-                document.getElementById('nav-recursos-btn').style.display = 'block';
-                document.getElementById('nav-perfil-btn').style.display = 'block';
-                document.getElementById('nav-logout-btn').style.display = 'block';
-                document.getElementById('perfil-usuario').innerText = usuarioLogueado.usuario;
-                document.getElementById('perfil-nombre').innerText = usuarioLogueado.nombre;
+        async function comprobarSesion() {
+            try {
+                const response = await fetch(`${API_URL}/comprobar_sesion.php`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                if (result.logueado) {
+                    usuarioLogueado = result;
+                    document.getElementById('nav-login-btn').style.display = 'none';
+                    document.getElementById('nav-recursos-btn').style.display = 'block';
+                    document.getElementById('nav-perfil-btn').style.display = 'block';
+                    document.getElementById('nav-logout-btn').style.display = 'block';
+                    document.getElementById('perfil-usuario').innerText = usuarioLogueado.usuario;
+                    document.getElementById('perfil-nombre').innerText = usuarioLogueado.nombre;
+                    if (typeof _paq !== 'undefined') _paq.push(['setUserId', usuarioLogueado.usuario]);
+                }
+            } catch (error) {
+                console.error("Error comprobando sesión", error);
             }
         }
 
-        function cerrarSesion() { localStorage.removeItem('eldesiempre_user'); window.location.reload(); }
+        async function cerrarSesion() { 
+            try {
+                await fetch(`${API_URL}/logout.php`, { credentials: 'include' });
+            } catch (error) {}
+            window.location.reload(); 
+        }
+
+        function solicitarMagicLink() {
+            const correo = document.getElementById('login-correo').value;
+            if (!correo) {
+                mostrarToast("Introduce tu correo electrónico primero.", "error");
+                return;
+            }
+            fetch(`${API_URL}/magic_link.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ correo: correo })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    mostrarToast(result.message, 'success');
+                } else {
+                    mostrarToast('Error: ' + result.message, 'error');
+                }
+            })
+            .catch(() => mostrarToast('Error de conexión.', 'error'));
+        }
 
         document.getElementById('form-registro').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -683,7 +726,10 @@
             };
             try {
                 const response = await fetch(`${API_URL}/registro.php`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(data),
+                    credentials: 'include'
                 });
                 const result = await response.json();
                 if (result.success) {
@@ -702,14 +748,14 @@
             };
             try {
                 const response = await fetch(`${API_URL}/login.php`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(data),
+                    credentials: 'include'
                 });
                 const result = await response.json();
                 if (result.success) {
                     mostrarToast('Bienvenido ' + result.nombre, 'success');
-                    if (typeof _paq !== 'undefined') _paq.push(['setUserId', result.usuario]);
-                    const userData = { usuario: result.usuario, nombre: result.nombre, correo: data.correo };
-                    localStorage.setItem('eldesiempre_user', JSON.stringify(userData));
                     setTimeout(() => window.location.reload(), 1000);
                 } else { mostrarToast('Error: ' + result.message, 'error'); }
             } catch (error) { mostrarToast('Error de conexión.', 'error'); }
@@ -772,7 +818,18 @@
             res.innerHTML = `Tipo: <strong style="color: var(--neon-green);">${tipo}</strong>`;
         }
 
-        comprobarSesion();
+        window.onload = () => {
+            comprobarSesion();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('verificado')) {
+                mostrarToast('¡Cuenta verificada con éxito! Ya tienes la sesión iniciada.', 'success');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (urlParams.has('magic_login')) {
+                mostrarToast('¡Bienvenido! Has iniciado sesión mediante enlace mágico.', 'success');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        };
     </script>
 </body>
 </html>
