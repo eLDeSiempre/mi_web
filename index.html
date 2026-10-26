@@ -257,6 +257,79 @@
             min-height: 30px;
         }
 
+        .gen-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        .gen-controls label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .gen-controls input[type="checkbox"] {
+            accent-color: var(--gold);
+            width: 16px;
+            height: 16px;
+        }
+        .gen-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .gen-slider-container input[type="range"] {
+            flex-grow: 1;
+            accent-color: var(--gold);
+        }
+        .gen-slider-value {
+            min-width: 30px;
+            text-align: right;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .crypto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .crypto-item:hover {
+            border-color: var(--gold);
+            background: #1a1a1a;
+        }
+        .crypto-label {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .crypto-address {
+            color: var(--text-bright);
+            font-size: 0.7rem;
+            word-break: break-all;
+            margin: 0 10px;
+            flex-grow: 1;
+        }
+        .copy-icon {
+            fill: var(--text-main);
+            width: 16px;
+            height: 16px;
+            transition: fill 0.3s;
+        }
+        .crypto-item:hover .copy-icon {
+            fill: var(--gold);
+        }
+
         .diagram { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
         .node {
             background: var(--card-bg);
@@ -440,7 +513,16 @@
                 
                 <div class="card">
                     <h3>Generador de Contraseñas</h3>
-                    <p>Genera contraseñas criptográficamente seguras de 16 caracteres en tu propio navegador.</p>
+                    <div class="gen-controls">
+                        <label><input type="checkbox" id="chk-mayus" checked> Mayúsculas (A-Z)</label>
+                        <label><input type="checkbox" id="chk-minus" checked> Minúsculas (a-z)</label>
+                        <label><input type="checkbox" id="chk-nums" checked> Números (0-9)</label>
+                        <label><input type="checkbox" id="chk-symbols" checked> Símbolos (!@#$%)</label>
+                    </div>
+                    <div class="gen-slider-container">
+                        <input type="range" id="slider-longitud" min="4" max="60" value="16" oninput="document.getElementById('slider-valor').innerText = this.value">
+                        <span class="gen-slider-value" id="slider-valor">16</span>
+                    </div>
                     <button class="btn-primary" onclick="generarPassword()">[ Generar Contraseña ]</button>
                     <div id="resultado-password" class="tool-result"></div>
                 </div>
@@ -614,18 +696,30 @@
                     <div style="flex: 1; min-width: 250px; border: 1px solid var(--border); padding: 20px; background: #000; text-align: center;">
                         <h3 style="color: #0070ba; margin-bottom: 15px;">PayPal</h3>
                         <p style="font-size: 0.85rem; margin-bottom: 15px;">La forma más rápida y segura. Puedes usar tarjeta sin tener cuenta.</p>
-                        <a href="https://www.paypal.com/paypalme/TUUSUARIO" target="_blank" class="btn-primary" style="text-decoration: none; display: inline-block;">[ Donar con PayPal ]</a>
+                        <a href="https://www.paypal.biz/ldesiem" target="_blank" class="btn-primary" style="text-decoration: none; display: inline-block;">[ Donar con PayPal ]</a>
                     </div>
 
                     <div style="flex: 1; min-width: 250px; border: 1px solid var(--border); padding: 20px; background: #000; text-align: center;">
                         <h3 style="color: var(--gold); margin-bottom: 15px;">Criptomonedas</h3>
-                        <p style="font-size: 0.85rem; margin-bottom: 15px;">Para los amantes de la descentralización y el anonimato.</p>
+                        <p style="font-size: 0.85rem; margin-bottom: 15px;">Haz clic en la dirección para copiarla.</p>
                         
-                        <div style="text-align: left; font-size: 0.8rem; word-break: break-all; background: #111; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                            <strong>BTC:</strong> <span style="color: var(--text-bright);">bc1q...</span><br><br>
-                            <strong>ETH (ERC20):</strong> <span style="color: var(--text-bright);">0x...</span>
+                        <div id="crypto-list">
+                            <div class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')">
+                                <span class="crypto-label">BTC</span>
+                                <span class="crypto-address">bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320</span>
+                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                            </div>
+                            <div class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')">
+                                <span class="crypto-label">ETH</span>
+                                <span class="crypto-address">0x671233AE15A16ff6424e831504CB6C749345B08D</span>
+                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                            </div>
+                            <div class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')">
+                                <span class="crypto-label">SOL</span>
+                                <span class="crypto-address">7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx</span>
+                                <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                            </div>
                         </div>
-                        <button class="btn-secondary" onclick="alert('Copiado al portapapeles')">[ Copiar Dirección ]</button>
                     </div>
                 </div>
 
@@ -792,6 +886,34 @@
             window.location.reload();
         }
 
+        function copiarAlPortapapeles(texto, moneda) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('Dirección de ' + moneda + ' copiada al portapapeles');
+                }).catch(err => {
+                    console.error('Error al copiar: ', err);
+                    alert('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = texto;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Dirección de ' + moneda + ' copiada al portapapeles');
+                } catch (err) {
+                    console.error('Error al copiar: ', err);
+                    alert('No se pudo copiar automáticamente. Selecciona el texto manualmente.');
+                }
+                textArea.remove();
+            }
+        }
+
         document.getElementById('form-registro').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
@@ -839,11 +961,27 @@
         });
 
         function generarPassword() {
-            const longitud = 16;
-            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]";
+            const longitud = parseInt(document.getElementById('slider-longitud').value);
+            const useMayus = document.getElementById('chk-mayus').checked;
+            const useMinus = document.getElementById('chk-minus').checked;
+            const useNums = document.getElementById('chk-nums').checked;
+            const useSymbols = document.getElementById('chk-symbols').checked;
+
+            if (!useMayus && !useMinus && !useNums && !useSymbols) {
+                alert("Selecciona al menos un tipo de carácter.");
+                return;
+            }
+
+            let charset = "";
+            if (useMayus) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (useMinus) charset += "abcdefghijklmnopqrstuvwxyz";
+            if (useNums) charset += "0123456789";
+            if (useSymbols) charset += "!@#$%^&*()_+{}[]";
+
             let password = "";
             const valoresAleatorios = new Uint32Array(longitud);
             window.crypto.getRandomValues(valoresAleatorios);
+            
             for (let i = 0; i < longitud; i++) {
                 password += charset[valoresAleatorios[i] % charset.length];
             }
