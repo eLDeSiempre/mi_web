@@ -10,6 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
     
+    <script>
+      var _paq = window._paq = window._paq || [];
+      _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+      _paq.push(["setCookieDomain", "*.eldesiempre.es"]);
+      _paq.push(["setDomains", ["*.eldesiempre.es"]]);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//45.151.123.75:8080/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+
     <style>
         :root {
             --bg-color: #050505;
@@ -255,6 +271,7 @@
             .container { padding: 20px 4%; }
             .btn-primary, .btn-secondary { width: 100%; margin: 5px 0; text-align: center; }
             .auth-form { max-width: 100%; }
+            .support-footer { padding: 15px; }
         }
     </style>
 </head>
