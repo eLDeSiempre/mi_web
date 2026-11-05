@@ -531,13 +531,48 @@
     <div class="modal-overlay" id="modal-dorks">
         <div class="modal-content">
             <button class="close-btn" onclick="cerrarModal('modal-dorks')">×</button>
-            <h2>Generador de Dorks</h2>
-            <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com">
-            <select id="dork-type" class="tool-input">
-                <option value="pdf">Documentos PDF</option>
-                <option value="xls">Excel</option>
-                <option value="env">Archivos .env</option>
-            </select>
+            <h2>Generador de Dorks Avanzado</h2>
+            
+            <label style="color: var(--neon-green); font-size: 0.9rem;">Dominio o URL Objetivo:</label>
+            <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com o *.ejemplo.com">
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="color: var(--neon-green); font-size: 0.9rem;">Tipo de Archivo:</label>
+                    <select id="dork-type" class="tool-input" style="margin-bottom: 0;">
+                        <optgroup label="Documentos">
+                            <option value="pdf">PDF (.pdf)</option>
+                            <option value="doc OR docx">Word (.doc/.docx)</option>
+                            <option value="xls OR xlsx">Excel (.xls/.xlsx)</option>
+                            <option value="ppt OR pptx">PowerPoint (.ppt/.pptx)</option>
+                            <option value="txt">Texto (.txt)</option>
+                        </optgroup>
+                        <optgroup label="Código y Configuración">
+                            <option value="env">Variables de Entorno (.env)</option>
+                            <option value="sql">Volcado SQL (.sql)</option>
+                            <option value="log">Registros (.log)</option>
+                            <option value="conf OR config">Configuración (.conf)</option>
+                            <option value="php">PHP (.php)</option>
+                        </optgroup>
+                        <optgroup label="Bases de Datos y Backups">
+                            <option value="db OR sqlite">SQLite (.db/.sqlite)</option>
+                            <option value="bak">Backup (.bak)</option>
+                            <option value="zip OR rar OR tar">Comprimidos (.zip/.rar)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div style="flex: 1;">
+                    <label style="color: var(--neon-green); font-size: 0.9rem;">Filtro Adicional:</label>
+                    <select id="dork-extra" class="tool-input" style="margin-bottom: 0;">
+                        <option value="">Ninguno</option>
+                        <option value="inurl:admin">Panel de Admin (inurl:admin)</option>
+                        <option value="intext:password">Buscar contraseñas (intext:password)</option>
+                        <option value="intitle:index.of">Listado de directorios (intitle:index.of)</option>
+                    </select>
+                </div>
+            </div>
+
             <button class="btn-primary" style="width: 100%;" onclick="generarDork()">Generar Dork</button>
             <div id="dork-result" class="tool-result"></div>
         </div>
@@ -739,10 +774,32 @@
 
         function generarDork() {
             const dominio = document.getElementById('dork-input').value.trim();
-            const tipo = document.getElementById('dork-type').value;
-            if (!dominio) { mostrarToast("Introduce un dominio.", "error"); return; }
-            const query = `site:${dominio} filetype:${tipo}`;
-            document.getElementById('dork-result').innerHTML = `<a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color: var(--neon-green); text-decoration: underline;">Buscar: ${query}</a>`;
+            const tipoArchivo = document.getElementById('dork-type').value;
+            const filtroExtra = document.getElementById('dork-extra').value;
+            
+            if (!dominio) { 
+                mostrarToast("Introduce un dominio.", "error"); 
+                return; 
+            }
+
+            let query = `site:${dominio}`;
+            
+            if (filtroExtra) {
+                query += ` ${filtroExtra}`;
+            }
+            
+            query += ` filetype:${tipoArchivo}`;
+
+            document.getElementById('dork-result').innerHTML = `
+                <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px;">
+                    <p style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 10px;">Dork generado:</p>
+                    <code style="color: var(--neon-green); font-size: 1.1rem; word-break: break-all; display: block; margin-bottom: 15px;">${query}</code>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" class="btn-secondary" style="padding: 10px 15px; font-size: 0.9rem; text-decoration: none; text-align: center; flex: 1;">Buscar en Google</a>
+                        <button class="btn-primary" style="padding: 10px 15px; font-size: 0.9rem; flex: 1;" onclick="copiarAlPortapapeles('${query}', 'Dork')">Copiar Dork</button>
+                    </div>
+                </div>
+            `;
         }
 
         document.getElementById('exif-input').addEventListener('change', function(e) {
