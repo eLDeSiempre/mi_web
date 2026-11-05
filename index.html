@@ -304,12 +304,22 @@
         .btn-discord:hover { box-shadow: 0 0 25px rgba(88, 101, 242, 0.6); transform: translateY(-3px); }
 
         @media (max-width: 768px) {
-            header { flex-direction: column; gap: 20px; padding: 20px; }
+            header { 
+                flex-direction: column; 
+                gap: 20px; 
+                padding: 20px; 
+                backdrop-filter: none; 
+                background: var(--bg-color); 
+            }
             nav { justify-content: center; width: 100%; }
             .nav-btn { font-size: 15px; padding: 12px; width: 100%; text-align: center; }
             .hero h1 { font-size: 2rem; }
             .btn-primary, .btn-secondary { width: 100%; margin: 10px 0; }
-            .card { padding: 20px; }
+            .card { 
+                padding: 20px; 
+                animation: none; 
+                backdrop-filter: none; 
+            }
             .crypto-list { flex-direction: column; width: 100%; }
             .crypto-item { width: 100%; justify-content: center; }
         }
