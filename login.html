@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Login | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="toast-container"></div>
+
+    <header>
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">eLDeSiempre<span>.es</span></div>
+        </div>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
+            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
+            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+        </nav>
+    </header>
+
+    <main class="container" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+        <form class="auth-form" id="form-login">
+            <h2>Iniciar Sesión</h2>
+            <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
+            <input type="password" id="login-contrasena" placeholder="Contraseña" required>
+            <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+            <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
+        </form>
+
+        <form class="auth-form" id="form-registro" style="display: none;">
+            <h2>Crear Cuenta</h2>
+            <input type="text" id="reg-nombre" placeholder="Nombre Completo" required>
+            <input type="text" id="reg-usuario" placeholder="Nombre de Usuario" required>
+            <input type="email" id="reg-correo" placeholder="Correo Electrónico" required>
+            <input type="password" id="reg-contrasena" placeholder="Contraseña" required>
+            <button type="submit" class="btn-secondary" style="width: 100%;">Registrarse</button>
+            <p style="text-align: center; margin-top: 20px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
+        </form>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
