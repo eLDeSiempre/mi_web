@@ -98,6 +98,26 @@ async function cerrarSesion() {
     window.location.href = 'index.html';
 }
 
+// --- FUNCIÓN DE BLINDAJE ---
+function protegerContenidoPrivado() {
+    const path = window.location.pathname;
+    if (path.includes('recursos.html') || path.includes('perfil.html')) {
+        const mainContent = document.querySelector('main.container');
+        if (mainContent) {
+            mainContent.style.display = 'none'; // Ocultamos al instante
+            
+            setTimeout(() => {
+                if (usuarioLogueado) {
+                    mainContent.style.display = 'block'; // Mostramos si hay sesión
+                } else {
+                    mostrarToast("Acceso denegado. Debes iniciar sesión.", "error");
+                    setTimeout(() => window.location.href = 'login.html', 1000);
+                }
+            }, 800);
+        }
+    }
+}
+
 document.getElementById('form-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
@@ -157,6 +177,7 @@ function toggleAuthForms(event) {
 
 window.onload = () => {
     comprobarSesion();
+    protegerContenidoPrivado(); // <--- Llamamos al blindaje
     
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
@@ -166,15 +187,5 @@ window.onload = () => {
             const banner = document.getElementById('cookie-banner');
             if(banner) banner.style.display = 'flex';
         }
-    }
-
-    const path = window.location.pathname;
-    if (path.includes('recursos.html') || path.includes('perfil.html')) {
-        setTimeout(() => {
-            if (!usuarioLogueado) {
-                alert("Acceso denegado. Debes iniciar sesión.");
-                window.location.href = 'login.html';
-            }
-        }, 800);
     }
 };
