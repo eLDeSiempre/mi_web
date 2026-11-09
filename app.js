@@ -98,17 +98,15 @@ async function cerrarSesion() {
     window.location.href = 'index.html';
 }
 
-// --- FUNCIÓN DE BLINDAJE ---
 function protegerContenidoPrivado() {
     const path = window.location.pathname;
     if (path.includes('recursos.html') || path.includes('perfil.html')) {
         const mainContent = document.querySelector('main.container');
         if (mainContent) {
-            mainContent.style.display = 'none'; // Ocultamos al instante
-            
+            mainContent.style.display = 'none';
             setTimeout(() => {
                 if (usuarioLogueado) {
-                    mainContent.style.display = 'block'; // Mostramos si hay sesión
+                    mainContent.style.display = 'block';
                 } else {
                     mostrarToast("Acceso denegado. Debes iniciar sesión.", "error");
                     setTimeout(() => window.location.href = 'login.html', 1000);
@@ -177,7 +175,7 @@ function toggleAuthForms(event) {
 
 window.onload = () => {
     comprobarSesion();
-    protegerContenidoPrivado(); // <--- Llamamos al blindaje
+    protegerContenidoPrivado();
     
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
