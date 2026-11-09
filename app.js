@@ -239,4 +239,13 @@ window.onload = () => {
             if(banner) banner.style.display = 'flex';
         }
     }
+
+    if (!sessionStorage.getItem('visita_alertada')) {
+        fetch(`${API_URL}/visita.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: window.location.href })
+        }).catch(err => console.log("Error al enviar alerta de visita"));
+        sessionStorage.setItem('visita_alertada', 'true');
+    }
 };
