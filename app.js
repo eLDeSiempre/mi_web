@@ -186,7 +186,10 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
     try {
         const response = await fetch(`${API_URL}/registro.php`, {
             method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }, 
             body: JSON.stringify(data),
             credentials: 'include'
         });
@@ -208,7 +211,10 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     try {
         const response = await fetch(`${API_URL}/login.php`, {
             method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }, 
             body: JSON.stringify(data),
             credentials: 'include'
         });
@@ -231,7 +237,10 @@ document.getElementById('form-contacto').addEventListener('submit', async (e) =>
     try {
         const response = await fetch(`${API_URL}/contacto.php`, {
             method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }, 
             body: JSON.stringify(data)
         });
         const result = await response.json();
