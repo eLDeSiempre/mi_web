@@ -1,9 +1,20 @@
 const API_URL = 'https://api.eldesiempre.es';
 let usuarioLogueado = null;
 
-function abrirModal(id) { document.getElementById(id).classList.add('active'); }
-function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
-function mostrarAvisoLegal(e) { if (e) e.preventDefault(); abrirModal('modal-legal'); }
+function abrirModal(id) { 
+    const modal = document.getElementById(id);
+    if(modal) modal.classList.add('active'); 
+}
+
+function cerrarModal(id) { 
+    const modal = document.getElementById(id);
+    if(modal) modal.classList.remove('active'); 
+}
+
+function mostrarAvisoLegal(e) { 
+    if (e) e.preventDefault(); 
+    abrirModal('modal-legal'); 
+}
 
 function mostrarToast(mensaje, tipo = 'success') {
     const container = document.getElementById('toast-container');
