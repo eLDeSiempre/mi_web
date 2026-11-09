@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Mi Perfil | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="toast-container"></div>
+
+    <header>
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">eLDeSiempre<span>.es</span></div>
+        </div>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
+            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
+            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Mi Perfil Profesional</h2>
+        <div class="profile-card">
+            <h2 style="color: var(--neon-green); text-align: center; border: none;">@<span id="perfil-usuario">usuario</span></h2>
+            <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
+            
+            <form class="profile-form" id="form-perfil">
+                <label for="perfil-bio">Biografía</label>
+                <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..."></textarea>
+                <label for="perfil-habilidades">Habilidades</label>
+                <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT...">
+                <label for="perfil-github">GitHub (URL)</label>
+                <input type="url" id="perfil-github" placeholder="https://github.com/...">
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
+            </form>
+
+            <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord">Unirse al Discord</a>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('form-perfil').addEventListener('submit', (e) => {
+            e.preventDefault();
+            mostrarToast('Perfil actualizado.', 'success');
+        });
+        
+        // Rellenar los datos del perfil (esto se puede mejorar cargando datos reales de la API)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if(usuarioLogueado) {
+                    const userElement = document.getElementById('perfil-usuario');
+                    const nameElement = document.getElementById('perfil-nombre');
+                    if(userElement) userElement.innerText = usuarioLogueado.usuario;
+                    if(nameElement) nameElement.innerText = usuarioLogueado.nombre;
+                }
+            }, 1000);
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
