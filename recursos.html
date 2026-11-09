@@ -25,7 +25,7 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" style="display: none;">
         <h2>Recursos de Aprendizaje</h2>
         <p style="margin-bottom: 20px;">Selecciona una categoría para desplegar los enlaces recomendados.</p>
         
@@ -81,7 +81,6 @@
     </main>
     
     <script>
-        // Funciones específicas de esta página (buscador, likes, etc.)
         function toggleNode(nodeId) {
             const content = document.getElementById(nodeId);
             content.classList.toggle('open');
@@ -96,7 +95,6 @@
             });
         }
         function darLike(nodeId, btn) {
-            // Aquí iría la lógica de guardar el "me gusta"
             mostrarToast("¡Gracias por votar!", "success");
         }
     </script>
