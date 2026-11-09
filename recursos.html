@@ -25,74 +25,13 @@
         </nav>
     </header>
 
-    <main class="container" style="display: none;">
-        <h2>Recursos de Aprendizaje</h2>
-        <p style="margin-bottom: 20px;">Selecciona una categoría para desplegar los enlaces recomendados.</p>
-        
-        <div class="search-container">
-            <input type="text" id="buscador-recursos" placeholder="Buscar recurso (ej. Nmap, Python, CTF...)" onkeyup="filtrarRecursos()">
-        </div>
-
-        <div class="diagram" id="lista-recursos">
-            <div class="node" data-search="formacion certificaciones incibe microsoft cisco redes ccna">
-                <div class="node-header-flex" onclick="toggleNode('rec1')">
-                    <h3>01. Formación y Certificaciones</h3>
-                    <button class="btn-like" onclick="event.stopPropagation(); darLike('rec1', this)">⭐ <span>0</span></button>
-                </div>
-            </div>
-            <div id="rec1" class="node-content">
-                <ul style="margin-left: 20px; line-height: 2.2;">
-                    <li><strong>INCIBE Academia:</strong> Talleres gratuitos oficiales. <a href="https://www.incibe.es/ed2026/talento-hacker/academia-hacker/talleres-tematicos" target="_blank">[Ir]</a></li>
-                    <li><strong>Microsoft Learn:</strong> Cursos de Python y Azure. <a href="https://learn.microsoft.com/es-es/training/paths/get-started-with-python-fundamentals/" target="_blank">[Ir]</a></li>
-                    <li><strong>Cisco Networking Academy:</strong> Redes (CCNA) y seguridad. <a href="https://www.netacad.com/es" target="_blank">[Ir]</a></li>
-                </ul>
-            </div>
-
-            <div class="node" data-search="practica plataformas ctfs hack the box tryhackme portswigger overthewire">
-                <div class="node-header-flex" onclick="toggleNode('rec2')">
-                    <h3>02. Plataformas de Práctica (CTFs)</h3>
-                    <button class="btn-like" onclick="event.stopPropagation(); darLike('rec2', this)">⭐ <span>0</span></button>
-                </div>
-            </div>
-            <div id="rec2" class="node-content">
-                <ul style="margin-left: 20px; line-height: 2.2;">
-                    <li><strong>Hack The Box:</strong> Máquinas reales y desafíos. <a href="https://www.hackthebox.com/" target="_blank">[Ir]</a></li>
-                    <li><strong>TryHackMe:</strong> Rutas guiadas para principiantes. <a href="https://tryhackme.com/" target="_blank">[Ir]</a></li>
-                    <li><strong>PortSwigger Academy:</strong> Laboratorios web gratuitos. <a href="https://portswigger.net/web-security/all-labs" target="_blank">[Ir]</a></li>
-                    <li><strong>OverTheWire (Wargames):</strong> Desafíos clásicos por SSH. <a href="https://overthewire.org/wargames/" target="_blank">[Ir]</a></li>
-                </ul>
-            </div>
-
-            <div class="node" data-search="herramientas esenciales nmap wireshark burp suite kali linux">
-                <div class="node-header-flex" onclick="toggleNode('rec3')">
-                    <h3>03. Herramientas Esenciales</h3>
-                    <button class="btn-like" onclick="event.stopPropagation(); darLike('rec3', this)">⭐ <span>0</span></button>
-                </div>
-            </div>
-            <div id="rec3" class="node-content">
-                <ul style="margin-left: 20px; line-height: 2.2;">
-                    <li><strong>Nmap:</strong> Escáner de puertos. <a href="https://nmap.org/" target="_blank">[Ir]</a></li>
-                    <li><strong>Wireshark:</strong> Analizador de tráfico. <a href="https://www.wireshark.org/" target="_blank">[Ir]</a></li>
-                    <li><strong>Burp Suite:</strong> Proxy de interceptación web. <a href="https://portswigger.net/burp" target="_blank">[Ir]</a></li>
-                    <li><strong>Kali Linux:</strong> Sistema operativo para hacking. <a href="https://www.kali.org/" target="_blank">[Ir]</a></li>
-                </ul>
-            </div>
-        </div>
+    <main class="container" id="contenedor-recursos" style="display: none;">
     </main>
     
     <script>
         function toggleNode(nodeId) {
             const content = document.getElementById(nodeId);
-            content.classList.toggle('open');
-        }
-        function filtrarRecursos() {
-            const input = document.getElementById('buscador-recursos').value.toLowerCase();
-            const nodos = document.querySelectorAll('#lista-recursos .node');
-            nodos.forEach(nodo => {
-                const searchData = nodo.getAttribute('data-search');
-                if (searchData.includes(input)) { nodo.style.display = 'block'; } 
-                else { nodo.style.display = 'none'; }
-            });
+            if(content) content.classList.toggle('open');
         }
         function darLike(nodeId, btn) {
             mostrarToast("¡Gracias por votar!", "success");
