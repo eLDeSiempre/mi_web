@@ -16,7 +16,6 @@
     <title>root@eLDeSiempre:~#</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
     <link rel="stylesheet" href="styles.css">
     
     <script>
@@ -59,280 +58,43 @@
     </div>
 
     <header>
-        <div class="logo-container" onclick="openTab('inicio')">
+        <div class="logo-container" onclick="window.location.href='index.html'">
             <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">eLDeSiempre<span>.es</span></div>
         </div>
         <nav>
-            <button class="nav-btn" onclick="openTab('herramientas')">Herramientas</button>
-            <button class="nav-btn" id="nav-recursos-btn" style="display:none;" onclick="openTab('recursos')">Recursos</button>
-            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="openTab('perfil')">Perfil</button>
-            <button class="nav-btn" onclick="openTab('contacto')">Contacto</button>
-            <button class="nav-btn btn-login" id="nav-login-btn" onclick="openTab('login')">Acceder</button>
+            <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
+            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
+            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
             <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
     <main class="container">
+        <div class="hero">
+            <h1>Aprende Ciberseguridad desde Cero</h1>
+            <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
+            <button class="btn-primary" onclick="comprobarAcceso('recursos.html')">Explorar Recursos</button>
+            <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
+        </div>
 
-        <section id="inicio" class="tab-content active">
-            <div class="hero">
-                <h1>Aprende Ciberseguridad desde Cero</h1>
-                <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
-                <button class="btn-primary" onclick="comprobarAcceso('recursos')">Explorar Recursos</button>
-                <button class="btn-secondary" onclick="openTab('login')">Crear Cuenta Gratis</button>
-            </div>
-        </section>
-
-        <section id="herramientas" class="tab-content">
-            <h2>Laboratorio de Herramientas</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta. No necesitas ser un experto, aquí te explicamos para qué sirve cada una.</p>
-            
-            <div class="grid-cards">
-                <div class="card" onclick="abrirModal('modal-osint')">
-                    <h3>OSINT Framework</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Es como un "árbol genealógico" de internet. Te muestra dónde buscar información pública (redes sociales, registros, etc.) sobre una persona o empresa.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Investigar antecedentes o encontrar datos ocultos.</p>
+        <section style="margin-top: 50px;">
+            <h2>Últimas Guías</h2>
+            <div class="grid-cards" style="margin-top: 20px;">
+                <div class="card" onclick="window.location.href='guia.html?id=que-es-osint'">
+                    <h3>¿Qué es el OSINT?</h3>
+                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Descubre cómo se utiliza la inteligencia de fuentes abiertas para investigar personas y empresas sin dejar rastro.</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
                 </div>
                 
-                <div class="card" onclick="abrirModal('modal-dorks')">
-                    <h3>Generador de Dorks</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Los "Dorks" son trucos de búsqueda avanzada en Google. Con esta herramienta puedes buscar archivos específicos (como PDFs o Excels) que estén expuestos por error en una web.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Encontrar documentos filtrados o vulnerabilidades.</p>
-                </div>
-
-                <div class="card" onclick="abrirModal('modal-exif')">
-                    <h3>Analizador EXIF</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Cuando haces una foto, tu móvil guarda datos ocultos: la hora, el modelo del móvil e incluso las coordenadas GPS. Esta herramienta te enseña esa "letra pequeña" de las imágenes.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si alguien ha subido una foto con tu ubicación.</p>
-                </div>
-
-                <div class="card" onclick="abrirModal('modal-pass')">
-                    <h3>Generador de Contraseñas</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Crea contraseñas súper seguras y aleatorias. Olvídate de usar "1234" o tu fecha de cumpleaños; aquí generamos claves imposibles de adivinar para ti.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Proteger tus cuentas de correo y redes sociales.</p>
-                </div>
-
-                <div class="card" onclick="abrirModal('modal-hash')">
-                    <h3>Analizador de Hash</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Un "Hash" es como una huella digital de un archivo o contraseña. Esta herramienta te dice qué tipo de huella es (si es de una contraseña, de un archivo, etc.).</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender cómo se guardan las contraseñas en las webs.</p>
-                </div>
-
-                <div class="card" onclick="abrirModal('modal-ip')">
-                    <h3>Buscador de IP / OSINT</h3>
-                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Cada dispositivo conectado a internet tiene una matrícula (IP). Esta herramienta te dice de qué país, ciudad y compañía es esa matrícula.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber de dónde viene una visita extraña a tu web.</p>
+                <div class="card" onclick="window.location.href='guia.html?id=empezar-ctf'">
+                    <h3>Cómo empezar en los CTFs</h3>
+                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Guía paso a paso para entrar en el mundo de las competiciones de hacking ético (Capture The Flag) desde cero.</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
                 </div>
             </div>
         </section>
-
-        <section id="recursos" class="tab-content">
-            <h2>Recursos de Aprendizaje</h2>
-            <p style="margin-bottom: 20px;">Selecciona una categoría para desplegar los enlaces recomendados.</p>
-            
-            <div class="search-container">
-                <input type="text" id="buscador-recursos" placeholder="Buscar recurso (ej. Nmap, Python, CTF...)" onkeyup="filtrarRecursos()">
-            </div>
-
-            <div class="diagram" id="lista-recursos">
-                <div class="node" data-search="formacion certificaciones incibe microsoft cisco redes ccna">
-                    <div class="node-header-flex" onclick="toggleNode('rec1')">
-                        <h3>01. Formación y Certificaciones</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec1', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec1" class="node-content">
-                    <ul style="margin-left: 20px; line-height: 2.2;">
-                        <li><strong>INCIBE Academia:</strong> Talleres gratuitos oficiales. <a href="https://www.incibe.es/ed2026/talento-hacker/academia-hacker/talleres-tematicos" target="_blank">[Ir]</a></li>
-                        <li><strong>Microsoft Learn:</strong> Cursos de Python y Azure. <a href="https://learn.microsoft.com/es-es/training/paths/get-started-with-python-fundamentals/" target="_blank">[Ir]</a></li>
-                        <li><strong>Cisco Networking Academy:</strong> Redes (CCNA) y seguridad. <a href="https://www.netacad.com/es" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" data-search="practica plataformas ctfs hack the box tryhackme portswigger overthewire">
-                    <div class="node-header-flex" onclick="toggleNode('rec2')">
-                        <h3>02. Plataformas de Práctica (CTFs)</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec2', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec2" class="node-content">
-                    <ul style="margin-left: 20px; line-height: 2.2;">
-                        <li><strong>Hack The Box:</strong> Máquinas reales y desafíos. <a href="https://www.hackthebox.com/" target="_blank">[Ir]</a></li>
-                        <li><strong>TryHackMe:</strong> Rutas guiadas para principiantes. <a href="https://tryhackme.com/" target="_blank">[Ir]</a></li>
-                        <li><strong>PortSwigger Academy:</strong> Laboratorios web gratuitos. <a href="https://portswigger.net/web-security/all-labs" target="_blank">[Ir]</a></li>
-                        <li><strong>OverTheWire (Wargames):</strong> Desafíos clásicos por SSH para aprender comandos Linux y seguridad desde cero. <a href="https://overthewire.org/wargames/" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" data-search="herramientas esenciales nmap wireshark burp suite kali linux">
-                    <div class="node-header-flex" onclick="toggleNode('rec3')">
-                        <h3>03. Herramientas Esenciales</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec3', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec3" class="node-content">
-                    <ul style="margin-left: 20px; line-height: 2.2;">
-                        <li><strong>Nmap:</strong> Escáner de puertos. <a href="https://nmap.org/" target="_blank">[Ir]</a></li>
-                        <li><strong>Wireshark:</strong> Analizador de tráfico. <a href="https://www.wireshark.org/" target="_blank">[Ir]</a></li>
-                        <li><strong>Burp Suite:</strong> Proxy de interceptación web. <a href="https://portswigger.net/burp" target="_blank">[Ir]</a></li>
-                        <li><strong>Kali Linux:</strong> Sistema operativo para hacking. <a href="https://www.kali.org/" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" data-search="comunidades noticias hackplayers dragonjar incibe">
-                    <div class="node-header-flex" onclick="toggleNode('rec4')">
-                        <h3>04. Comunidades y Noticias</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec4', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec4" class="node-content">
-                    <ul style="margin-left: 20px; line-height: 2.2;">
-                        <li><strong>Hackplayers:</strong> Comunidad en español. <a href="https://www.hackplayers.com/" target="_blank">[Ir]</a></li>
-                        <li><strong>DragonJAR:</strong> Foro histórico. <a href="https://www.dragonjar.org/" target="_blank">[Ir]</a></li>
-                        <li><strong>Incibe Noticias:</strong> Alertas oficiales. <a href="https://www.incibe.es/incibe/sala-de-prensa" target="_blank">[Ir]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" data-search="biblioteca libros español hacking python pentesting kali metasploit sql injection criptografia">
-                    <div class="node-header-flex" onclick="toggleNode('rec5')">
-                        <h3>05. Biblioteca Recomendada (Libros en Español)</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec5', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec5" class="node-content">
-                    <ul style="margin-left: 20px; line-height: 2.2;">
-                        <li><strong>Hacking con Python (Daniel Echeverri):</strong> Seguridad ofensiva y scripting. <a href="https://0xword.com/es/libros/57-hacking-con-python.html" target="_blank">[Ver en 0xWord]</a></li>
-                        <li><strong>Pentesting con Kali (Pablo González):</strong> Metodología completa de un test de intrusión. <a href="https://0xword.com/es/libros/56-pentesting-con-kali.html" target="_blank">[Ver en 0xWord]</a></li>
-                        <li><strong>Metasploit para Pentesters (Pablo González):</strong> Guía del framework ofensivo por excelencia. <a href="https://0xword.com/es/libros/55-metasploit-para-pentesters.html" target="_blank">[Ver en 0xWord]</a></li>
-                        <li><strong>Hacking de aplicaciones web: SQL Injection (Enrique Rando):</strong> Monográfico sobre inyección SQL. <a href="https://0xword.com/es/libros/60-hacking-de-aplicaciones-web-sql-injection.html" target="_blank">[Ver en 0xWord]</a></li>
-                        <li><strong>Criptografía: De la A a la Z (Gonzalo Álvarez Marañón):</strong> El mejor libro de criptografía en español. <a href="https://0xword.com/es/libros/14-criptografia-de-la-a-a-la-z.html" target="_blank">[Ver en 0xWord]</a></li>
-                    </ul>
-                </div>
-
-                <div class="node" data-search="referentes hacking chema alonso roman ramirez gabriela kevin mitnick linus torvalds poulsen adrian lamo">
-                    <div class="node-header-flex" onclick="toggleNode('rec6')">
-                        <h3>06. Referentes del Hacking</h3>
-                        <button class="btn-like" onclick="event.stopPropagation(); darLike('rec6', this)">⭐ <span>0</span></button>
-                    </div>
-                </div>
-                <div id="rec6" class="node-content">
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                        <div style="border-left: 2px solid var(--neon-green); padding-left: 10px; margin-bottom: 10px;">
-                            <h4 style="color: var(--neon-blue); margin-bottom: 15px;">España</h4>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Chema+Alonso&background=0D1117&color=00ff41&rounded=true&bold=true" alt="Chema Alonso" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-green);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Chema Alonso:</strong> CDO en Telefónica. Divulgador y referente absoluto en España. 
-                                    <a href="https://www.elladodelmal.com/" target="_blank" style="color: var(--neon-green); text-decoration: none;">[Web/Blog Oficial]</a>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Roman+Ramirez&background=0D1117&color=00ff41&rounded=true&bold=true" alt="Román Ramírez" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-green);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Román Ramírez:</strong> Fundador de RootedCON, el mayor congreso de seguridad de España. 
-                                    <a href="https://www.rootedcon.com/" target="_blank" style="color: var(--neon-green); text-decoration: none;">[Web RootedCON]</a>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Gabriela+B&background=0D1117&color=00ff41&rounded=true&bold=true" alt="Gabriela B." style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-green);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Gabriela B. (Gabi):</strong> Investigadora de seguridad ofensiva y divulgadora. 
-                                    <span style="color: #888;">[Sin web corporativa pública verificada]</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="border-left: 2px solid var(--neon-gold); padding-left: 10px;">
-                            <h4 style="color: var(--neon-gold); margin-bottom: 15px;">Mundo</h4>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Kevin+Mitnick&background=0D1117&color=ffd700&rounded=true&bold=true" alt="Kevin Mitnick" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-gold);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Kevin Mitnick:</strong> El hacker más famoso. Fundador de Mitnick Security. 
-                                    <a href="https://www.mitnicksecurity.com/" target="_blank" style="color: var(--neon-gold); text-decoration: none;">[Mitnick Security]</a>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Linus+Torvalds&background=0D1117&color=ffd700&rounded=true&bold=true" alt="Linus Torvalds" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-gold);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Linus Torvalds:</strong> Creador del kernel Linux. 
-                                    <a href="https://www.linuxfoundation.org/" target="_blank" style="color: var(--neon-gold); text-decoration: none;">[Linux Foundation]</a>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Kevin+Poulsen&background=0D1117&color=ffd700&rounded=true&bold=true" alt="Kevin Poulsen" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-gold);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Kevin Poulsen:</strong> Ex-hacker, ahora periodista de seguridad. 
-                                    <a href="https://www.kevinpoulsen.com/" target="_blank" style="color: var(--neon-gold); text-decoration: none;">[Web Oficial]</a>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start;">
-                                <img src="https://ui-avatars.com/api/?name=Adrian+Lamo&background=0D1117&color=ffd700&rounded=true&bold=true" alt="Adrian Lamo" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-gold);">
-                                <div>
-                                    <strong style="color: var(--text-bright);">Adrian Lamo:</strong> Conocido por hackear Microsoft y filtrar a Wikileaks (QEPD). 
-                                    <a href="https://about.me/aal" target="_blank" style="color: var(--neon-gold); text-decoration: none;">[Perfil Oficial]</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="login" class="tab-content">
-            <div class="auth-container">
-                <form class="auth-form" id="form-login">
-                    <h2>Iniciar Sesión</h2>
-                    <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
-                    <input type="password" id="login-contrasena" placeholder="Contraseña" required>
-                    <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
-                    <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
-                </form>
-
-                <form class="auth-form" id="form-registro" style="display: none;">
-                    <h2>Crear Cuenta</h2>
-                    <input type="text" id="reg-nombre" placeholder="Nombre Completo" required>
-                    <input type="text" id="reg-usuario" placeholder="Nombre de Usuario" required>
-                    <input type="email" id="reg-correo" placeholder="Correo Electrónico" required>
-                    <input type="password" id="reg-contrasena" placeholder="Contraseña" required>
-                    <button type="submit" class="btn-secondary" style="width: 100%;">Registrarse</button>
-                    <p style="text-align: center; margin-top: 20px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
-                </form>
-            </div>
-        </section>
-
-        <section id="contacto" class="tab-content">
-            <h2>Contacto</h2>
-            <p style="margin-bottom: 30px; text-align: center;">¿Tienes alguna consulta, observación o has encontrado un error en la página? Escríbenos y te responderemos lo antes posible.</p>
-            
-            <form class="contact-form" id="form-contacto">
-                <input type="text" id="contact-nombre" placeholder="Tu Nombre" required>
-                <input type="email" id="contact-email" placeholder="Tu Correo Electrónico" required>
-                <input type="text" id="contact-asunto" placeholder="Asunto (Ej: Corrección, Duda, etc.)" required>
-                <textarea id="contact-mensaje" placeholder="Escribe tu mensaje aquí..." required></textarea>
-                <button type="submit" class="btn-primary" style="width: 100%;">Enviar Mensaje</button>
-            </form>
-        </section>
-
-        <section id="perfil" class="tab-content">
-            <h2>Mi Perfil Profesional</h2>
-            <div class="profile-card">
-                <h2 style="color: var(--neon-green); text-align: center; border: none;">@<span id="perfil-usuario">usuario</span></h2>
-                <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
-                
-                <form class="profile-form" id="form-perfil">
-                    <label for="perfil-bio">Biografía</label>
-                    <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..."></textarea>
-                    <label for="perfil-habilidades">Habilidades</label>
-                    <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT...">
-                    <label for="perfil-github">GitHub (URL)</label>
-                    <input type="url" id="perfil-github" placeholder="https://github.com/...">
-                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
-                </form>
-
-                <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord">Unirse al Discord</a>
-            </div>
-        </section>
-
     </main>
 
     <footer>
@@ -380,124 +142,6 @@
 
         <p style="margin-top: 20px; color: #666;">&copy; 2026 eLDeSiempre.es</p>
     </footer>
-
-    <div class="modal-overlay" id="modal-osint">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-osint')">×</button>
-            <h2>OSINT Framework</h2>
-            <iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 8px;"></iframe>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-dorks">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-dorks')">×</button>
-            <h2>Generador de Dorks Avanzado</h2>
-            
-            <label style="color: var(--neon-green); font-size: 0.9rem;">Dominio o URL Objetivo:</label>
-            <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com o *.ejemplo.com">
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <div style="flex: 1;">
-                    <label style="color: var(--neon-green); font-size: 0.9rem;">Tipo de Archivo:</label>
-                    <select id="dork-type" class="tool-input" style="margin-bottom: 0;">
-                        <optgroup label="Documentos">
-                            <option value="pdf">PDF (.pdf)</option>
-                            <option value="doc OR docx">Word (.doc/.docx)</option>
-                            <option value="xls OR xlsx">Excel (.xls/.xlsx)</option>
-                            <option value="ppt OR pptx">PowerPoint (.ppt/.pptx)</option>
-                            <option value="txt">Texto (.txt)</option>
-                        </optgroup>
-                        <optgroup label="Código y Configuración">
-                            <option value="env">Variables de Entorno (.env)</option>
-                            <option value="sql">Volcado SQL (.sql)</option>
-                            <option value="log">Registros (.log)</option>
-                            <option value="conf OR config">Configuración (.conf)</option>
-                            <option value="php">PHP (.php)</option>
-                        </optgroup>
-                        <optgroup label="Bases de Datos y Backups">
-                            <option value="db OR sqlite">SQLite (.db/.sqlite)</option>
-                            <option value="bak">Backup (.bak)</option>
-                            <option value="zip OR rar OR tar">Comprimidos (.zip/.rar)</option>
-                        </optgroup>
-                    </select>
-                </div>
-                
-                <div style="flex: 1;">
-                    <label style="color: var(--neon-green); font-size: 0.9rem;">Filtro Adicional:</label>
-                    <select id="dork-extra" class="tool-input" style="margin-bottom: 0;">
-                        <option value="">Ninguno</option>
-                        <option value="inurl:admin">Panel de Admin (inurl:admin)</option>
-                        <option value="intext:password">Buscar contraseñas (intext:password)</option>
-                        <option value="intitle:index.of">Listado de directorios (intitle:index.of)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="generarDork()">Generar Dork</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarDorks()">Limpiar</button>
-            </div>
-            <div id="dork-result" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-exif">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-exif')">×</button>
-            <h2>Analizador EXIF</h2>
-            <input type="file" id="exif-input" accept="image/*" class="tool-input">
-            <div id="exif-result" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-pass">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-pass')">×</button>
-            <h2>Generador de Contraseñas</h2>
-            <div class="gen-controls">
-                <label><input type="checkbox" id="chk-mayus" checked> Mayúsculas</label>
-                <label><input type="checkbox" id="chk-minus" checked> Minúsculas</label>
-                <label><input type="checkbox" id="chk-nums" checked> Números</label>
-                <label><input type="checkbox" id="chk-symbols" checked> Símbolos</label>
-            </div>
-            <div class="gen-slider-container">
-                <input type="range" id="slider-longitud" min="4" max="60" value="16" oninput="document.getElementById('slider-valor').innerText = this.value">
-                <span class="gen-slider-value" id="slider-valor">16</span>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="generarPassword()">Generar</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarPassword()">Limpiar</button>
-            </div>
-            <div id="resultado-password" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-hash">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-hash')">×</button>
-            <h2>Analizador de Hash</h2>
-            <input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash aquí...">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="analizarHash()">Analizar</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarHash()">Limpiar</button>
-            </div>
-            <div id="resultado-hash" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-ip">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-ip')">×</button>
-            <h2>Buscador de IP / OSINT</h2>
-            <input type="text" id="ip-input" class="tool-input" placeholder="Ej: 8.8.8.8 o eldesiempre.es">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="buscarIP()">Analizar IP</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarIP()">Limpiar</button>
-            </div>
-            <div id="resultado-ip" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div>
-        </div>
-    </div>
 
     <div class="modal-overlay" id="modal-legal">
         <div class="modal-content">
