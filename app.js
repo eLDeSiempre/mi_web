@@ -116,6 +116,55 @@ function protegerContenidoPrivado() {
     }
 }
 
+async function cargarRecursosDesdeVPS() {
+    const contenedor = document.getElementById('contenedor-recursos');
+    if (!contenedor) return;
+
+    try {
+        const response = await fetch(`${API_URL}/obtener_recursos.php`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        if (!response.ok) throw new Error("Error de red");
+        const result = await response.json();
+
+        if (result.success) {
+            const categorias = {
+                1: "01. Formación y Certificaciones",
+                2: "02. Plataformas de Práctica (CTFs)",
+                3: "03. Herramientas Esenciales"
+            };
+
+            let html = `<h2>Recursos de Aprendizaje</h2><p style="margin-bottom: 20px;">Selecciona una categoría para desplegar los enlaces recomendados.</p>`;
+            
+            for (const [id, nombre] of Object.entries(categorias)) {
+                const recursosCat = result.data.filter(r => r.categoria_id == id);
+                if (recursosCat.length > 0) {
+                    html += `
+                        <div class="node">
+                            <div class="node-header-flex" onclick="toggleNode('rec${id}')">
+                                <h3>${nombre}</h3>
+                                <button class="btn-like" onclick="event.stopPropagation(); darLike('rec${id}', this)">⭐ <span>0</span></button>
+                            </div>
+                        </div>
+                        <div id="rec${id}" class="node-content">
+                            <ul style="margin-left: 20px; line-height: 2.2;">
+                    `;
+                    recursosCat.forEach(r => {
+                        html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} <a href="${r.url}" target="_blank">[Ir]</a></li>`;
+                    });
+                    html += `</ul></div>`;
+                }
+            }
+            
+            contenedor.innerHTML = html;
+        }
+    } catch (error) {
+        console.error("Error cargando recursos:", error);
+    }
+}
+
 document.getElementById('form-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
@@ -177,6 +226,10 @@ window.onload = () => {
     comprobarSesion();
     protegerContenidoPrivado();
     
+    if (window.location.pathname.includes('recursos.html')) {
+        setTimeout(cargarRecursosDesdeVPS, 1000);
+    }
+
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
         if(modal) modal.style.display = 'none';
