@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="eLDeSiempre.es - El Directorio de Recursos de Ciberseguridad y Hacking Ético.">
     <meta name="theme-color" content="#050505">
-    
     <meta property="og:title" content="eLDeSiempre.es - Ciberseguridad y Hacking Ético">
     <meta property="og:description" content="Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético.">
     <meta property="og:image" content="https://eldesiempre.es/assets/logo.png">
     <meta property="og:url" content="https://eldesiempre.es">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-
     <title>root@eLDeSiempre:~#</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
     <script>
       var _paq = window._paq = window._paq || [];
       _paq.push(['trackPageView']);
@@ -32,12 +28,12 @@
     </script>
 </head>
 <body class="locked">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
-    <div id="toast-container"></div>
-
-    <div class="modal-overlay active" id="disclaimer-modal">
+    <div class="modal-overlay active" id="disclaimer-modal" role="dialog" aria-modal="true" aria-labelledby="ttl-disclaimer">
         <div class="modal-content" style="text-align: left;">
-            <h2>⚠️ Descargo de Responsabilidad</h2>
+            <h2 id="ttl-disclaimer">⚠️ Descargo de Responsabilidad</h2>
             <p style="margin-bottom: 15px;">Bienvenido a <strong>eLDeSiempre.es</strong>. Antes de continuar, es obligatorio que lea y acepte las siguientes condiciones:</p>
             <ul style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
                 <li>Este sitio web tiene fines <strong>exclusivamente educativos e informativos</strong> sobre ciberseguridad y hacking ético.</li>
@@ -49,7 +45,7 @@
         </div>
     </div>
 
-    <div id="cookie-banner">
+    <div id="cookie-banner" role="region" aria-label="Aviso de cookies">
         <p>Utilizamos cookies propias y de terceros (Matomo) para analizar el tráfico y mejorar tu experiencia. Puedes aceptarlas o rechazarlas. <a href="#" onclick="mostrarAvisoLegal(event)">Más información</a>.</p>
         <div>
             <button class="btn-secondary" style="padding: 10px 20px; font-size: 0.9rem; margin: 0;" onclick="aceptarCookies(false)">Rechazar</button>
@@ -58,20 +54,20 @@
     </div>
 
     <header>
-        <div class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <button class="logo-container" onclick="window.location.href='index.html'" aria-label="Ir a la página de inicio">
+            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </div>
-        <nav>
+        </button>
+        <nav aria-label="Navegación principal">
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d; border-color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" id="main-content">
         <div class="hero">
             <h1>Aprende Ciberseguridad desde Cero</h1>
             <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
@@ -79,20 +75,19 @@
             <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
         </div>
 
-        <section style="margin-top: 50px;">
-            <h2>Últimas Guías</h2>
+        <section style="margin-top: 50px;" aria-labelledby="ttl-guias">
+            <h2 id="ttl-guias">Últimas Guías</h2>
             <div class="grid-cards" style="margin-top: 20px;">
-                <div class="card" onclick="window.location.href='guia.html?id=que-es-osint'">
+                <article class="card" onclick="window.location.href='guia.html?id=que-es-osint'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'){window.location.href='guia.html?id=que-es-osint'}">
                     <h3>¿Qué es el OSINT?</h3>
                     <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Descubre cómo se utiliza la inteligencia de fuentes abiertas para investigar personas y empresas sin dejar rastro.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
-                </div>
-                
-                <div class="card" onclick="window.location.href='guia.html?id=empezar-ctf'">
+                </article>
+                <article class="card" onclick="window.location.href='guia.html?id=empezar-ctf'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'){window.location.href='guia.html?id=empezar-ctf'}">
                     <h3>Cómo empezar en los CTFs</h3>
                     <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Guía paso a paso para entrar en el mundo de las competiciones de hacking ético (Capture The Flag) desde cero.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
-                </div>
+                </article>
             </div>
         </section>
     </main>
@@ -101,56 +96,42 @@
         <div class="support-footer">
             <h3>☕ Apoya el Proyecto</h3>
             <p style="margin-bottom: 20px;">Si te ha sido útil, puedes invitarme a un café o enviar cripto.</p>
-            <a href="https://www.paypal.biz/ldesiem" target="_blank" class="paypal-btn">Donar con PayPal</a>
-            
+            <a href="https://www.paypal.biz/ldesiem" target="_blank" rel="noopener noreferrer" class="paypal-btn">Donar con PayPal</a>
             <div class="crypto-list">
-                <div class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')">
-                    BTC <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                </div>
-                <div class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')">
-                    ETH <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                </div>
-                <div class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')">
-                    SOL <svg class="copy-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                </div>
+                <button class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')" aria-label="Copiar dirección Bitcoin">
+                    BTC
+                </button>
+                <button class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')" aria-label="Copiar dirección Ethereum">
+                    ETH
+                </button>
+                <button class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')" aria-label="Copiar dirección Solana">
+                    SOL
+                </button>
             </div>
         </div>
-        
-        <div class="social-links">
-            <a href="https://x.com/eLDeSiempre_TTV" target="_blank" title="X (Twitter)">
-                <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-            <a href="https://www.instagram.com/__eldesiempre__/" target="_blank" title="Instagram">
-                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@eLDeSiempreOfficial" target="_blank" title="YouTube">
-                <svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
-            <a href="https://www.twitch.tv/eldesiempre" target="_blank" title="Twitch">
-                <svg class="social-icon" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
-            </a>
-            <a href="https://www.tiktok.com/@eldesiempre_ttv" target="_blank" title="TikTok">
-                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-            </a>
+        <div class="social-links" aria-label="Redes sociales">
+            <a href="https://x.com/eLDeSiempre_TTV" target="_blank" rel="noopener noreferrer" title="X (Twitter)" aria-label="X (Twitter)"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.instagram.com/__eldesiempre__/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <a href="https://www.youtube.com/@eLDeSiempreOfficial" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="https://www.twitch.tv/eldesiempre" target="_blank" rel="noopener noreferrer" title="Twitch" aria-label="Twitch"><svg class="social-icon" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg></a>
+            <a href="https://www.tiktok.com/@eldesiempre_ttv" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="TikTok"><svg class="social-icon" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
         </div>
-        
         <div class="legal-links">
             <a href="#" onclick="mostrarAvisoLegal(event)">Aviso Legal</a>
             <a href="#" onclick="mostrarAvisoLegal(event)">Política de Privacidad (RGPD)</a>
             <a href="#" onclick="mostrarAvisoLegal(event)">Política de Cookies</a>
         </div>
-
-        <p style="margin-top: 20px; color: #666;">&copy; 2026 eLDeSiempre.es</p>
+        <p style="margin-top: 20px;">&copy; 2026 eLDeSiempre.es</p>
     </footer>
 
-    <div class="modal-overlay" id="modal-legal">
+    <div class="modal-overlay" id="modal-legal" role="dialog" aria-modal="true" aria-labelledby="ttl-legal">
         <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-legal')">×</button>
-            <h2>Información Legal y RGPD</h2>
-            <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main);">
+            <button class="close-btn" onclick="cerrarModal('modal-legal')" aria-label="Cerrar">×</button>
+            <h2 id="ttl-legal">Información Legal y RGPD</h2>
+            <div style="font-size: 0.92rem; line-height: 1.7; color: var(--text-main);">
                 <h3 style="color: var(--neon-blue); margin: 15px 0 5px;">1. Aviso Legal</h3>
                 <p>Este sitio web es un proyecto personal sin ánimo de lucro. El titular es el administrador de eLDeSiempre.es. El contenido es meramente educativo.</p>
-                
+
                 <h3 style="color: var(--neon-blue); margin: 15px 0 5px;">2. Política de Privacidad (RGPD)</h3>
                 <p>De acuerdo con el Reglamento (UE) 2016/679 (RGPD), te informamos:</p>
                 <ul style="margin-left: 20px;">
@@ -162,6 +143,18 @@
 
                 <h3 style="color: var(--neon-blue); margin: 15px 0 5px;">3. Política de Cookies</h3>
                 <p>Esta web utiliza cookies técnicas (para el inicio de sesión) y cookies analíticas (proporcionadas por Matomo, alojado en nuestros propios servidores, sin compartir datos con terceros). Puedes rechazar las analíticas sin que afecte al funcionamiento de la web.</p>
+
+                <h3 style="color: var(--neon-purple); margin: 20px 0 5px;">4. Auditoría de Uso Interno</h3>
+                <p>Para garantizar la seguridad del servicio y detectar abusos, <strong>eLDeSiempre.es registra de forma automatizada el uso de sus herramientas públicas</strong> (generador de Dorks, analizador de Hash, buscador de IP, análisis EXIF) y de los formularios públicos (contacto). Estos registros incluyen:</p>
+                <ul style="margin-left: 20px;">
+                    <li>La URL de la página donde se usó la herramienta.</li>
+                    <li>El identificador del campo o herramienta utilizada.</li>
+                    <li>La acción realizada (consultar, generar, limpiar, enviar).</li>
+                    <li>El valor introducido, <strong>excepto</strong> en los campos de contraseña, correo electrónico, login, registro y generador de contraseñas, que nunca se registran.</li>
+                    <li>Dirección IP y fecha/hora del uso, para trazabilidad de seguridad.</li>
+                </ul>
+                <p><strong>Base legal:</strong> interés legítimo (Art. 6.1.f RGPD) en la seguridad del servicio. <strong>Conservación:</strong> máximo 90 días. <strong>Destinatario:</strong> los registros se envían a un canal privado de Discord controlado exclusivamente por el administrador, y no se comparten con terceros. <strong>Derechos:</strong> puedes solicitar acceso o supresión escribiendo a <strong>contacto@eldesiempre.es</strong>.</p>
+                <p><strong>Aviso importante:</strong> NO debes introducir datos personales reales, contraseñas reales ni información sensible en las herramientas públicas. Están diseñadas para aprender y experimentar con datos de prueba.</p>
             </div>
         </div>
     </div>
