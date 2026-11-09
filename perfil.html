@@ -25,7 +25,7 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" style="display: none;">
         <h2>Mi Perfil Profesional</h2>
         <div class="profile-card">
             <h2 style="color: var(--neon-green); text-align: center; border: none;">@<span id="perfil-usuario">usuario</span></h2>
@@ -51,7 +51,6 @@
             mostrarToast('Perfil actualizado.', 'success');
         });
         
-        // Rellenar los datos del perfil (esto se puede mejorar cargando datos reales de la API)
         window.addEventListener('load', () => {
             setTimeout(() => {
                 if(usuarioLogueado) {
