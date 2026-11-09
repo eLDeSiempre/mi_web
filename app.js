@@ -1,4 +1,4 @@
-const API_URL = 'https://api.eldesiempre.es/api';
+const API_URL = 'https://api.eldesiempre.es';
 let usuarioLogueado = null;
 
 function abrirModal(id) { document.getElementById(id).classList.add('active'); }
