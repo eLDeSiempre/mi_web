@@ -5,41 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Login | eLDeSiempre.es</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="toast-container"></div>
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
     <header>
-        <div class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <button class="logo-container" onclick="window.location.href='index.html'" aria-label="Ir a la página de inicio">
+            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </div>
-        <nav>
+        </button>
+        <nav aria-label="Navegación principal">
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d; border-color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
-    <main class="container" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
-        <form class="auth-form" id="form-login">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-correo" placeholder="Correo Electrónico" required>
-            <input type="password" id="login-contrasena" placeholder="Contraseña" required>
+    <main class="container" id="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 60vh; gap: 40px; flex-wrap: wrap;">
+        <form class="auth-form" id="form-login" aria-labelledby="ttl-login">
+            <h2 id="ttl-login">Iniciar Sesión</h2>
+            <div class="form-field">
+                <label for="login-correo">Correo Electrónico</label>
+                <input type="email" id="login-correo" placeholder="tu@correo.com" required autocomplete="email">
+            </div>
+            <div class="form-field">
+                <label for="login-contrasena">Contraseña</label>
+                <input type="password" id="login-contrasena" placeholder="••••••••" required autocomplete="current-password">
+            </div>
             <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
             <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
         </form>
 
-        <form class="auth-form" id="form-registro" style="display: none;">
-            <h2>Crear Cuenta</h2>
-            <input type="text" id="reg-nombre" placeholder="Nombre Completo" required>
-            <input type="text" id="reg-usuario" placeholder="Nombre de Usuario" required>
-            <input type="email" id="reg-correo" placeholder="Correo Electrónico" required>
-            <input type="password" id="reg-contrasena" placeholder="Contraseña" required>
+        <form class="auth-form" id="form-registro" style="display: none;" aria-labelledby="ttl-registro">
+            <h2 id="ttl-registro">Crear Cuenta</h2>
+            <div class="form-field">
+                <label for="reg-nombre">Nombre Completo</label>
+                <input type="text" id="reg-nombre" placeholder="Tu nombre" required autocomplete="name">
+            </div>
+            <div class="form-field">
+                <label for="reg-usuario">Nombre de Usuario</label>
+                <input type="text" id="reg-usuario" placeholder="usuario123" required autocomplete="username">
+            </div>
+            <div class="form-field">
+                <label for="reg-correo">Correo Electrónico</label>
+                <input type="email" id="reg-correo" placeholder="tu@correo.com" required autocomplete="email">
+            </div>
+            <div class="form-field">
+                <label for="reg-contrasena">Contraseña</label>
+                <input type="password" id="reg-contrasena" placeholder="Mínimo 8 caracteres" required autocomplete="new-password" minlength="8">
+            </div>
             <button type="submit" class="btn-secondary" style="width: 100%;">Registrarse</button>
             <p style="text-align: center; margin-top: 20px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
         </form>
