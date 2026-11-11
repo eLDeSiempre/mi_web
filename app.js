@@ -1,20 +1,9 @@
 const API_URL = 'https://api.eldesiempre.es';
 let usuarioLogueado = null;
 
-function abrirModal(id) { 
-    const modal = document.getElementById(id);
-    if(modal) modal.classList.add('active'); 
-}
-
-function cerrarModal(id) { 
-    const modal = document.getElementById(id);
-    if(modal) modal.classList.remove('active'); 
-}
-
-function mostrarAvisoLegal(e) { 
-    if (e) e.preventDefault(); 
-    abrirModal('modal-legal'); 
-}
+function abrirModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.add('active'); }
+function cerrarModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.remove('active'); }
+function mostrarAvisoLegal(e) { if (e) e.preventDefault(); abrirModal('modal-legal'); }
 
 function mostrarToast(mensaje, tipo = 'success') {
     const container = document.getElementById('toast-container');
@@ -49,11 +38,7 @@ function aceptarCookies(aceptadas) {
 
 function copiarAlPortapapeles(texto, moneda) {
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(texto).then(() => {
-            mostrarToast('Dirección de ' + moneda + ' copiada', 'success');
-        }).catch(err => {
-            mostrarToast('No se pudo copiar automáticamente.', 'error');
-        });
+        navigator.clipboard.writeText(texto).then(() => mostrarToast('Dirección de ' + moneda + ' copiada', 'success')).catch(err => mostrarToast('No se pudo copiar.', 'error'));
     } else {
         const textArea = document.createElement("textarea");
         textArea.value = texto;
@@ -70,13 +55,12 @@ function logHerramienta(herramienta, accion, detalle = "") {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ herramienta, accion, detalle })
-    }).catch(err => console.log("Error al registrar herramienta"));
+    }).catch(err => console.log("Error log"));
 }
 
 function comprobarAcceso(url) {
-    if (usuarioLogueado) {
-        window.location.href = url;
-    } else {
+    if (usuarioLogueado) window.location.href = url;
+    else {
         mostrarToast("Debes iniciar sesión para acceder.", "error");
         setTimeout(() => window.location.href = 'login.html', 1500);
     }
@@ -84,10 +68,7 @@ function comprobarAcceso(url) {
 
 async function comprobarSesion() {
     try {
-        const response = await fetch(`${API_URL}/comprobar_sesion.php`, {
-            method: 'GET',
-            credentials: 'include'
-        });
+        const response = await fetch(`${API_URL}/comprobar_sesion.php`, { method: 'GET', credentials: 'include' });
         const result = await response.json();
         if (result.logueado) {
             usuarioLogueado = result;
@@ -96,9 +77,7 @@ async function comprobarSesion() {
             if(btnLogin) btnLogin.style.display = 'none';
             if(btnLogout) btnLogout.style.display = 'block';
         }
-    } catch (error) {
-        console.error("Error comprobando sesión", error);
-    }
+    } catch (error) {}
 }
 
 async function cerrarSesion() { 
@@ -113,10 +92,9 @@ function protegerContenidoPrivado() {
         if (mainContent) {
             mainContent.style.display = 'none';
             setTimeout(() => {
-                if (usuarioLogueado) {
-                    mainContent.style.display = 'block';
-                } else {
-                    mostrarToast("Acceso denegado. Debes iniciar sesión.", "error");
+                if (usuarioLogueado) mainContent.style.display = 'block';
+                else {
+                    mostrarToast("Acceso denegado.", "error");
                     setTimeout(() => window.location.href = 'login.html', 1000);
                 }
             }, 500);
@@ -129,12 +107,8 @@ async function cargarRecursosDesdeVPS() {
     if (!contenedor) return;
 
     try {
-        const response = await fetch(`${API_URL}/obtener_recursos.php`, {
-            method: 'GET',
-            credentials: 'include'
-        });
-        
-        if (!response.ok) throw new Error("Error de red");
+        const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
+        if (!response.ok) throw new Error("Error");
         const result = await response.json();
 
         if (result.success) {
@@ -170,38 +144,24 @@ async function cargarRecursosDesdeVPS() {
                     html += `</ul></div>`;
                 }
             }
-            
             contenedor.innerHTML = html;
             contenedor.style.display = 'block';
         }
     } catch (error) {
-        console.error("Error cargando recursos:", error);
-        contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos. Inténtalo más tarde.</p>";
+        contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
         contenedor.style.display = 'block';
     }
 }
 
-function toggleNode(nodeId) {
-    const content = document.getElementById(nodeId);
-    if(content) content.classList.toggle('open');
-}
-
-function darLike(nodeId, btn) {
-    mostrarToast("¡Gracias por votar!", "success");
-}
+function toggleNode(nodeId) { const content = document.getElementById(nodeId); if(content) content.classList.toggle('open'); }
+function darLike(nodeId, btn) { mostrarToast("¡Gracias por votar!", "success"); }
 
 document.getElementById('form-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = {
-        correo: document.getElementById('login-correo').value,
-        contrasena: document.getElementById('login-contrasena').value
-    };
+    const data = { correo: document.getElementById('login-correo').value, contrasena: document.getElementById('login-contrasena').value };
     try {
         const response = await fetch(`${API_URL}/login.php`, {
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
-            body: JSON.stringify(data),
-            credentials: 'include'
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include'
         });
         const result = await response.json();
         if (result.success) {
@@ -221,10 +181,7 @@ document.getElementById('form-registro')?.addEventListener('submit', async (e) =
     };
     try {
         const response = await fetch(`${API_URL}/registro.php`, {
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
-            body: JSON.stringify(data),
-            credentials: 'include'
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include'
         });
         const result = await response.json();
         if (result.success) {
@@ -251,9 +208,7 @@ window.onload = async () => {
     await comprobarSesion();
     protegerContenidoPrivado();
     
-    if (window.location.pathname.includes('recursos.html')) {
-        cargarRecursosDesdeVPS();
-    }
+    if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
 
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
@@ -267,10 +222,8 @@ window.onload = async () => {
 
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: window.location.href })
-        }).catch(err => console.log("Error al enviar alerta de visita"));
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href })
+        }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
     }
 };
