@@ -144,7 +144,8 @@ async function cargarRecursosDesdeVPS() {
                 3: "03. Blue Team, Forense y Respuesta a Incidentes",
                 4: "04. OSINT, Inteligencia y Búsqueda de Información",
                 5: "05. Desarrollo Seguro, Web y Bases de Datos",
-                6: "06. Sistemas Operativos y Administración"
+                6: "06. Sistemas Operativos y Administración",
+                7: "07. Noticias, Comunidades y Referentes"
             };
 
             let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces recomendados.</p>`;
