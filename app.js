@@ -119,7 +119,7 @@ function protegerContenidoPrivado() {
                     mostrarToast("Acceso denegado. Debes iniciar sesión.", "error");
                     setTimeout(() => window.location.href = 'login.html', 1000);
                 }
-            }, 800);
+            }, 500);
         }
     }
 }
@@ -139,12 +139,15 @@ async function cargarRecursosDesdeVPS() {
 
         if (result.success) {
             const categorias = {
-                1: "01. Formación y Certificaciones",
-                2: "02. Plataformas de Práctica (CTFs)",
-                3: "03. Herramientas Esenciales"
+                1: "01. Formación, Certificaciones y Teoría",
+                2: "02. Red Team, Pentesting y Explotación",
+                3: "03. Blue Team, Forense y Respuesta a Incidentes",
+                4: "04. OSINT, Inteligencia y Búsqueda de Información",
+                5: "05. Desarrollo Seguro, Web y Bases de Datos",
+                6: "06. Sistemas Operativos y Administración"
             };
 
-            let html = `<h2>Recursos de Aprendizaje</h2><p style="margin-bottom: 20px;">Selecciona una categoría para desplegar los enlaces recomendados.</p>`;
+            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces recomendados.</p>`;
             
             for (const [id, nombre] of Object.entries(categorias)) {
                 const recursosCat = result.data.filter(r => r.categoria_id == id);
@@ -157,20 +160,33 @@ async function cargarRecursosDesdeVPS() {
                             </div>
                         </div>
                         <div id="rec${id}" class="node-content">
-                            <ul style="margin-left: 20px; line-height: 2.2;">
+                            <ul>
                     `;
                     recursosCat.forEach(r => {
-                        html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} <a href="${r.url}" target="_blank">[Ir]</a></li>`;
+                        const badge = r.tipo ? `<span class="badge">${r.tipo}</span>` : '';
+                        html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} ${badge} <a href="${r.url}" target="_blank" rel="noopener noreferrer">[Ir]</a></li>`;
                     });
                     html += `</ul></div>`;
                 }
             }
             
             contenedor.innerHTML = html;
+            contenedor.style.display = 'block';
         }
     } catch (error) {
         console.error("Error cargando recursos:", error);
+        contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos. Inténtalo más tarde.</p>";
+        contenedor.style.display = 'block';
     }
+}
+
+function toggleNode(nodeId) {
+    const content = document.getElementById(nodeId);
+    if(content) content.classList.toggle('open');
+}
+
+function darLike(nodeId, btn) {
+    mostrarToast("¡Gracias por votar!", "success");
 }
 
 document.getElementById('form-login')?.addEventListener('submit', async (e) => {
@@ -230,12 +246,12 @@ function toggleAuthForms(event) {
     }
 }
 
-window.onload = () => {
-    comprobarSesion();
+window.onload = async () => {
+    await comprobarSesion();
     protegerContenidoPrivado();
     
     if (window.location.pathname.includes('recursos.html')) {
-        setTimeout(cargarRecursosDesdeVPS, 1000);
+        cargarRecursosDesdeVPS();
     }
 
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
