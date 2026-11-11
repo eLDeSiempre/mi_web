@@ -20,23 +20,14 @@
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn active" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
-            <button class="nav-btn" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
             <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
-    <main class="container" id="contenedor-recursos" style="display: none;">
+    <main class="container" id="contenedor-recursos">
     </main>
     
-    <script>
-        function toggleNode(nodeId) {
-            const content = document.getElementById(nodeId);
-            if(content) content.classList.toggle('open');
-        }
-        function darLike(nodeId, btn) {
-            mostrarToast("¡Gracias por votar!", "success");
-        }
-    </script>
     <script src="app.js"></script>
 </body>
 </html>
