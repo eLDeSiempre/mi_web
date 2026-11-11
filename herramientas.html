@@ -22,49 +22,49 @@
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
     <main class="container">
         <h2>Laboratorio de Herramientas</h2>
-        <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta. No necesitas ser un experto, aquí te explicamos para qué sirve cada una.</p>
+        <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta.</p>
         
         <div class="grid-cards">
             <div class="card" onclick="abrirModal('modal-osint')">
                 <h3>OSINT Framework</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Es como un "árbol genealógico" de internet. Te muestra dónde buscar información pública (redes sociales, registros, etc.) sobre una persona o empresa.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Investigar antecedentes o encontrar datos ocultos.</p>
+                <p>Árbol genealógico de internet. Muestra dónde buscar información pública sobre una persona o empresa.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Investigar antecedentes.</p>
             </div>
             
             <div class="card" onclick="abrirModal('modal-dorks')">
                 <h3>Generador de Dorks</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Los "Dorks" son trucos de búsqueda avanzada en Google. Con esta herramienta puedes buscar archivos específicos (como PDFs o Excels) que estén expuestos por error en una web.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Encontrar documentos filtrados o vulnerabilidades.</p>
+                <p>Trucos de búsqueda avanzada en Google para encontrar archivos expuestos por error.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Encontrar documentos filtrados.</p>
             </div>
 
             <div class="card" onclick="abrirModal('modal-exif')">
                 <h3>Analizador EXIF</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Cuando haces una foto, tu móvil guarda datos ocultos: la hora, el modelo del móvil e incluso las coordenadas GPS. Esta herramienta te enseña esa "letra pequeña" de las imágenes.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si alguien ha subido una foto con tu ubicación.</p>
+                <p>Extrae datos ocultos de las imágenes: hora, modelo del móvil y coordenadas GPS.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si una foto revela tu ubicación.</p>
             </div>
 
             <div class="card" onclick="abrirModal('modal-pass')">
                 <h3>Generador de Contraseñas</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Crea contraseñas súper seguras y aleatorias. Olvídate de usar "1234" o tu fecha de cumpleaños; aquí generamos claves imposibles de adivinar para ti.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Proteger tus cuentas de correo y redes sociales.</p>
+                <p>Crea contraseñas súper seguras y aleatorias. Olvídate de usar "1234".</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Proteger tus cuentas.</p>
             </div>
 
             <div class="card" onclick="abrirModal('modal-hash')">
                 <h3>Analizador de Hash</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Un "Hash" es como una huella digital de un archivo o contraseña. Esta herramienta te dice qué tipo de huella es (si es de una contraseña, de un archivo, etc.).</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender cómo se guardan las contraseñas en las webs.</p>
+                <p>Un "Hash" es la huella digital de una contraseña. Descubre qué tipo de huella es.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender el almacenamiento de claves.</p>
             </div>
 
             <div class="card" onclick="abrirModal('modal-ip')">
                 <h3>Buscador de IP / OSINT</h3>
-                <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Cada dispositivo conectado a internet tiene una matrícula (IP). Esta herramienta te dice de qué país, ciudad y compañía es esa matrícula.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber de dónde viene una visita extraña a tu web.</p>
+                <p>Descubre el país, ciudad y proveedor de una dirección IP o dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Rastrear el origen de una visita.</p>
             </div>
         </div>
     </main>
@@ -73,7 +73,7 @@
         <div class="modal-content">
             <button class="close-btn" onclick="cerrarModal('modal-osint')">×</button>
             <h2>OSINT Framework</h2>
-            <iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 8px;"></iframe>
+            <iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 4px;"></iframe>
         </div>
     </div>
 
@@ -200,7 +200,7 @@
             if (filtroExtra) { query += ` ${filtroExtra}`; }
             query += ` filetype:${tipoArchivo}`;
             document.getElementById('dork-result').innerHTML = `
-                <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px;">
+                <div style="background: #000; padding: 15px; border-radius: 4px; border: 1px solid var(--border); margin-top: 15px;">
                     <p style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 10px;">Dork generado:</p>
                     <code style="color: var(--neon-green); font-size: 1.1rem; word-break: break-all; display: block; margin-bottom: 15px;">${query}</code>
                     <div style="display: flex; gap: 10px;">
@@ -230,7 +230,7 @@
                 if (Object.keys(allTags).length === 0) { resultado.innerHTML = "Sin metadatos."; return; }
                 let html = "<ul style='list-style: none; padding: 0;'>";
                 for (let tag in allTags) {
-                    if (allTags[tag] !== "" && tag !== "MakerNote") html += `<li><strong>${tag}:</strong> ${allTags[tag]}</li>`;
+                    if (allTags[tag] !== "" && tag !== "MakerNote") html += `<li style="padding: 4px 0; border-bottom: 1px solid #222;"><strong>${tag}:</strong> ${allTags[tag]}</li>`;
                 }
                 resultado.innerHTML = html;
             });
