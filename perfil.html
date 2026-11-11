@@ -21,7 +21,7 @@
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
@@ -29,7 +29,7 @@
         <h2>Mi Perfil Profesional</h2>
         <div class="profile-card">
             <h2 style="color: var(--neon-green); text-align: center; border: none;">@<span id="perfil-usuario">usuario</span></h2>
-            <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
             
             <form class="profile-form" id="form-perfil">
                 <label for="perfil-bio">Biografía</label>
@@ -59,7 +59,7 @@
                     if(userElement) userElement.innerText = usuarioLogueado.usuario;
                     if(nameElement) nameElement.innerText = usuarioLogueado.nombre;
                 }
-            }, 1000);
+            }, 500);
         });
     </script>
     <script src="app.js"></script>
