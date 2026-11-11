@@ -21,11 +21,11 @@
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d; border-color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
-    <main class="container" id="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 60vh; gap: 40px; flex-wrap: wrap;">
+    <main class="container" id="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 60vh; gap: 30px; flex-wrap: wrap;">
         <form class="auth-form" id="form-login" aria-labelledby="ttl-login">
             <h2 id="ttl-login">Iniciar Sesión</h2>
             <div class="form-field">
@@ -37,7 +37,7 @@
                 <input type="password" id="login-contrasena" placeholder="••••••••" required autocomplete="current-password">
             </div>
             <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
-            <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
+            <p style="text-align: center; margin-top: 15px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
         </form>
 
         <form class="auth-form" id="form-registro" style="display: none;" aria-labelledby="ttl-registro">
@@ -59,7 +59,7 @@
                 <input type="password" id="reg-contrasena" placeholder="Mínimo 8 caracteres" required autocomplete="new-password" minlength="8">
             </div>
             <button type="submit" class="btn-secondary" style="width: 100%;">Registrarse</button>
-            <p style="text-align: center; margin-top: 20px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
+            <p style="text-align: center; margin-top: 15px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
         </form>
     </main>
     <script src="app.js"></script>
