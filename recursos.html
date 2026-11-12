@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Recursos | eLDeSiempre.es</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,12 +19,14 @@
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn active" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333; border-color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
         </nav>
     </header>
 
-    <main class="container" id="contenedor-recursos">
+    <main class="container" id="contenedor-recursos" style="display: none;">
     </main>
     
     <script src="app.js"></script>
