@@ -425,3 +425,9 @@ async function analizarMAC() {
         res.innerHTML = `<span style="color: var(--danger);">Error de conexión con el servicio.</span>`;
     }
 }
+
+function abrirCanarytoken(tipo, descripcion) {
+    mostrarToast(`Abriendo Canarytokens. Selecciona "${tipo}" en la web oficial.`, 'success');
+    logHerramienta("Canarytokens", "Crear", tipo, descripcion);
+    window.open('https://canarytokens.org/nest/', '_blank');
+}
