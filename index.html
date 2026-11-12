@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="eLDeSiempre.es - El Directorio de Recursos de Ciberseguridad y Hacking Ético.">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="eLDeSiempre.es - Donde la seguridad y el conocimiento se encuentran.">
+    <meta name="theme-color" content="#050505">
     <meta property="og:title" content="eLDeSiempre.es - Ciberseguridad y Hacking Ético">
     <meta property="og:description" content="Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético.">
     <meta property="og:image" content="https://eldesiempre.es/assets/logo.png">
     <meta property="og:url" content="https://eldesiempre.es">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <title>eLDeSiempre.es</title>
+    <title>eLDeSiempre.es | Donde la seguridad y el conocimiento se encuentran</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
     <script>
@@ -63,29 +63,29 @@
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff4d4d; border-color:#ff4d4d;" onclick="cerrarSesion()">Salir</button>
         </nav>
     </header>
 
     <main class="container" id="main-content">
         <div class="hero">
-            <h1>Aprende Ciberseguridad desde Cero</h1>
+            <h1>Donde la seguridad y el conocimiento se encuentran</h1>
             <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
             <button class="btn-primary" onclick="comprobarAcceso('recursos.html')">Explorar Recursos</button>
             <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
         </div>
 
-        <section style="margin-top: 40px;" aria-labelledby="ttl-guias">
+        <section style="margin-top: 50px;" aria-labelledby="ttl-guias">
             <h2 id="ttl-guias">Últimas Guías</h2>
-            <div class="grid-cards" style="margin-top: 15px;">
+            <div class="grid-cards" style="margin-top: 20px;">
                 <article class="card" onclick="window.location.href='guia.html?id=que-es-osint'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'){window.location.href='guia.html?id=que-es-osint'}">
                     <h3>¿Qué es el OSINT?</h3>
-                    <p>Descubre cómo se utiliza la inteligencia de fuentes abiertas para investigar personas y empresas sin dejar rastro.</p>
+                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Descubre cómo se utiliza la inteligencia de fuentes abiertas para investigar personas y empresas sin dejar rastro.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
                 </article>
                 <article class="card" onclick="window.location.href='guia.html?id=empezar-ctf'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'){window.location.href='guia.html?id=empezar-ctf'}">
                     <h3>Cómo empezar en los CTFs</h3>
-                    <p>Guía paso a paso para entrar en el mundo de las competiciones de hacking ético (Capture The Flag) desde cero.</p>
+                    <p style="margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem;">Guía paso a paso para entrar en el mundo de las competiciones de hacking ético (Capture The Flag) desde cero.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Leer guía →</p>
                 </article>
             </div>
@@ -95,7 +95,7 @@
     <footer>
         <div class="support-footer">
             <h3>☕ Apoya el Proyecto</h3>
-            <p style="margin-bottom: 15px;">Si te ha sido útil, puedes invitarme a un café o enviar cripto.</p>
+            <p style="margin-bottom: 20px;">Si te ha sido útil, puedes invitarme a un café o enviar cripto.</p>
             <a href="https://www.paypal.biz/ldesiem" target="_blank" rel="noopener noreferrer" class="paypal-btn">Donar con PayPal</a>
             <div class="crypto-list">
                 <button class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')" aria-label="Copiar dirección Bitcoin">BTC</button>
@@ -115,14 +115,14 @@
             <a href="#" onclick="mostrarAvisoLegal(event)">Política de Privacidad (RGPD)</a>
             <a href="#" onclick="mostrarAvisoLegal(event)">Política de Cookies</a>
         </div>
-        <p style="margin-top: 15px;">&copy; 2026 eLDeSiempre.es</p>
+        <p style="margin-top: 20px;">&copy; 2026 eLDeSiempre.es</p>
     </footer>
 
     <div class="modal-overlay" id="modal-legal" role="dialog" aria-modal="true" aria-labelledby="ttl-legal">
         <div class="modal-content">
             <button class="close-btn" onclick="cerrarModal('modal-legal')" aria-label="Cerrar">×</button>
             <h2 id="ttl-legal">Información Legal y RGPD</h2>
-            <div style="font-size: 0.9rem; line-height: 1.7; color: var(--text-main);">
+            <div style="font-size: 0.92rem; line-height: 1.7; color: var(--text-main);">
                 <h3 style="color: var(--neon-blue); margin: 15px 0 5px;">1. Aviso Legal</h3>
                 <p>Este sitio web es un proyecto personal sin ánimo de lucro. El titular es el administrador de eLDeSiempre.es. El contenido es meramente educativo.</p>
 
