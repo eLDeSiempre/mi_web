@@ -98,8 +98,11 @@ async function comprobarSesion() {
             usuarioLogueado = result;
             const btnLogin = document.getElementById('nav-login-btn');
             const btnLogout = document.getElementById('nav-logout-btn');
+            const btnPerfil = document.getElementById('nav-perfil-btn');
+            
             if(btnLogin) btnLogin.style.display = 'none';
             if(btnLogout) btnLogout.style.display = 'block';
+            if(btnPerfil) btnPerfil.style.display = 'block';
         }
     } catch (error) {}
 }
