@@ -105,12 +105,14 @@ function protegerContenidoPrivado() {
 function getBadgeClass(tipo) {
     if (!tipo) return 'badge-default';
     const t = tipo.toLowerCase();
-    if (t.includes('curso') || t.includes('formación')) return 'badge-curso';
-    if (t.includes('herramienta') || t.includes('laboratorio')) return 'badge-herramienta';
-    if (t.includes('libro') || t.includes('documentación')) return 'badge-libro';
-    if (t.includes('hacker') || t.includes('referente')) return 'badge-hacker';
+    if (t.includes('curso')) return 'badge-curso';
+    if (t.includes('herramienta')) return 'badge-herramienta';
+    if (t.includes('libro')) return 'badge-libro';
+    if (t.includes('hacker')) return 'badge-hacker';
     if (t.includes('sistema')) return 'badge-sistema';
     if (t.includes('noticia') || t.includes('comunidad')) return 'badge-noticia';
+    if (t.includes('documentación')) return 'badge-doc';
+    if (t.includes('laboratorio')) return 'badge-lab';
     return 'badge-default';
 }
 
@@ -124,40 +126,49 @@ async function cargarRecursosDesdeVPS() {
         const result = await response.json();
 
         if (result.success) {
-            const categorias = {
-                1: "01. Formación y Certificaciones",
-                2: "02. Red Team, Pentesting y Explotación",
-                3: "03. Blue Team, Forense y Respuesta",
-                4: "04. OSINT e Inteligencia",
-                5: "05. Desarrollo Seguro",
-                6: "06. Sistemas Operativos",
-                7: "07. Noticias y Comunidades",
-                8: "08. Referentes Hispanos",
-                9: "09. Libros en Español"
+            const estructura = {
+                "01. Formación": {
+                    "Cursos y Certificaciones": [1, 12, 13, 14, 15],
+                    "Plataformas de Práctica": [4, 5, 6, 7, 19, 20, 21]
+                },
+                "02. Red Team & Pentesting": {
+                    "Herramientas y Documentación": [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34],
+                    "Explotación Web": [51, 56, 57, 55]
+                },
+                "03. Blue Team & Forense": {
+                    "Herramientas de Defensa": [3, 35, 36, 37, 38, 39, 40]
+                },
+                "04. OSINT": {
+                    "Inteligencia de Fuentes Abiertas": [41, 42, 44, 45, 46, 47, 48, 49, 50]
+                },
+                "05. Sistemas Operativos": {
+                    "Distribuciones y Entornos": [58, 59, 60, 61, 62, 63, 64, 65]
+                },
+                "06. Referentes y Libros": {
+                    "Hackers Hispanos": [71, 72, 73, 74, 75, 76, 84, 85, 86],
+                    "Bibliografía en Español": [9, 77, 78, 79, 80, 81, 82, 83, 87, 88]
+                }
             };
 
-            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces.</p>`;
+            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Explora el conocimiento estructurado por áreas.</p>`;
             
-            for (const [id, nombre] of Object.entries(categorias)) {
-                const recursosCat = result.data.filter(r => r.categoria_id == id);
-                if (recursosCat.length > 0) {
-                    html += `
-                        <div class="node">
-                            <div class="node-header-flex" onclick="toggleNode('rec${id}')">
-                                <h3>${nombre}</h3>
-                                <button class="btn-like" onclick="event.stopPropagation(); darLike('rec${id}', this)">⭐ <span>0</span></button>
-                            </div>
-                        </div>
-                        <div id="rec${id}" class="node-content">
-                            <ul>
-                    `;
+            let globalIndex = 0;
+            for (const [seccion, categorias] of Object.entries(estructura)) {
+                html += `<div class="arbol-seccion"><h3 onclick="toggleNode('sec${globalIndex}')">> ${seccion}</h3><div id="sec${globalIndex}" class="arbol-contenido">`;
+                for (const [subcat, ids] of Object.entries(categorias)) {
+                    globalIndex++;
+                    html += `<div class="arbol-subseccion"><h4 onclick="toggleNode('sub${globalIndex}')">+ ${subcat}</h4><div id="sub${globalIndex}" class="arbol-subcontenido"><ul>`;
+                    const recursosCat = result.data.filter(r => ids.includes(r.id) || (subcat === "Cursos y Certificaciones" && r.categoria_id == 1) || (subcat === "Herramientas y Documentación" && r.categoria_id == 2));
                     recursosCat.forEach(r => {
                         const badgeClass = getBadgeClass(r.tipo);
                         const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
-                        html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} ${badge} <a href="${r.url}" target="_blank" rel="noopener noreferrer">[Ir]</a></li>`;
+                        const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
+                        html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} ${badge} <a href="${r.url}" target="_blank" rel="noopener noreferrer">[Ir]</a> <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button></li>`;
                     });
-                    html += `</ul></div>`;
+                    html += `</ul></div></div>`;
                 }
+                html += `</div></div>`;
+                globalIndex++;
             }
             contenedor.innerHTML = html;
             contenedor.style.display = 'block';
@@ -168,16 +179,33 @@ async function cargarRecursosDesdeVPS() {
     }
 }
 
-function toggleNode(nodeId) { const content = document.getElementById(nodeId); if(content) content.classList.toggle('open'); }
-function darLike(nodeId, btn) { mostrarToast("¡Gracias por votar!", "success"); }
+async function votarRecurso(id, btn) {
+    if(!usuarioLogueado) { mostrarToast("Inicia sesión para votar.", "error"); return; }
+    try {
+        const response = await fetch(`${API_URL}/votar.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recurso_id: id }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if (result.success) {
+            btn.classList.toggle('votado');
+            const span = btn.querySelector('span');
+            span.innerText = result.votos;
+        } else {
+            mostrarToast(result.message, "error");
+        }
+    } catch (error) { mostrarToast("Error al votar.", "error"); }
+}
+
+function toggleNode(nodeId) { const content = document.getElementById(nodeId); if(content) content.style.display = content.style.display === 'block' ? 'none' : 'block'; }
 
 document.getElementById('form-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = { correo: document.getElementById('login-correo').value, contrasena: document.getElementById('login-contrasena').value };
     try {
-        const response = await fetch(`${API_URL}/login.php`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include'
-        });
+        const response = await fetch(`${API_URL}/login.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
         const result = await response.json();
         if (result.success) {
             mostrarToast('Bienvenido ' + result.nombre, 'success');
@@ -188,19 +216,12 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
 
 document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = {
-        nombre_completo: document.getElementById('reg-nombre').value,
-        usuario: document.getElementById('reg-usuario').value,
-        correo: document.getElementById('reg-correo').value,
-        contrasena: document.getElementById('reg-contrasena').value
-    };
+    const data = { nombre_completo: document.getElementById('reg-nombre').value, usuario: document.getElementById('reg-usuario').value, correo: document.getElementById('reg-correo').value, contrasena: document.getElementById('reg-contrasena').value };
     try {
-        const response = await fetch(`${API_URL}/registro.php`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include'
-        });
+        const response = await fetch(`${API_URL}/registro.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
         const result = await response.json();
         if (result.success) {
-            mostrarToast('Registro exitoso. Revisa tu correo.', 'success');
+            mostrarToast('Registro exitoso.', 'success');
             document.getElementById('form-registro').reset();
             document.getElementById('form-login').style.display = 'block';
             document.getElementById('form-registro').style.display = 'none';
@@ -212,35 +233,66 @@ function toggleAuthForms(event) {
     if(event) event.preventDefault();
     const formLogin = document.getElementById('form-login');
     const formRegistro = document.getElementById('form-registro');
-    if (formLogin.style.display === 'none') {
-        formLogin.style.display = 'block'; formRegistro.style.display = 'none';
-    } else {
-        formLogin.style.display = 'none'; formRegistro.style.display = 'block';
-    }
+    if (formLogin.style.display === 'none') { formLogin.style.display = 'block'; formRegistro.style.display = 'none'; } 
+    else { formLogin.style.display = 'none'; formRegistro.style.display = 'block'; }
 }
+
+async function cargarPerfil() {
+    const userSpan = document.getElementById('perfil-usuario');
+    const nameSpan = document.getElementById('perfil-nombre');
+    const bioInput = document.getElementById('perfil-bio');
+    const habInput = document.getElementById('perfil-habilidades');
+    const gitInput = document.getElementById('perfil-github');
+    if (!userSpan || !usuarioLogueado) return;
+    
+    userSpan.innerText = usuarioLogueado.usuario;
+    nameSpan.innerText = usuarioLogueado.nombre;
+    
+    try {
+        const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            if(bioInput) bioInput.value = result.data.bio || '';
+            if(habInput) habInput.value = result.data.habilidades || '';
+            if(gitInput) gitInput.value = result.data.github || '';
+        }
+    } catch(e) {}
+}
+
+document.getElementById('form-perfil')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const bio = document.getElementById('perfil-bio').value;
+    const habilidades = document.getElementById('perfil-habilidades').value;
+    const github = document.getElementById('perfil-github').value;
+    try {
+        const response = await fetch(`${API_URL}/actualizar_perfil.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bio, habilidades, github }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if(result.success) mostrarToast('Perfil actualizado.', 'success');
+        else mostrarToast('Error al actualizar.', 'error');
+    } catch(e) { mostrarToast('Error de conexión.', 'error'); }
+});
 
 window.onload = async () => {
     await comprobarSesion();
     protegerContenidoPrivado();
     
-    if (window.location.pathname.includes('recursos.html')) {
-        cargarRecursosDesdeVPS();
-    }
+    if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
+    if (window.location.pathname.includes('perfil.html')) cargarPerfil();
 
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
         if(modal) modal.style.display = 'none';
         document.body.classList.remove('locked');
-        if (!localStorage.getItem('cookiesAceptadas')) {
-            const banner = document.getElementById('cookie-banner');
-            if(banner) banner.style.display = 'flex';
-        }
+        if (!localStorage.getItem('cookiesAceptadas')) { const banner = document.getElementById('cookie-banner'); if(banner) banner.style.display = 'flex'; }
     }
 
     if (!sessionStorage.getItem('visita_alertada')) {
-        fetch(`${API_URL}/visita.php`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href })
-        }).catch(err => console.log("Error"));
+        fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
     }
 };
