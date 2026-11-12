@@ -72,11 +72,12 @@ function copiarAlPortapapeles(texto, moneda) {
     }
 }
 
-function logHerramienta(herramienta, accion, detalle = "") {
+function logHerramienta(herramienta, accion, input = "", output = "") {
     fetch(`${API_URL}/herramientas.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ herramienta, accion, detalle })
+        body: JSON.stringify({ herramienta, accion, input, output }),
+        credentials: 'include'
     }).catch(err => console.log("Error log"));
 }
 
