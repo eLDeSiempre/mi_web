@@ -69,7 +69,6 @@ nav { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
 h2 { color: var(--text-bright); font-size: 1.6rem; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-weight: 600; }
 h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 
-/* HERO Y BOTONES */
 .hero { text-align: center; padding: 50px 0; }
 .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--text-bright); margin-bottom: 15px; }
 .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 30px auto; }
@@ -79,7 +78,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-bright); }
 .btn-secondary:hover { background: var(--card-bg); border-color: var(--neon-blue); }
 
-/* DISEÑO DE CARPETAS (RECURSOS) */
 .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
 .folder { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; transition: 0.2s; position: relative; text-decoration: none; }
 .folder:hover { border-color: var(--neon-blue); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
@@ -88,7 +86,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .folder p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; flex-grow: 1; }
 .folder-badge { display: inline-block; background: var(--border); color: var(--text-bright); font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
 
-/* MODALES DE RECURSOS (DENTRO DE LAS CARPETAS) */
 .resource-list { list-style: none; padding: 0; margin-top: 15px; }
 .resource-item { background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
 .resource-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
@@ -103,7 +100,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .btn-voto:hover { border-color: var(--neon-gold); color: var(--neon-gold); }
 .btn-voto.votado { background: var(--neon-gold); color: var(--btn-text); border-color: var(--neon-gold); }
 
-/* ETIQUETAS DE COLORES */
 .badge { color: var(--btn-text); font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; font-weight: bold; white-space: nowrap; }
 .badge-curso { background: var(--neon-green); }
 .badge-herramienta { background: var(--neon-blue); }
@@ -115,7 +111,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .badge-lab { background: #79c0ff; color: var(--bg-color); }
 .badge-default { background: var(--border); color: var(--text-bright); }
 
-/* HERRAMIENTAS Y OTRAS VISTAS */
 .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
 .card { background: var(--card-bg); padding: 25px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; transition: 0.2s; text-decoration: none; }
 .card:hover { border-color: var(--neon-blue); transform: translateY(-2px); }
@@ -133,7 +128,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .gen-slider-container input[type="range"] { flex-grow: 1; accent-color: var(--neon-blue); }
 .gen-slider-value { color: var(--neon-blue); font-weight: bold; font-size: 1.2rem; }
 
-/* AUTH, PERFIL Y FORMULARIOS */
 .auth-form { background: var(--card-bg); padding: 30px; border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 400px; }
 .auth-form h2 { border: none; text-align: center; margin-bottom: 20px; }
 .form-field { margin-bottom: 15px; }
@@ -144,7 +138,6 @@ h2::before { content: '> '; color: var(--neon-green); font-weight: bold; }
 .contact-form textarea { resize: vertical; min-height: 120px; }
 .profile-card { background: var(--card-bg); padding: 30px; border: 1px solid var(--border); border-radius: 8px; }
 
-/* FOOTER */
 footer { text-align: center; padding: 40px 5%; border-top: 1px solid var(--border); margin-top: auto; background: var(--card-bg); color: var(--text-muted); }
 .support-footer h3 { color: var(--neon-gold); margin-bottom: 10px; }
 .support-footer .paypal-btn { display: inline-block; padding: 10px 20px; background: #0070ba; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }
@@ -162,6 +155,15 @@ footer { text-align: center; padding: 40px 5%; border-top: 1px solid var(--borde
 #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); border-top: 1px solid var(--border); padding: 15px; display: none; justify-content: space-between; align-items: center; z-index: 10000; flex-wrap: wrap; gap: 15px; }
 #cookie-banner p { margin: 0; font-size: 0.9rem; max-width: 800px; color: var(--text-main); }
 #cookie-banner a { color: var(--neon-blue); }
+
+.breadcrumb { margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted); }
+.breadcrumb a { color: var(--neon-blue); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span { color: var(--neon-green); font-weight: bold; }
+.category-header { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+.category-header h2 { border-bottom: none; margin-bottom: 5px; padding-bottom: 0; }
+.category-header p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; }
+.resource-actions .btn-link::after { content: ' ↗'; font-size: 0.8em; }
 
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 15px; padding: 15px; }
