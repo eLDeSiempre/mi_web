@@ -5,9 +5,7 @@ function inicializarTema() {
     const temaGuardado = localStorage.getItem('tema');
     const body = document.body;
     const btnToggle = document.getElementById('theme-toggle');
-    
     if (temaGuardado === 'light') body.classList.add('light-mode');
-    
     if (btnToggle) {
         btnToggle.innerText = body.classList.contains('light-mode') ? '☀️' : '🌙';
         btnToggle.addEventListener('click', () => {
@@ -98,7 +96,6 @@ async function comprobarSesion() {
             const btnLogin = document.getElementById('nav-login-btn');
             const btnLogout = document.getElementById('nav-logout-btn');
             const btnPerfil = document.getElementById('nav-perfil-btn');
-            
             if(btnLogin) btnLogin.style.display = 'none';
             if(btnLogout) btnLogout.style.display = 'block';
             if(btnPerfil) btnPerfil.style.display = 'block';
@@ -145,6 +142,8 @@ function getBadgeClass(tipo) {
 async function cargarRecursosDesdeVPS() {
     const contenedor = document.getElementById('contenedor-recursos');
     if (!contenedor) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoriaActual = urlParams.get('cat');
 
     try {
         const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
@@ -153,60 +152,80 @@ async function cargarRecursosDesdeVPS() {
 
         if (result.success) {
             const estructura = {
-                "Formación y Certificaciones": { icon: "🎓", desc: "Cursos, plataformas y certificaciones para iniciarte o especializarte.", ids: [1, 12, 13, 14, 15, 4, 5, 6, 7, 19, 20, 21] },
-                "Red Team & Pentesting": { icon: "⚔️", desc: "Herramientas y documentación para pruebas de penetración y explotación.", ids: [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] },
-                "Blue Team & Forense": { icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
-                "OSINT e Inteligencia": { icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
-                "Sistemas Operativos": { icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
-                "Referentes y Libros": { icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
+                "formacion": { titulo: "Formación y Certificaciones", icon: "🎓", desc: "Cursos, plataformas y certificaciones para iniciarte o especializarte.", ids: [1, 12, 13, 14, 15, 4, 5, 6, 7, 19, 20, 21] },
+                "red-team": { titulo: "Red Team & Pentesting", icon: "⚔️", desc: "Herramientas y documentación para pruebas de penetración y explotación.", ids: [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] },
+                "blue-team": { titulo: "Blue Team & Forense", icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
+                "osint": { titulo: "OSINT e Inteligencia", icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
+                "sistemas": { titulo: "Sistemas Operativos", icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
+                "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
             };
 
-            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Explora las categorías para acceder a los recursos. Haz clic en una carpeta.</p><div class="folder-grid">`;
-            
-            let modalHtml = '';
-
-            for (const [seccion, data] of Object.entries(estructura)) {
-                const folderId = `folder-${seccion.replace(/[^a-zA-Z0-9]/g, '')}`;
-                
-                html += `
-                    <div class="folder" onclick="abrirModal('${folderId}')">
-                        <div class="folder-icon">${data.icon}</div>
-                        <h3>${seccion}</h3>
-                        <p>${data.desc}</p>
-                        <span class="folder-badge">${data.ids.length} enlaces</span>
-                    </div>
-                `;
-
-                modalHtml += `<div class="modal-overlay" id="${folderId}"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('${folderId}')">×</button><h2>${data.icon} ${seccion}</h2><ul class="resource-list">`;
-                
-                const recursosCat = result.data.filter(r => data.ids.includes(r.id) || (seccion === "Formación y Certificaciones" && r.categoria_id == 1) || (seccion === "Red Team & Pentesting" && r.categoria_id == 2) || (seccion === "Blue Team & Forense" && r.categoria_id == 3) || (seccion === "OSINT e Inteligencia" && r.categoria_id == 4) || (seccion === "Sistemas Operativos" && r.categoria_id == 6) || (seccion === "Referentes y Libros" && (r.categoria_id == 8 || r.categoria_id == 9)));
-                
-                recursosCat.forEach(r => {
-                    const badgeClass = getBadgeClass(r.tipo);
-                    const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
-                    const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
-                    
-                    modalHtml += `
-                        <li class="resource-item">
-                            <div class="resource-header">
-                                <span class="resource-title">${r.titulo}</span>
-                                ${badge}
-                            </div>
-                            <div class="resource-desc">${r.descripcion}</div>
-                            <div class="resource-meta">
-                                <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
-                            </div>
-                            <div class="resource-actions">
-                                <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
-                                <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
-                            </div>
-                        </li>
+            if (!categoriaActual) {
+                let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Explora las categorías para acceder a los recursos.</p><div class="folder-grid">`;
+                for (const [slug, data] of Object.entries(estructura)) {
+                    html += `
+                        <a href="recursos.html?cat=${slug}" class="folder">
+                            <div class="folder-icon">${data.icon}</div>
+                            <h3>${data.titulo}</h3>
+                            <p>${data.desc}</p>
+                            <span class="folder-badge">${data.ids.length} enlaces</span>
+                        </a>
                     `;
-                });
-                modalHtml += `</ul></div></div>`;
+                }
+                html += `</div>`;
+                contenedor.innerHTML = html;
+                contenedor.style.display = 'block';
+                return;
             }
 
-            html += `</div><div id="modales-recursos">${modalHtml}</div>`;
+            const dataCat = estructura[categoriaActual];
+            if (!dataCat) {
+                contenedor.innerHTML = "<p>Categoría no encontrada.</p>";
+                contenedor.style.display = 'block';
+                return;
+            }
+
+            const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team" && r.categoria_id == 2) || (categoriaActual === "blue-team" && r.categoria_id == 3) || (categoriaActual === "osint" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)));
+
+            let html = `
+                <div class="breadcrumb">
+                    <a href="recursos.html">Recursos</a> / <span>${dataCat.titulo}</span>
+                </div>
+                <div class="category-header">
+                    <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+                    <p>${dataCat.desc}</p>
+                    <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
+                </div>
+                <ul class="resource-list" id="lista-recursos">
+            `;
+
+            recursosCat.forEach(r => {
+                const badgeClass = getBadgeClass(r.tipo);
+                const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
+                const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
+                html += `
+                    <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
+                        <div class="resource-header">
+                            <span class="resource-title">${r.titulo}</span>
+                            ${badge}
+                        </div>
+                        <div class="resource-desc">${r.descripcion}</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
+                            <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
+                        </div>
+                    </li>
+                `;
+            });
+
+            if (recursosCat.length === 0) {
+                html += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta categoría.</li>`;
+            }
+
+            html += `</ul>`;
             contenedor.innerHTML = html;
             contenedor.style.display = 'block';
         }
@@ -214,6 +233,15 @@ async function cargarRecursosDesdeVPS() {
         contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
         contenedor.style.display = 'block';
     }
+}
+
+function filtrarRecursos() {
+    const input = document.getElementById('buscador-recursos').value.toLowerCase();
+    const items = document.querySelectorAll('#lista-recursos .resource-item');
+    items.forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(input) ? 'flex' : 'none';
+    });
 }
 
 async function votarRecurso(id, btn) {
@@ -279,10 +307,8 @@ async function cargarPerfil() {
     const habInput = document.getElementById('perfil-habilidades');
     const gitInput = document.getElementById('perfil-github');
     if (!userSpan || !usuarioLogueado) return;
-    
     userSpan.innerText = usuarioLogueado.usuario;
     nameSpan.innerText = usuarioLogueado.nombre;
-    
     try {
         const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
         const result = await response.json();
@@ -316,10 +342,8 @@ window.onload = async () => {
     inicializarTema();
     await comprobarSesion();
     protegerContenidoPrivado();
-    
     if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
-
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
