@@ -3,13 +3,10 @@ function generarDork() {
     const tipoArchivo = document.getElementById('dork-type').value;
     const filtroExtra = document.getElementById('dork-extra').value;
     if (!dominio) { mostrarToast("Introduce un dominio.", "error"); return; }
-    
     let query = `site:${dominio}`;
     if (filtroExtra) { query += ` ${filtroExtra}`; }
     query += ` filetype:${tipoArchivo}`;
-    
     logHerramienta("Dorks", "Generar", dominio, query);
-
     document.getElementById('dork-result').innerHTML = `
         <div style="background: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-top: 15px;">
             <p style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 10px;">Dork generado:</p>
@@ -80,14 +77,11 @@ function analizarHash() {
     const hash = document.getElementById('input-hash').value.trim();
     const res = document.getElementById('resultado-hash');
     if (!hash) { res.innerText = "Introduce un hash."; return; }
-    
     let tipo = "Desconocido";
     if (/^[a-f0-9]{32}$/i.test(hash)) tipo = "MD5";
     else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = "SHA-1";
     else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = "SHA-256";
-    
     logHerramienta("Hash", "Analizar", hash, tipo);
-
     res.innerHTML = `Tipo detectado: <strong style="color: var(--neon-green);">${tipo}</strong><br><br><a href="https://crackstation.net/" target="_blank" class="btn-secondary" style="text-decoration: none; padding: 10px; display: inline-block;">Buscar en CrackStation</a>`;
 }
 
@@ -101,7 +95,6 @@ async function buscarIP() {
     const ip = document.getElementById('ip-input').value.trim();
     const res = document.getElementById('resultado-ip');
     if (!ip) { res.innerText = "Introduce una IP o dominio."; return; }
-    
     res.innerHTML = "Buscando datos...";
     try {
         const response = await fetch(`https://ipwho.is/${ip}`);
@@ -111,10 +104,8 @@ async function buscarIP() {
             logHerramienta("Buscador IP", "Error", ip, data.message);
             return; 
         }
-        
         const resultadoTexto = `País: ${data.country} | ISP: ${data.connection.isp} | Org: ${data.connection.org}`;
         logHerramienta("Buscador IP", "Consultar", ip, resultadoTexto);
-
         res.innerHTML = `
             <ul style="list-style: none; padding: 0; line-height: 1.8;">
                 <li><strong>IP/Dominio:</strong> ${data.ip}</li>
@@ -138,7 +129,6 @@ function procesarBase64(accion) {
     const input = document.getElementById('base64-input').value;
     const res = document.getElementById('base64-result');
     if (!input) { res.innerText = "Introduce texto."; return; }
-    
     let output = "";
     try {
         if (accion === 'codificar') output = btoa(input);
@@ -154,7 +144,6 @@ function analizarJWT() {
     const token = document.getElementById('jwt-input').value.trim();
     const res = document.getElementById('jwt-result');
     if (!token) { res.innerText = "Introduce un token."; return; }
-    
     const partes = token.split('.');
     if (partes.length !== 3) {
         res.innerHTML = "<span style='color: var(--danger);'>Formato JWT inválido.</span>";
@@ -163,9 +152,7 @@ function analizarJWT() {
     try {
         const header = JSON.stringify(JSON.parse(atob(partes[0])), null, 2);
         const payload = JSON.stringify(JSON.parse(atob(partes[1])), null, 2);
-        
         logHerramienta("JWT", "Analizar", token, "Token decodificado correctamente");
-
         res.innerHTML = `<strong>Header:</strong><br><pre style="color:var(--text-bright); margin-bottom:10px;">${header}</pre>`;
         res.innerHTML += `<strong>Payload:</strong><br><pre style="color:var(--text-bright); margin-bottom:10px;">${payload}</pre>`;
     } catch (e) {
@@ -201,21 +188,17 @@ abrirModal = function(id) {
         let info = `<p><strong>User-Agent:</strong> <br><span style="color:var(--text-muted); font-size:0.85rem;">${ua}</span></p><br>`;
         let so = "Desconocido";
         let nav = "Desconocido";
-        
         if (ua.includes('Windows')) so = "Windows";
         else if (ua.includes('Mac')) so = "macOS";
         else if (ua.includes('Linux')) so = "Linux";
         else if (ua.includes('Android')) so = "Android";
         else if (ua.includes('iPhone') || ua.includes('iPad')) so = "iOS";
-        
         if (ua.includes('Firefox')) nav = "Firefox";
         else if (ua.includes('Edg/')) nav = "Edge";
         else if (ua.includes('Chrome')) nav = "Chrome";
         else if (ua.includes('Safari')) nav = "Safari";
-
         info += `<p><strong>Sistema Operativo:</strong> ${so}</p>`;
         info += `<p><strong>Navegador:</strong> ${nav}</p>`;
-        
         res.innerHTML = info;
         logHerramienta("User-Agent", "Analizar", "Navegador", `SO: ${so} | Nav: ${nav}`);
     }
@@ -227,14 +210,12 @@ async function analizarRobots() {
     const res = document.getElementById('robots-result');
     if (!url) { res.innerText = "Introduce una URL."; return; }
     if (!url.startsWith('http')) url = 'https://' + url;
-    
     const robotsUrl = new URL('/robots.txt', url).href;
     res.innerText = "Cargando...";
     try {
         const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(robotsUrl)}`);
         const text = await response.text();
         const resultado = text ? text.substring(0, 100) + "..." : "Archivo vacío.";
-        
         logHerramienta("Robots.txt", "Analizar", url, resultado);
         res.innerText = text || "Archivo vacío.";
     } catch (e) {
@@ -309,7 +290,6 @@ async function analizarWifi() {
     res.innerHTML = "Analizando...";
     let info = "<ul style='list-style: none; padding: 0; line-height: 1.8;'>";
     let logStr = "";
-    
     if (navigator.connection) {
         const conn = navigator.connection;
         info += `<li><strong>Tipo de conexión:</strong> ${conn.effectiveType || 'Desconocido'}</li>`;
@@ -319,17 +299,14 @@ async function analizarWifi() {
     } else {
         info += `<li>Tu navegador no soporta la API de Network Information.</li>`;
     }
-    
     info += `<li><strong>Estado de red:</strong> ${navigator.onLine ? 'Conectado' : 'Desconectado'}</li>`;
     info += `<li><strong>Protocolo seguro:</strong> ${window.isSecureContext ? 'Sí (HTTPS)' : 'No (HTTP)'}</li>`;
-    
     try {
         const start = performance.now();
         await fetch(window.location.href, { method: 'HEAD', cache: 'no-store' });
         const end = performance.now();
         info += `<li><strong>Ping al servidor:</strong> ${Math.round(end - start)} ms</li>`;
     } catch (e) {}
-    
     info += "</ul>";
     res.innerHTML = info;
     logHerramienta("Wi-Fi", "Analizar", "", logStr);
@@ -352,7 +329,6 @@ function auditarPassword() {
     const pass = document.getElementById('pass-audit-input').value;
     const res = document.getElementById('pass-audit-result');
     if (!pass) { res.innerHTML = ""; return; }
-
     let score = 0;
     if (pass.length > 8) score++;
     if (pass.length > 12) score++;
@@ -360,16 +336,13 @@ function auditarPassword() {
     if (/[a-z]/.test(pass)) score++;
     if (/[0-9]/.test(pass)) score++;
     if (/[^A-Za-z0-9]/.test(pass)) score++;
-
     let timeToCrack = "";
     let color = "var(--danger)";
     let message = "";
-
     if (score <= 2) { timeToCrack = "Instantáneo"; message = "Muy débil."; }
     else if (score <= 4) { timeToCrack = "Horas o días"; color = "var(--neon-gold)"; message = "Débil."; }
     else if (score === 5) { timeToCrack = "Años"; color = "var(--neon-green)"; message = "Buena."; }
     else { timeToCrack = "Siglos"; color = "var(--neon-green)"; message = "Excelente."; }
-
     res.innerHTML = `<p><strong>Tiempo estimado de descifrado:</strong> <span style="color: ${color}; font-weight: bold;">${timeToCrack}</span></p><p style="margin-top: 10px;">${message}</p>`;
     logHerramienta("Auditor Pass", "Analizar");
 }
@@ -379,12 +352,10 @@ async function analizarDominio() {
     const res = document.getElementById('domain-result');
     if (!domain) { res.innerText = "Introduce un dominio."; return; }
     domain = domain.replace(/^https?:\/\//, '').split('/')[0];
-
     res.innerHTML = "Analizando...";
     try {
         const response = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
         const data = await response.json();
-        
         let ips = [];
         let html = `<p><strong>Dominio:</strong> ${domain}</p>`;
         if (data.Answer) {
@@ -399,7 +370,6 @@ async function analizarDominio() {
         } else {
             html += `<p style="color: var(--danger);">No se encontraron registros IP.</p>`;
         }
-
         const mxRes = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
         const mxData = await mxRes.json();
         let mxList = [];
@@ -411,7 +381,6 @@ async function analizarDominio() {
             });
             html += `</ul>`;
         }
-        
         logHerramienta("Dominio", "Analizar", domain, `IPs: ${ips.join(', ')} | MX: ${mxList.join(', ')}`);
         res.innerHTML = html;
     } catch (e) {
@@ -423,7 +392,6 @@ function validarEmail() {
     const email = document.getElementById('email-input').value.trim();
     const res = document.getElementById('email-result');
     if (!email) { res.innerText = "Introduce un correo."; return; }
-    
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regex.test(email)) {
         res.innerHTML = `<p style="color: var(--neon-green);">✓ El formato es correcto.</p><p style="margin-top:10px; color: var(--text-muted);">Para verificar si el correo existe realmente sin enviar un email, se requieren servicios de validación profunda.</p>`;
@@ -438,13 +406,11 @@ async function analizarMAC() {
     const mac = document.getElementById('mac-input').value.trim();
     const res = document.getElementById('mac-result');
     if (!mac) { res.innerText = "Introduce una MAC."; return; }
-    
     const cleanMac = mac.replace(/[^a-fA-F0-9]/g, '').substring(0, 6);
     if (cleanMac.length !== 6) {
         res.innerHTML = `<span style="color: var(--danger);">Formato de MAC inválido.</span>`;
         return;
     }
-
     res.innerHTML = "Buscando fabricante...";
     try {
         const response = await fetch(`https://api.macvendors.com/${cleanMac}`);
