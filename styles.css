@@ -83,11 +83,19 @@ h2::before { content: '> '; color: var(--neon-green); }
 .node-content { background: #000; border: 1px solid var(--border); border-radius: 4px; padding: 15px; margin-top: 10px; display: none; }
 .node-content.open { display: block; }
 .node-content ul { list-style: none; padding: 0; }
-.node-content li { padding: 5px 0; border-bottom: 1px solid #222; }
+.node-content li { padding: 8px 0; border-bottom: 1px solid #222; }
 .node-content a { color: var(--neon-blue); text-decoration: none; }
 .node-content a:hover { text-decoration: underline; }
 
-.badge { background: var(--neon-purple); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; margin-left: 5px; text-transform: uppercase; vertical-align: middle; }
+.badge { color: #000; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; margin-left: 5px; text-transform: uppercase; vertical-align: middle; font-weight: bold; }
+.badge-curso { background: var(--neon-green); }
+.badge-herramienta { background: var(--neon-blue); }
+.badge-libro { background: var(--neon-gold); }
+.badge-hacker { background: var(--neon-purple); color: #fff; }
+.badge-sistema { background: #ff4d4d; color: #fff; }
+.badge-noticia { background: #888; color: #fff; }
+.badge-default { background: #555; color: #fff; }
+
 .btn-like { background: transparent; border: 1px solid var(--border); color: var(--text-main); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
 .btn-like:hover { border-color: var(--neon-gold); color: var(--neon-gold); }
 
