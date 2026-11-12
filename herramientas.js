@@ -101,7 +101,7 @@ async function buscarIP() {
                 <li><strong>Organización:</strong> ${data.connection.org}</li>
             </ul>
         `;
-    } catch (error) { res.innerHTML = "Error al conectar con el servicio."; }
+    } catch (error) { res.innerHTML = "Error al conectar."; }
 }
 
 function limpiarIP() { 
@@ -115,13 +115,10 @@ function procesarBase64(accion) {
     const res = document.getElementById('base64-result');
     if (!input) { res.innerText = "Introduce texto."; return; }
     try {
-        if (accion === 'codificar') {
-            res.innerText = btoa(input);
-        } else {
-            res.innerText = atob(input);
-        }
+        if (accion === 'codificar') res.innerText = btoa(input);
+        else res.innerText = atob(input);
     } catch (e) {
-        res.innerText = "Error: El texto no es válido para Base64.";
+        res.innerText = "Error: Texto no válido.";
     }
 }
 
@@ -129,20 +126,16 @@ function analizarJWT() {
     const token = document.getElementById('jwt-input').value.trim();
     const res = document.getElementById('jwt-result');
     if (!token) { res.innerText = "Introduce un token."; return; }
-    
     const partes = token.split('.');
     if (partes.length !== 3) {
-        res.innerHTML = "<span style='color: var(--danger);'>El token no tiene el formato JWT válido (debe tener 3 partes separadas por puntos).</span>";
+        res.innerHTML = "<span style='color: var(--danger);'>Formato JWT inválido.</span>";
         return;
     }
-    
     try {
-        const payload = JSON.parse(atob(partes[1]));
         res.innerHTML = `<strong>Header:</strong><br><pre style="color:var(--text-bright); margin-bottom:10px;">${JSON.stringify(JSON.parse(atob(partes[0])), null, 2)}</pre>`;
-        res.innerHTML += `<strong>Payload:</strong><br><pre style="color:var(--text-bright); margin-bottom:10px;">${JSON.stringify(payload, null, 2)}</pre>`;
-        res.innerHTML += `<strong>Firma:</strong><br><span style="color:var(--text-muted);">${partes[2]}</span>`;
+        res.innerHTML += `<strong>Payload:</strong><br><pre style="color:var(--text-bright); margin-bottom:10px;">${JSON.stringify(JSON.parse(atob(partes[1])), null, 2)}</pre>`;
     } catch (e) {
-        res.innerHTML = "<span style='color: var(--danger);'>Error al decodificar el token. Asegúrate de que es un JWT válido.</span>";
+        res.innerHTML = "<span style='color: var(--danger);'>Error al decodificar.</span>";
     }
 }
 
@@ -178,8 +171,90 @@ abrirModal = function(id) {
         else if (ua.includes('Edg/')) info += "<p><strong>Navegador:</strong> Microsoft Edge</p>";
         else if (ua.includes('Chrome')) info += "<p><strong>Navegador:</strong> Google Chrome</p>";
         else if (ua.includes('Safari')) info += "<p><strong>Navegador:</strong> Apple Safari</p>";
-        
         res.innerHTML = info;
     }
     originalAbrirModal(id);
 };
+
+async function analizarRobots() {
+    let url = document.getElementById('robots-url').value.trim();
+    const res = document.getElementById('robots-result');
+    if (!url) { res.innerText = "Introduce una URL."; return; }
+    if (!url.startsWith('http')) url = 'https://' + url;
+    const robotsUrl = new URL('/robots.txt', url).href;
+    logHerramienta("Robots.txt", "Analizar", robotsUrl);
+    res.innerText = "Cargando...";
+    try {
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(robotsUrl)}`);
+        const text = await response.text();
+        res.innerText = text || "Archivo vacío.";
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error al cargar.</span>`;
+    }
+}
+
+async function analizarHeaders() {
+    let url = document.getElementById('header-url').value.trim();
+    const res = document.getElementById('header-result');
+    if (!url) { res.innerText = "Introduce una URL."; return; }
+    if (!url.startsWith('http')) url = 'https://' + url;
+    logHerramienta("HTTP Headers", "Analizar", url);
+    res.innerText = "Analizando...";
+    try {
+        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        res.innerHTML = `<p style="color: var(--neon-green);">Conexión establecida con el servidor. (Las cabeceras exactas están protegidas por el navegador por seguridad).</p>`;
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error de conexión.</span>`;
+    }
+}
+
+async function analizarSSL() {
+    let url = document.getElementById('ssl-url').value.trim();
+    const res = document.getElementById('ssl-result');
+    if (!url) { res.innerText = "Introduce una URL."; return; }
+    if (!url.startsWith('https://')) url = 'https://' + url.replace(/^https?:\/\//, '');
+    logHerramienta("SSL", "Analizar", url);
+    res.innerText = "Analizando...";
+    try {
+        const response = await fetch(url, { method: 'HEAD' });
+        if (response.ok) res.innerHTML = `<p style="color: var(--neon-green);">✓ Certificado SSL válido y conexión segura.</p>`;
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error o certificado no válido.</span>`;
+    }
+}
+
+function generarUUID() {
+    const uuid = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+    document.getElementById('uuid-result').innerText = uuid;
+    logHerramienta("UUID", "Generar");
+}
+
+function probarRegex() {
+    const patron = document.getElementById('regex-pattern').value;
+    const texto = document.getElementById('regex-text').value;
+    const res = document.getElementById('regex-result');
+    if (!patron || !texto) { res.innerText = ""; return; }
+    try {
+        const regex = new RegExp(patron);
+        const match = regex.test(texto);
+        res.innerHTML = match ? `<span style="color: var(--neon-green);">✓ Coincidencia</span>` : `<span style="color: var(--danger);">✗ Sin coincidencia</span>`;
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error en el patrón.</span>`;
+    }
+}
+
+function formatearJSON() {
+    const input = document.getElementById('json-input').value;
+    const res = document.getElementById('json-result');
+    if (!input) { res.innerText = "Introduce JSON."; return; }
+    try {
+        const obj = JSON.parse(input);
+        res.innerHTML = `<pre style="color: var(--neon-green);">${JSON.stringify(obj, null, 4)}</pre>`;
+        logHerramienta("JSON", "Formatear");
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">JSON Inválido.</span>`;
+    }
+}
