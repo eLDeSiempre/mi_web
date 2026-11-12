@@ -25,7 +25,7 @@ function limpiarDorks() {
     logHerramienta("Dorks", "Limpiar"); 
 }
 
-document.getElementById('exif-input').addEventListener('change', function(e) {
+document.getElementById('exif-input')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
     const resultado = document.getElementById('exif-result');
     if (!file) return;
@@ -201,8 +201,8 @@ async function analizarHeaders() {
     logHerramienta("HTTP Headers", "Analizar", url);
     res.innerText = "Analizando...";
     try {
-        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
-        res.innerHTML = `<p style="color: var(--neon-green);">Conexión establecida con el servidor. (Las cabeceras exactas están protegidas por el navegador por seguridad).</p>`;
+        await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        res.innerHTML = `<p style="color: var(--neon-green);">Conexión establecida con el servidor.</p>`;
     } catch (e) {
         res.innerHTML = `<span style="color: var(--danger);">Error de conexión.</span>`;
     }
@@ -256,5 +256,149 @@ function formatearJSON() {
         logHerramienta("JSON", "Formatear");
     } catch (e) {
         res.innerHTML = `<span style="color: var(--danger);">JSON Inválido.</span>`;
+    }
+}
+
+async function analizarWifi() {
+    const res = document.getElementById('wifi-result');
+    res.innerHTML = "Analizando...";
+    let info = "<ul style='list-style: none; padding: 0; line-height: 1.8;'>";
+    
+    if (navigator.connection) {
+        const conn = navigator.connection;
+        info += `<li><strong>Tipo de conexión:</strong> ${conn.effectiveType || 'Desconocido'}</li>`;
+        info += `<li><strong>Velocidad estimada:</strong> ${conn.downlink ? conn.downlink + ' Mbps' : 'Desconocida'}</li>`;
+        info += `<li><strong>Latencia (RTT):</strong> ${conn.rtt ? conn.rtt + ' ms' : 'Desconocida'}</li>`;
+    } else {
+        info += `<li>Tu navegador no soporta la API de Network Information.</li>`;
+    }
+    
+    info += `<li><strong>Estado de red:</strong> ${navigator.onLine ? 'Conectado' : 'Desconectado'}</li>`;
+    info += `<li><strong>Protocolo seguro:</strong> ${window.isSecureContext ? 'Sí (HTTPS)' : 'No (HTTP)'}</li>`;
+    
+    try {
+        const start = performance.now();
+        await fetch(window.location.href, { method: 'HEAD', cache: 'no-store' });
+        const end = performance.now();
+        info += `<li><strong>Ping al servidor:</strong> ${Math.round(end - start)} ms</li>`;
+    } catch (e) {}
+    
+    info += "</ul>";
+    res.innerHTML = info;
+    logHerramienta("Wi-Fi", "Analizar");
+}
+
+async function analizarDNS() {
+    const res = document.getElementById('dns-result');
+    res.innerHTML = "Comprobando...";
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        res.innerHTML = `<p>Tu IP pública es: <strong>${data.ip}</strong></p><p style="margin-top:10px; color: var(--text-muted);">Para una comprobación exhaustiva de fugas de DNS, te recomendamos usar <a href="https://dnsleaktest.com/" target="_blank" style="color:var(--neon-blue);">DNSLeakTest</a>.</p>`;
+        logHerramienta("DNS", "Comprobar", data.ip);
+    } catch (e) {
+        res.innerText = "Error al comprobar la IP.";
+    }
+}
+
+function auditarPassword() {
+    const pass = document.getElementById('pass-audit-input').value;
+    const res = document.getElementById('pass-audit-result');
+    if (!pass) { res.innerHTML = ""; return; }
+
+    let score = 0;
+    if (pass.length > 8) score++;
+    if (pass.length > 12) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[a-z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+    let timeToCrack = "";
+    let color = "var(--danger)";
+    let message = "";
+
+    if (score <= 2) { timeToCrack = "Instantáneo"; message = "Muy débil. Un hacker la rompería al instante."; }
+    else if (score <= 4) { timeToCrack = "Horas o días"; color = "var(--neon-gold)"; message = "Débil. Fácil de romper con un ataque de fuerza bruta."; }
+    else if (score === 5) { timeToCrack = "Años"; color = "var(--neon-green)"; message = "Buena. Resistente a ataques comunes."; }
+    else { timeToCrack = "Siglos"; color = "var(--neon-green)"; message = "Excelente. Prácticamente irrompible."; }
+
+    res.innerHTML = `<p><strong>Tiempo estimado de descifrado:</strong> <span style="color: ${color}; font-weight: bold;">${timeToCrack}</span></p><p style="margin-top: 10px;">${message}</p>`;
+}
+
+async function analizarDominio() {
+    let domain = document.getElementById('domain-input').value.trim();
+    const res = document.getElementById('domain-result');
+    if (!domain) { res.innerText = "Introduce un dominio."; return; }
+    domain = domain.replace(/^https?:\/\//, '').split('/')[0];
+
+    res.innerHTML = "Analizando...";
+    logHerramienta("Dominio", "Analizar", domain);
+
+    try {
+        const response = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
+        const data = await response.json();
+        
+        let html = `<p><strong>Dominio:</strong> ${domain}</p>`;
+        if (data.Answer) {
+            html += `<p><strong>Direcciones IP:</strong></p><ul style="margin-left: 20px;">`;
+            data.Answer.forEach(ans => { if (ans.type === 1) html += `<li>${ans.data}</li>`; });
+            html += `</ul>`;
+        } else {
+            html += `<p style="color: var(--danger);">No se encontraron registros IP.</p>`;
+        }
+
+        const mxRes = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
+        const mxData = await mxRes.json();
+        if (mxData.Answer) {
+            html += `<p style="margin-top:10px;"><strong>Servidores de Correo (MX):</strong></p><ul style="margin-left: 20px;">`;
+            mxData.Answer.forEach(ans => { html += `<li>${ans.data}</li>`; });
+            html += `</ul>`;
+        }
+
+        res.innerHTML = html;
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error al analizar el dominio.</span>`;
+    }
+}
+
+function validarEmail() {
+    const email = document.getElementById('email-input').value.trim();
+    const res = document.getElementById('email-result');
+    if (!email) { res.innerText = "Introduce un correo."; return; }
+    
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (regex.test(email)) {
+        res.innerHTML = `<p style="color: var(--neon-green);">✓ El formato es correcto.</p><p style="margin-top:10px; color: var(--text-muted);">Para verificar si el correo existe realmente sin enviar un email, se requieren servicios de validación profunda.</p>`;
+        logHerramienta("Email", "Validar", email);
+    } else {
+        res.innerHTML = `<p style="color: var(--danger);">✗ El formato del correo es inválido.</p>`;
+    }
+}
+
+async function analizarMAC() {
+    const mac = document.getElementById('mac-input').value.trim();
+    const res = document.getElementById('mac-result');
+    if (!mac) { res.innerText = "Introduce una MAC."; return; }
+    
+    const cleanMac = mac.replace(/[^a-fA-F0-9]/g, '').substring(0, 6);
+    if (cleanMac.length !== 6) {
+        res.innerHTML = `<span style="color: var(--danger);">Formato de MAC inválido.</span>`;
+        return;
+    }
+
+    res.innerHTML = "Buscando fabricante...";
+    logHerramienta("MAC", "Analizar", mac);
+
+    try {
+        const response = await fetch(`https://api.macvendors.com/${cleanMac}`);
+        if (response.ok) {
+            const vendor = await response.text();
+            res.innerHTML = `<p><strong>MAC:</strong> ${mac}</p><p><strong>Fabricante:</strong> <span style="color: var(--neon-green);">${vendor}</span></p>`;
+        } else {
+            res.innerHTML = `<span style="color: var(--danger);">Fabricante no encontrado en la base de datos.</span>`;
+        }
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error de conexión con el servicio.</span>`;
     }
 }
