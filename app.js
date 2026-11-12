@@ -1,6 +1,30 @@
 const API_URL = 'https://api.eldesiempre.es';
 let usuarioLogueado = null;
 
+function inicializarTema() {
+    const temaGuardado = localStorage.getItem('tema');
+    const body = document.body;
+    const btnToggle = document.getElementById('theme-toggle');
+    
+    if (temaGuardado === 'light') {
+        body.classList.add('light-mode');
+    }
+    
+    if (btnToggle) {
+        btnToggle.innerText = body.classList.contains('light-mode') ? '☀️' : '🌙';
+        btnToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('tema', 'light');
+                btnToggle.innerText = '☀️';
+            } else {
+                localStorage.setItem('tema', 'dark');
+                btnToggle.innerText = '🌙';
+            }
+        });
+    }
+}
+
 function abrirModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.add('active'); }
 function cerrarModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.remove('active'); }
 function mostrarAvisoLegal(e) { if (e) e.preventDefault(); abrirModal('modal-legal'); }
@@ -278,6 +302,7 @@ document.getElementById('form-perfil')?.addEventListener('submit', async (e) => 
 });
 
 window.onload = async () => {
+    inicializarTema();
     await comprobarSesion();
     protegerContenidoPrivado();
     
