@@ -320,13 +320,6 @@ window.onload = async () => {
     if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
 
-    if (localStorage.getItem('disclaimerAceptado') === 'true') {
-        const modal = document.getElementById('disclaimer-modal');
-        if(modal) modal.style.display = 'none';
-        document.body.classList.remove('locked');
-        if (!localStorage.getItem('cookiesAceptadas')) { const banner = document.getElementById('cookie-banner'); if(banner) banner.style.display = 'flex'; }
-    }
-
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
