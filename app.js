@@ -102,6 +102,18 @@ function protegerContenidoPrivado() {
     }
 }
 
+function getBadgeClass(tipo) {
+    if (!tipo) return 'badge-default';
+    const t = tipo.toLowerCase();
+    if (t.includes('curso') || t.includes('formación')) return 'badge-curso';
+    if (t.includes('herramienta') || t.includes('laboratorio')) return 'badge-herramienta';
+    if (t.includes('libro') || t.includes('documentación')) return 'badge-libro';
+    if (t.includes('hacker') || t.includes('referente')) return 'badge-hacker';
+    if (t.includes('sistema')) return 'badge-sistema';
+    if (t.includes('noticia') || t.includes('comunidad')) return 'badge-noticia';
+    return 'badge-default';
+}
+
 async function cargarRecursosDesdeVPS() {
     const contenedor = document.getElementById('contenedor-recursos');
     if (!contenedor) return;
@@ -113,15 +125,15 @@ async function cargarRecursosDesdeVPS() {
 
         if (result.success) {
             const categorias = {
-                1: "01. Formación, Certificaciones y Teoría",
+                1: "01. Formación y Certificaciones",
                 2: "02. Red Team, Pentesting y Explotación",
-                3: "03. Blue Team, Forense y Respuesta a Incidentes",
-                4: "04. OSINT, Inteligencia y Búsqueda de Información",
-                5: "05. Desarrollo Seguro, Web y Bases de Datos",
-                6: "06. Sistemas Operativos y Administración",
-                7: "07. Noticias, Comunidades y Referentes",
-                8: "08. Referentes Hispanos del Hacking",
-                9: "09. Libros y Bibliografía en Español"
+                3: "03. Blue Team, Forense y Respuesta",
+                4: "04. OSINT e Inteligencia",
+                5: "05. Desarrollo Seguro",
+                6: "06. Sistemas Operativos",
+                7: "07. Noticias y Comunidades",
+                8: "08. Referentes Hispanos",
+                9: "09. Libros en Español"
             };
 
             let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces.</p>`;
@@ -140,7 +152,8 @@ async function cargarRecursosDesdeVPS() {
                             <ul>
                     `;
                     recursosCat.forEach(r => {
-                        const badge = r.tipo ? `<span class="badge">${r.tipo}</span>` : '';
+                        const badgeClass = getBadgeClass(r.tipo);
+                        const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
                         html += `<li><strong>${r.titulo}:</strong> ${r.descripcion} ${badge} <a href="${r.url}" target="_blank" rel="noopener noreferrer">[Ir]</a></li>`;
                     });
                     html += `</ul></div>`;
