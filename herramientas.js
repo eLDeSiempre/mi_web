@@ -7,7 +7,6 @@ function generarDork() {
     let query = `site:${dominio}`;
     if (filtroExtra) { query += ` ${filtroExtra}`; }
     query += ` filetype:${tipoArchivo}`;
-    
     document.getElementById('dork-result').innerHTML = `
         <div style="background: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-top: 15px;">
             <p style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 10px;">Dork generado:</p>
@@ -73,7 +72,7 @@ function analizarHash() {
     if (/^[a-f0-9]{32}$/i.test(hash)) tipo = "MD5";
     else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = "SHA-1";
     else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = "SHA-256";
-    res.innerHTML = `Tipo: <strong style="color: var(--neon-green);">${tipo}</strong>`;
+    res.innerHTML = `Tipo detectado: <strong style="color: var(--neon-green);">${tipo}</strong><br><br><a href="https://crackstation.net/" target="_blank" class="btn-secondary" style="text-decoration: none; padding: 10px; display: inline-block;">Buscar en CrackStation</a>`;
 }
 
 function limpiarHash() { 
@@ -200,13 +199,7 @@ async function analizarHeaders() {
     if (!url) { res.innerText = "Introduce una URL."; return; }
     if (!url.startsWith('http')) url = 'https://' + url;
     logHerramienta("HTTP Headers", "Analizar", url);
-    res.innerText = "Analizando...";
-    try {
-        await fetch(url, { method: 'HEAD', mode: 'no-cors' });
-        res.innerHTML = `<p style="color: var(--neon-green);">Conexión establecida con el servidor.</p>`;
-    } catch (e) {
-        res.innerHTML = `<span style="color: var(--danger);">Error de conexión.</span>`;
-    }
+    res.innerHTML = `<p style="color: var(--text-main); margin-bottom: 15px;">Para analizar las cabeceras HTTP y SSL de forma segura y pública, te recomendamos la herramienta oficial:</p><a href="https://securityheaders.com/?q=${encodeURIComponent(url)}" target="_blank" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a SecurityHeaders.com</a>`;
 }
 
 async function analizarSSL() {
@@ -215,12 +208,12 @@ async function analizarSSL() {
     if (!url) { res.innerText = "Introduce una URL."; return; }
     if (!url.startsWith('https://')) url = 'https://' + url.replace(/^https?:\/\//, '');
     logHerramienta("SSL", "Analizar", url);
-    res.innerText = "Analizando...";
+    res.innerText = "Comprobando conexión...";
     try {
-        const response = await fetch(url, { method: 'HEAD' });
-        if (response.ok) res.innerHTML = `<p style="color: var(--neon-green);">✓ Certificado SSL válido y conexión segura.</p>`;
+        await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        res.innerHTML = `<p style="color: var(--neon-green);">✓ El sitio responde y tiene una conexión HTTPS activa.</p><p style="margin-top: 10px; color: var(--text-muted);">Para ver los detalles exactos del certificado (fecha de expiración, emisor), por favor usa SSL Labs:</p><a href="https://www.ssllabs.com/ssltest/analyze.html?d=${url.replace('https://', '')}" target="_blank" class="btn-secondary" style="text-decoration: none; display: inline-block; margin-top: 10px;">Analizar en SSL Labs</a>`;
     } catch (e) {
-        res.innerHTML = `<span style="color: var(--danger);">Error o certificado no válido.</span>`;
+        res.innerHTML = `<span style="color: var(--danger);">Error de conexión o certificado no válido.</span>`;
     }
 }
 
