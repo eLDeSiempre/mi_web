@@ -1,249 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Herramientas | eLDeSiempre.es</title>
-    <link rel="icon" type="image/png" href="assets/logo.png">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-</head>
-<body>
-    <div id="toast-container"></div>
-
-    <header>
-        <div class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
-            <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </div>
-        <nav>
-            <button class="nav-btn active" onclick="window.location.href='herramientas.html'">Herramientas</button>
-            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
-            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
-            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
-            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
-        </nav>
-    </header>
-
-    <main class="container">
-        <h2>Laboratorio de Herramientas</h2>
-        <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta.</p>
-        
-        <div class="grid-cards">
-            <div class="card" onclick="abrirModal('modal-osint')">
-                <h3>OSINT Framework</h3>
-                <p>Árbol genealógico de internet. Muestra dónde buscar información pública sobre una persona o empresa.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Investigar antecedentes.</p>
-            </div>
-            
-            <div class="card" onclick="abrirModal('modal-dorks')">
-                <h3>Generador de Dorks</h3>
-                <p>Trucos de búsqueda avanzada en Google para encontrar archivos expuestos por error.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Encontrar documentos filtrados.</p>
+            <div class="card" onclick="abrirModal('modal-http-headers')">
+                <h3>Inspector de Cabeceras HTTP</h3>
+                <p>Analiza las cabeceras de seguridad (CSP, HSTS, X-Frame-Options) de cualquier sitio web.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Auditar configuraciones web.</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-exif')">
-                <h3>Analizador EXIF</h3>
-                <p>Extrae datos ocultos de las imágenes: hora, modelo del móvil y coordenadas GPS.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si una foto revela tu ubicación.</p>
+            <div class="card" onclick="abrirModal('modal-ssl')">
+                <h3>Analizador SSL/TLS</h3>
+                <p>Comprueba la validez del certificado SSL, la fecha de expiración y la versión del protocolo de un dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Verificar seguridad de servidores.</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-pass')">
-                <h3>Generador de Contraseñas</h3>
-                <p>Crea contraseñas súper seguras y aleatorias. Olvídate de usar "1234".</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Proteger tus cuentas.</p>
+            <div class="card" onclick="abrirModal('modal-uuid')">
+                <h3>Generador de UUID</h3>
+                <p>Crea identificadores únicos universales (v4) para tus pruebas de APIs y desarrollo.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Desarrollo de software seguro.</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-hash')">
-                <h3>Analizador de Hash</h3>
-                <p>Un "Hash" es la huella digital de una contraseña. Descubre qué tipo de huella es.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender el almacenamiento de claves.</p>
+            <div class="card" onclick="abrirModal('modal-regex')">
+                <h3>Probador de Expresiones Regulares</h3>
+                <p>Prueba patrones de búsqueda (Regex) en tiempo real para validación de formularios.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Programación y filtrado de datos.</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-ip')">
-                <h3>Buscador de IP / OSINT</h3>
-                <p>Descubre el país, ciudad y proveedor de una dirección IP o dominio.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Rastrear el origen de una visita.</p>
+            <div class="card" onclick="abrirModal('modal-json')">
+                <h3>Formateador JSON</h3>
+                <p>Valida y formatea documentos JSON para que sean legibles por humanos.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis de APIs y logs.</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-base64')">
-                <h3>Codificador Base64</h3>
-                <p>Convierte texto a Base64 o viceversa. Esencial para entender cómo viajan los datos en las cabeceras HTTP y APIs.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Depurar peticiones web.</p>
+            <div class="card" onclick="abrirModal('modal-robots')">
+                <h3>Analizador de Robots.txt</h3>
+                <p>Descubre qué directorios y archivos está intentando ocultar un sitio web a los buscadores.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Reconocimiento web (OSINT).</p>
             </div>
 
-            <div class="card" onclick="abrirModal('modal-jwt')">
-                <h3>Inspector de JWT</h3>
-                <p>Pega un token JWT y descubre qué información oculta en su interior (usuario, rol, expiración).</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender la autenticación moderna.</p>
+            <div class="card" onclick="abrirModal('modal-security-headers')">
+                <h3>Validador de Seguridad Web</h3>
+                <p>Comprueba si una web tiene protecciones contra Clickjacking, XSS y MIME-sniffing.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Auditoría de seguridad rápida.</p>
             </div>
-
-            <div class="card" onclick="abrirModal('modal-timestamp')">
-                <h3>Conversor de Timestamp</h3>
-                <p>Convierte fechas normales a formato Unix (segundos desde 1970) y viceversa.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis forense y logs.</p>
-            </div>
-
-            <div class="card" onclick="abrirModal('modal-ua')">
-                <h3>Analizador User-Agent</h3>
-                <p>Descubre qué sistema operativo, navegador y motor está usando tu dispositivo actualmente.</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Pruebas de compatibilidad web.</p>
-            </div>
-        </div>
-    </main>
-
-    <div class="modal-overlay" id="modal-osint">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-osint')">×</button>
-            <h2>OSINT Framework</h2>
-            <iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 4px;"></iframe>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-dorks">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-dorks')">×</button>
-            <h2>Generador de Dorks Avanzado</h2>
-            <label style="color: var(--neon-blue); font-size: 0.9rem;">Dominio o URL Objetivo:</label>
-            <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com o *.ejemplo.com">
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <div style="flex: 1;">
-                    <label style="color: var(--neon-blue); font-size: 0.9rem;">Tipo de Archivo:</label>
-                    <select id="dork-type" class="tool-input" style="margin-bottom: 0;">
-                        <option value="pdf">PDF (.pdf)</option>
-                        <option value="doc OR docx">Word (.doc/.docx)</option>
-                        <option value="xls OR xlsx">Excel (.xls/.xlsx)</option>
-                        <option value="env">Variables de Entorno (.env)</option>
-                        <option value="sql">Volcado SQL (.sql)</option>
-                        <option value="log">Registros (.log)</option>
-                    </select>
-                </div>
-                <div style="flex: 1;">
-                    <label style="color: var(--neon-blue); font-size: 0.9rem;">Filtro Adicional:</label>
-                    <select id="dork-extra" class="tool-input" style="margin-bottom: 0;">
-                        <option value="">Ninguno</option>
-                        <option value="inurl:admin">Panel de Admin</option>
-                        <option value="intext:password">Buscar contraseñas</option>
-                        <option value="intitle:index.of">Listado de directorios</option>
-                    </select>
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="generarDork()">Generar Dork</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarDorks()">Limpiar</button>
-            </div>
-            <div id="dork-result" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-exif">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-exif')">×</button>
-            <h2>Analizador EXIF</h2>
-            <input type="file" id="exif-input" accept="image/*" class="tool-input">
-            <div id="exif-result" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-pass">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-pass')">×</button>
-            <h2>Generador de Contraseñas</h2>
-            <div class="gen-controls">
-                <label><input type="checkbox" id="chk-mayus" checked> Mayúsculas</label>
-                <label><input type="checkbox" id="chk-minus" checked> Minúsculas</label>
-                <label><input type="checkbox" id="chk-nums" checked> Números</label>
-                <label><input type="checkbox" id="chk-symbols" checked> Símbolos</label>
-            </div>
-            <div class="gen-slider-container">
-                <input type="range" id="slider-longitud" min="4" max="60" value="16" oninput="document.getElementById('slider-valor').innerText = this.value">
-                <span class="gen-slider-value" id="slider-valor">16</span>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="generarPassword()">Generar</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarPassword()">Limpiar</button>
-            </div>
-            <div id="resultado-password" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-hash">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-hash')">×</button>
-            <h2>Analizador de Hash</h2>
-            <input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash aquí...">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="analizarHash()">Analizar</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarHash()">Limpiar</button>
-            </div>
-            <div id="resultado-hash" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-ip">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-ip')">×</button>
-            <h2>Buscador de IP / OSINT</h2>
-            <input type="text" id="ip-input" class="tool-input" placeholder="Ej: 8.8.8.8 o eldesiempre.es">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="flex: 2;" onclick="buscarIP()">Analizar IP</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarIP()">Limpiar</button>
-            </div>
-            <div id="resultado-ip" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-base64">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-base64')">×</button>
-            <h2>Codificador Base64</h2>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn-primary" style="flex: 1; margin: 0;" onclick="procesarBase64('codificar')">Codificar</button>
-                <button class="btn-secondary" style="flex: 1; margin: 0;" onclick="procesarBase64('decodificar')">Decodificar</button>
-            </div>
-            <textarea id="base64-input" class="tool-input" placeholder="Escribe o pega tu texto aquí..." rows="5" style="resize: vertical;"></textarea>
-            <div id="base64-result" class="tool-result" style="text-align: left; font-family: monospace;"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-jwt">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-jwt')">×</button>
-            <h2>Inspector de JWT</h2>
-            <input type="text" id="jwt-input" class="tool-input" placeholder="Pega el token JWT aquí...">
-            <button class="btn-primary" style="width: 100%;" onclick="analizarJWT()">Analizar Token</button>
-            <div id="jwt-result" class="tool-result" style="text-align: left; font-family: monospace; word-break: break-all;"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-timestamp">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-timestamp')">×</button>
-            <h2>Conversor de Timestamp</h2>
-            <label style="color: var(--neon-blue); font-size: 0.9rem;">Fecha y hora normal:</label>
-            <input type="datetime-local" id="ts-date-input" class="tool-input">
-            <button class="btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="convertirFechaATimestamp()">Convertir a Timestamp</button>
-            
-            <label style="color: var(--neon-blue); font-size: 0.9rem;">Timestamp (Unix):</label>
-            <input type="number" id="ts-input" class="tool-input" placeholder="Ej: 1710514200">
-            <button class="btn-secondary" style="width: 100%;" onclick="convertirTimestampAFecha()">Convertir a Fecha</button>
-            
-            <div id="ts-result" class="tool-result"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-ua">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-ua')">×</button>
-            <h2>Analizador User-Agent</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Información detectada de tu navegador actual:</p>
-            <div id="ua-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script src="herramientas.js"></script>
-</body>
-</html>
