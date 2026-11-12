@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Cargando... | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="toast-container"></div>
+
+    <header>
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">eLDeSiempre<span>.es</span></div>
+        </div>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
+            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
+            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
+        </nav>
+    </header>
+
+    <main class="container" id="main-content">
+        <article style="background: var(--card-bg); border: 1px solid var(--border); padding: 30px; border-radius: 8px;">
+            <h2 id="guia-titulo" style="border: none; margin-bottom: 10px;">Cargando guía...</h2>
+            <span id="guia-nivel" class="badge badge-default" style="display: none; margin-bottom: 20px;"></span>
+            <div id="guia-contenido" style="line-height: 1.8; color: var(--text-main); margin-top: 15px;"></div>
+        </article>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" class="btn-secondary" style="text-decoration: none;">← Volver al inicio</a>
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('load', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const guiaId = urlParams.get('id');
+            const tituloElement = document.getElementById('guia-titulo');
+            const nivelElement = document.getElementById('guia-nivel');
+            const contenidoElement = document.getElementById('guia-contenido');
+
+            if (!guiaId) {
+                tituloElement.innerText = "Error 404";
+                contenidoElement.innerHTML = "<p>No se ha especificado ninguna guía.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.eldesiempre.es/obtener_guia.php?id=${guiaId}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    document.title = result.data.titulo + " | eLDeSiempre.es";
+                    tituloElement.innerText = result.data.titulo;
+                    contenidoElement.innerHTML = result.data.contenido;
+                    
+                    nivelElement.style.display = 'inline-block';
+                    nivelElement.innerText = result.data.nivel;
+                    
+                    if(result.data.nivel === 'Principiante') nivelElement.className = 'badge badge-curso';
+                    else if(result.data.nivel === 'Fácil') nivelElement.className = 'badge badge-lab';
+                    else if(result.data.nivel === 'Medio') nivelElement.className = 'badge badge-herramienta';
+                    else if(result.data.nivel === 'Difícil') nivelElement.className = 'badge badge-libro';
+                    else if(result.data.nivel === 'Experto') nivelElement.className = 'badge badge-sistema';
+
+                } else {
+                    if (response.status === 403) {
+                        tituloElement.innerText = "Contenido Protegido";
+                        contenidoElement.innerHTML = `<p>${result.message}</p><br><a href="login.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a Iniciar Sesión</a>`;
+                    } else {
+                        tituloElement.innerText = "Guía no encontrada";
+                        contenidoElement.innerHTML = "<p>La guía que buscas no existe o ha sido eliminada.</p>";
+                    }
+                }
+            } catch (error) {
+                tituloElement.innerText = "Error de conexión";
+                contenidoElement.innerHTML = "<p>No se pudo cargar la guía. Inténtalo más tarde.</p>";
+            }
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
