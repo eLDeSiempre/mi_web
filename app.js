@@ -108,7 +108,7 @@ async function cargarRecursosDesdeVPS() {
 
     try {
         const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
-        if (!response.ok) throw new Error("Error");
+        if (!response.ok) throw new Error("Error de red");
         const result = await response.json();
 
         if (result.success) {
@@ -119,10 +119,12 @@ async function cargarRecursosDesdeVPS() {
                 4: "04. OSINT, Inteligencia y Búsqueda de Información",
                 5: "05. Desarrollo Seguro, Web y Bases de Datos",
                 6: "06. Sistemas Operativos y Administración",
-                7: "07. Noticias, Comunidades y Referentes"
+                7: "07. Noticias, Comunidades y Referentes",
+                8: "08. Referentes Hispanos del Hacking",
+                9: "09. Libros y Bibliografía en Español"
             };
 
-            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces recomendados.</p>`;
+            let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para desplegar los enlaces.</p>`;
             
             for (const [id, nombre] of Object.entries(categorias)) {
                 const recursosCat = result.data.filter(r => r.categoria_id == id);
@@ -208,7 +210,9 @@ window.onload = async () => {
     await comprobarSesion();
     protegerContenidoPrivado();
     
-    if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
+    if (window.location.pathname.includes('recursos.html')) {
+        cargarRecursosDesdeVPS();
+    }
 
     if (localStorage.getItem('disclaimerAceptado') === 'true') {
         const modal = document.getElementById('disclaimer-modal');
