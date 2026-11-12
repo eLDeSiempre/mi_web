@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mi Perfil | eLDeSiempre.es</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,24 +19,32 @@
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn active" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:#ff3333;" onclick="cerrarSesion()">Salir</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
         </nav>
     </header>
 
     <main class="container" style="display: none;">
         <h2>Mi Perfil Profesional</h2>
         <div class="profile-card">
-            <h2 style="color: var(--neon-green); text-align: center; border: none;">@<span id="perfil-usuario">usuario</span></h2>
+            <h2 style="color: var(--neon-green); text-align: center; border: none; margin-bottom: 10px;">@<span id="perfil-usuario">usuario</span></h2>
             <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
             
-            <form class="profile-form" id="form-perfil">
-                <label for="perfil-bio">Biografía</label>
-                <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..."></textarea>
-                <label for="perfil-habilidades">Habilidades</label>
-                <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT...">
-                <label for="perfil-github">GitHub (URL)</label>
-                <input type="url" id="perfil-github" placeholder="https://github.com/...">
+            <form class="profile-form" id="form-perfil" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="perfil-bio">Biografía</label>
+                    <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit; min-height: 100px;"></textarea>
+                </div>
+                <div>
+                    <label for="perfil-habilidades">Habilidades</label>
+                    <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit;">
+                </div>
+                <div>
+                    <label for="perfil-github">GitHub (URL)</label>
+                    <input type="url" id="perfil-github" placeholder="https://github.com/..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit;">
+                </div>
                 <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
             </form>
 
@@ -45,23 +52,6 @@
         </div>
     </main>
 
-    <script>
-        document.getElementById('form-perfil').addEventListener('submit', (e) => {
-            e.preventDefault();
-            mostrarToast('Perfil actualizado.', 'success');
-        });
-        
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if(usuarioLogueado) {
-                    const userElement = document.getElementById('perfil-usuario');
-                    const nameElement = document.getElementById('perfil-nombre');
-                    if(userElement) userElement.innerText = usuarioLogueado.usuario;
-                    if(nameElement) nameElement.innerText = usuarioLogueado.nombre;
-                }
-            }, 500);
-        });
-    </script>
     <script src="app.js"></script>
 </body>
 </html>
