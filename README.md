@@ -1,51 +1,54 @@
 # eLDeSiempre.es 🛡️
 
-**Plataforma web y aplicación móvil enfocada en ciberseguridad, hacking ético y educación.**
+**Donde la seguridad y el conocimiento se encuentran.**
 
-eLDeSiempre.es nace con el objetivo de centralizar los mejores recursos, herramientas y guías de ciberseguridad en un solo lugar. Todo ello bajo una estética visual inmersiva inspirada en una Terminal Hacker / Mr. Robot, utilizando tipografía monoespaciada (Fira Code) y una paleta de colores oscura con acentos en verde neón y dorado.
+eLDeSiempre.es es una plataforma web educativa enfocada en ciberseguridad y hacking ético. Su objetivo es centralizar los mejores recursos gratuitos, herramientas y guías de aprendizaje en español, estructurados como un recorrido desde cero hasta nivel experto. Todo bajo una estética de terminal inmersiva, un rendimiento excepcional y un fuerte enfoque en la seguridad y la privacidad.
 
 ---
 
 ### 🚀 Características Principales
 
-*   **Guías Públicas (SEO):** Artículos y tutoriales accesibles para todos, diseñados para aprender desde cero y posicionar en buscadores.
-*   **Biblioteca de Recursos (Privada):** Directorio masivo de enlaces clasificados por categorías para usuarios registrados:
+*   **Rutas de Aprendizaje (SEO):** Guías públicas estructuradas por niveles (Principiante, Fácil, Medio, Difícil, Experto). Los usuarios pueden empezar desde lo más básico (¿Qué es internet?) hasta técnicas avanzadas (Red Team). Algunas guías avanzadas requieren estar registrado.
+*   **Biblioteca de Recursos (Privada):** Directorio masivo y jerárquico (tipo árbol) de enlaces clasificados en 9 categorías. Incluye:
     *   Formación y Certificaciones.
-    *   Plataformas de Práctica (Hack The Box, TryHackMe, PortSwigger, OverTheWire).
-    *   Herramientas Esenciales (Nmap, Wireshark, Burp Suite, Kali Linux).
-    *   Comunidades y Noticias (Hackplayers, DragonJAR, INCIBE).
-    *   Biblioteca Recomendada (Libros clave de la industria).
-    *   Referentes del Hacking (Directorio de hackers destacados).
-*   **Laboratorio de Herramientas:** Utilidades funcionales integradas y de uso libre:
-    *   OSINT Framework (Iframe interactivo).
-    *   Generador de Dorks avanzados.
-    *   Analizador EXIF (Metadatos y geolocalización de imágenes).
-    *   Generador de Contraseñas seguras.
-    *   Analizador de Hashes (MD5, SHA-1, SHA-256).
-    *   Buscador de IP / OSINT.
-*   **Sistema de Usuarios:** Registro y login con verificación por correo, sesiones protegidas y limitación de intentos.
+    *   Plataformas de Práctica (Hack The Box, TryHackMe).
+    *   Red Team y Pentesting.
+    *   Blue Team y Forense.
+    *   Herramientas OSINT.
+    *   Desarrollo Seguro.
+    *   Sistemas Operativos (Kali, Parrot, Tails).
+    *   Referentes Hispanos (Chema Alonso, DragonJAR, etc.).
+    *   Bibliografía en Español (0xWord).
+    *   *Sistema de votaciones integrado para destacar los mejores recursos.*
+*   **Laboratorio de Herramientas (Público):** Más de 20 utilidades funcionales, 100% seguras y sin vulnerar la privacidad de terceros:
+    *   OSINT: OSINT Framework, Generador de Dorks, Reconocimiento de Dominio, Analizador de MAC.
+    *   Redes: Analizador Wi-Fi, Fuga de DNS, Buscador de IP.
+    *   Utilidades: Analizador EXIF, Generador de Hash, Generador de Contraseñas, Auditor de Contraseñas, Inspector JWT, Base64, Formateador JSON, Conversor Timestamp, User-Agent, Regex, UUID.
+    *   *Todas las acciones se registran de forma anónima en Discord para auditoría de seguridad.*
+*   **Sistema de Usuarios:** Registro y login con verificación por correo, sesiones protegidas, perfiles personalizables (bio, habilidades, GitHub) y limitación de intentos.
+*   **Diseño Adaptable:** Interfaz responsive con **Modo Oscuro (terminal) y Modo Claro (limpio)**. El usuario puede alternar y guardar su preferencia.
 *   **Comunidad:** Integración directa con un servidor privado de Discord.
-*   **Support Me:** Sección transparente para recibir donaciones vía PayPal y criptomonedas.
-*   **Diseño Responsive:** Totalmente adaptado para dispositivos móviles y ordenadores.
 
 ---
 
 ### 🛠️ Arquitectura Técnica
 
-El proyecto está construido priorizando el rendimiento y la seguridad, sin depender de frameworks pesados:
+El proyecto está construido priorizando el rendimiento, la seguridad y la simplicidad, sin depender de frameworks pesados:
 
 *   **Frontend:** HTML, CSS y JavaScript puro (Vanilla JS). Estructura multipágina alojada en GitHub Pages.
 *   **Backend:** API RESTful desarrollada en PHP (Nginx + PHP 8.5-FPM) alojada en un VPS propio.
 *   **Base de Datos:** MySQL, utilizando PDO con *Prepared Statements* para prevenir inyecciones SQL.
-*   **App Móvil:** WebView nativo de Android (Kotlin) con pantalla completa inmersiva.
-*   **Analítica:** Matomo autoalojado en Docker, garantizando la privacidad de los datos.
+*   **App Móvil:** WebView nativo de Android (Kotlin) con pantalla completa inmersiva (En desarrollo).
+*   **Analítica:** Matomo autoalojado en Docker, garantizando el 100% de privacidad.
+*   **Control:** Alertas y notificaciones centralizadas en un canal privado de Discord mediante Webhooks.
 
 #### 🔒 Medidas de Seguridad Implementadas
-*   Credenciales de base de datos y correo aisladas en un archivo `.env` externo al código público.
-*   Hashing de contraseñas mediante `password_hash` (Bcrypt).
-*   Protección de rutas privadas mediante validación de sesión tanto en el frontend como en el backend.
-*   Carga dinámica de recursos protegidos (los datos sensibles nunca viajan al cliente sin autenticación).
-*   Rate Limiting contra ataques de fuerza bruta y protección anti-spam en el registro.
+*   Credenciales de base de datos y correo aisladas en un archivo `.env` externo (bloqueado por Nginx).
+*   Control estricto de CORS y sesiones (HttpOnly, Secure, SameSite=Strict) desde PHP.
+*   Hashing de contraseñas mediante `password_hash` (Bcrypt) y `session_regenerate_id`.
+*   Protección de rutas privadas en el frontend (cortina JS) y validación obligatoria en el backend (PHP).
+*   Carga dinámica de recursos protegidos: el contenido solo viaja al cliente si hay una sesión válida.
+*   Rate Limiting contra ataques de fuerza bruta en login y anti-spam (Honeypot) en el formulario de contacto.
 
 ---
 
@@ -71,4 +74,4 @@ Este es un proyecto 100% gratuito y sin ánimo de lucro. Si te ha sido de ayuda 
 *   **TikTok:** [@eldesiempre_ttv](https://www.tiktok.com/@eldesiempre_ttv)
 
 ---
-*Hecho con 🖤 y mucho ☕ por eLDeSiempre.*
+*Hecho con 🖤, mucho ☕ y código por eLDeSiempre.*
