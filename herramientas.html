@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://matomo.eldesiempre.es https://api.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com;">
     <title>Herramientas | eLDeSiempre.es</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
@@ -29,7 +30,7 @@
 
     <main class="container">
         <h2>Laboratorio de Herramientas</h2>
-        <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta.</p>
+        <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta. Todas son seguras y no afectan a terceros.</p>
         
         <div class="grid-cards">
             <div class="card" onclick="abrirModal('modal-osint')">
@@ -112,6 +113,36 @@
                 <p>Descubre qué directorios y archivos está intentando ocultar un sitio web.</p>
                 <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Reconocimiento web (OSINT).</p>
             </div>
+            <div class="card" onclick="abrirModal('modal-wifi')">
+                <h3>Analizador de Red Wi-Fi</h3>
+                <p>Analiza la calidad y seguridad de tu conexión actual, detecta si usas WPA2 o WPA3 y comprueba tu velocidad.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si tu red doméstica es segura.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-dns')">
+                <h3>Fuga de DNS (DNS Leak)</h3>
+                <p>Comprueba si tu proveedor de internet está filtrando tu tráfico real o si tu VPN está funcionando correctamente.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Verificar privacidad.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-password-strength')">
+                <h3>Auditor de Contraseñas</h3>
+                <p>Comprueba en tiempo real cuánto tardaría un hacker en descifrar tu contraseña actual y recibe consejos.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Mejorar tu seguridad personal.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-domain')">
+                <h3>Reconocimiento de Dominio</h3>
+                <p>Descubre la IP del servidor, el proveedor de hosting y los servidores de correo (MX) de cualquier dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: OSINT de infraestructura.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-email')">
+                <h3>Validador de Correo Electrónico</h3>
+                <p>Verifica si un correo electrónico tiene un formato válido y si el dominio asociado realmente existe.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Limpieza de bases de datos.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-mac')">
+                <h3>Buscador de Fabricante (MAC)</h3>
+                <p>Introduce una dirección MAC y descubre a qué fabricante pertenece el dispositivo (Apple, Samsung, Intel, etc.).</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis de redes locales.</p>
+            </div>
         </div>
     </main>
 
@@ -131,6 +162,12 @@
     <div class="modal-overlay" id="modal-regex"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-regex')">×</button><h2>Probador de Regex</h2><label style="color: var(--neon-blue); font-size: 0.9rem;">Patrón:</label><input type="text" id="regex-pattern" class="tool-input" placeholder="Ej: [a-z]+@[a-z]+\.[a-z]{2,}"><label style="color: var(--neon-blue); font-size: 0.9rem;">Texto:</label><input type="text" id="regex-text" class="tool-input" placeholder="Ej: mi_correo@dominio.com" oninput="probarRegex()"><div id="regex-result" class="tool-result"></div></div></div>
     <div class="modal-overlay" id="modal-json"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-json')">×</button><h2>Formateador JSON</h2><textarea id="json-input" class="tool-input" rows="6" placeholder='Ej: {"nombre":"admin","activo":true}'></textarea><button class="btn-primary" style="width: 100%;" onclick="formatearJSON()">Formatear</button><div id="json-result" class="tool-result" style="text-align: left; font-family: monospace;"></div></div></div>
     <div class="modal-overlay" id="modal-robots"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-robots')">×</button><h2>Analizador de Robots.txt</h2><input type="url" id="robots-url" class="tool-input" placeholder="Ej: https://google.com"><button class="btn-primary" style="width: 100%;" onclick="analizarRobots()">Ver</button><div id="robots-result" class="tool-result" style="text-align: left; font-size: 0.9rem; white-space: pre-wrap; font-family: monospace;"></div></div></div>
+    <div class="modal-overlay" id="modal-wifi"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-wifi')">×</button><h2>Analizador de Red Wi-Fi</h2><button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="analizarWifi()">Analizar mi conexión</button><div id="wifi-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-dns"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-dns')">×</button><h2>Fuga de DNS</h2><button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="analizarDNS()">Comprobar mi DNS</button><div id="dns-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-password-strength"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-password-strength')">×</button><h2>Auditor de Contraseñas</h2><input type="text" id="pass-audit-input" class="tool-input" placeholder="Escribe una contraseña..." oninput="auditarPassword()"><div id="pass-audit-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-domain"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-domain')">×</button><h2>Reconocimiento de Dominio</h2><input type="text" id="domain-input" class="tool-input" placeholder="Ej: eldesiempre.es"><button class="btn-primary" style="width: 100%;" onclick="analizarDominio()">Analizar Dominio</button><div id="domain-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-email"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-email')">×</button><h2>Validador de Correo</h2><input type="email" id="email-input" class="tool-input" placeholder="Ej: correo@dominio.com"><button class="btn-primary" style="width: 100%;" onclick="validarEmail()">Validar</button><div id="email-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-mac"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-mac')">×</button><h2>Buscador de Fabricante (MAC)</h2><input type="text" id="mac-input" class="tool-input" placeholder="Ej: 00:1A:2B:3C:4D:5E"><button class="btn-primary" style="width: 100%;" onclick="analizarMAC()">Buscar Fabricante</button><div id="mac-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
 
     <script src="app.js"></script>
     <script src="herramientas.js"></script>
