@@ -3,57 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="eLDeSiempre.es - Donde la seguridad y el conocimiento se encuentran.">
-    <meta name="theme-color" content="#0d1117">
-    <title>eLDeSiempre.es | Donde la seguridad y el conocimiento se encuentran</title>
+    <title>Herramientas | eLDeSiempre.es</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
-    <script>
-      var _paq = window._paq = window._paq || [];
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//matomo.eldesiempre.es/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '1']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 </head>
-<body class="locked">
-    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
-    <div id="toast-container" role="status" aria-live="polite"></div>
-
-    <div class="modal-overlay active" id="disclaimer-modal" role="dialog" aria-modal="true">
-        <div class="modal-content" style="text-align: left;">
-            <h2>⚠️ Descargo de Responsabilidad</h2>
-            <p style="margin-bottom: 15px;">Bienvenido a <strong>eLDeSiempre.es</strong>. Antes de continuar, es obligatorio que lea y acepte las siguientes condiciones:</p>
-            <ul style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
-                <li>Este sitio web tiene fines <strong>exclusivamente educativos e informativos</strong> sobre ciberseguridad y hacking ético.</li>
-                <li>El uso de las herramientas y técnicas aquí mostradas para atacar sistemas sin el consentimiento explícito del propietario es <strong>ilegal</strong> y está penado por la ley.</li>
-                <li>El administrador de eLDeSiempre.es no se hace responsable del mal uso que los usuarios puedan dar a la información proporcionada.</li>
-                <li>Al hacer clic en "Acepto", usted confirma que es mayor de edad y asume toda la responsabilidad legal sobre sus acciones.</li>
-            </ul>
-            <button class="btn-primary" style="width: 100%;" onclick="aceptarDisclaimer()">Acepto y entro</button>
-        </div>
-    </div>
-
-    <div id="cookie-banner" role="region" aria-label="Aviso de cookies">
-        <p>Utilizamos cookies propias y de terceros (Matomo) para analizar el tráfico. Puedes aceptarlas o rechazarlas. <a href="#" onclick="mostrarAvisoLegal(event)">Más información</a>.</p>
-        <div>
-            <button class="btn-secondary" onclick="aceptarCookies(false)">Rechazar</button>
-            <button class="btn-primary" onclick="aceptarCookies(true)">Aceptar</button>
-        </div>
-    </div>
+<body>
+    <div id="toast-container"></div>
 
     <header>
-        <button class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </button>
+        </div>
         <nav>
-            <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
+            <button class="nav-btn active" onclick="window.location.href='herramientas.html'">Herramientas</button>
             <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
@@ -63,82 +27,148 @@
         </nav>
     </header>
 
-    <main class="container" id="main-content">
-        <div class="hero">
-            <h1>Donde la seguridad y el conocimiento se encuentran</h1>
-            <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
-            <button class="btn-primary" onclick="comprobarAcceso('recursos.html')">Explorar Recursos</button>
-            <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
-        </div>
-
-        <section style="margin-top: 50px;">
-            <h2>Rutas de Aprendizaje (Desde Cero)</h2>
-            <div class="grid-cards" style="margin-top: 20px;">
-                <article class="card" onclick="window.location.href='guia.html?id=introduccion-internet'">
-                    <h3>Nivel 1: ¿Qué es Internet?</h3>
-                    <p>El punto de partida. Entiende cómo viajan los datos, qué es una IP y cómo funciona la web antes de intentar hackearla.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
-                </article>
-                <article class="card" onclick="window.location.href='guia.html?id=comandos-linux'">
-                    <h3>Nivel 2: Supervivencia en Linux</h3>
-                    <p>Domina la terminal. Aprende los comandos básicos que usarás en el 90% de las herramientas de hacking ético.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Continuar →</p>
-                </article>
-                <article class="card" onclick="window.location.href='guia.html?id=hacking-etico-redes'">
-                    <h3>Nivel 3: Escaneo de Redes</h3>
-                    <p>Tu primer paso como hacker. Descubre cómo usar Nmap para encontrar dispositivos y puertos abiertos en una red.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Requisito: Login →</p>
-                </article>
-                <article class="card" onclick="window.location.href='guia.html?id=red-team-pentesting'">
-                    <h3>Nivel Final: Red Team</h3>
-                    <p>El nivel experto. Aprende a comprometer entornos corporativos avanzados con Active Directory.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Requisito: Login →</p>
-                </article>
+    <main class="container">
+        <h2>Laboratorio de Herramientas</h2>
+        <p style="margin-bottom: 25px; font-size: 1rem; color: var(--text-main);">Haz clic en cualquier tarjeta para abrir la herramienta. Todas son seguras y no afectan a terceros.</p>
+        
+        <div class="grid-cards">
+            <div class="card" onclick="abrirModal('modal-osint')">
+                <h3>OSINT Framework</h3>
+                <p>Árbol genealógico de internet. Muestra dónde buscar información pública sobre una persona o empresa.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Investigar antecedentes.</p>
             </div>
-        </section>
+            <div class="card" onclick="abrirModal('modal-dorks')">
+                <h3>Generador de Dorks</h3>
+                <p>Trucos de búsqueda avanzada en Google para encontrar archivos expuestos por error.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Encontrar documentos filtrados.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-exif')">
+                <h3>Analizador EXIF</h3>
+                <p>Extrae datos ocultos de las imágenes: hora, modelo del móvil y coordenadas GPS.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si una foto revela tu ubicación.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-pass')">
+                <h3>Generador de Contraseñas</h3>
+                <p>Crea contraseñas súper seguras y aleatorias. Olvídate de usar "1234".</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Proteger tus cuentas.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-hash')">
+                <h3>Analizador de Hash</h3>
+                <p>Un "Hash" es la huella digital de una contraseña. Descubre qué tipo de huella es.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender el almacenamiento de claves.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-ip')">
+                <h3>Buscador de IP / OSINT</h3>
+                <p>Descubre el país, ciudad y proveedor de una dirección IP o dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Rastrear el origen de una visita.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-base64')">
+                <h3>Codificador Base64</h3>
+                <p>Convierte texto a Base64 o viceversa. Esencial para entender cómo viajan los datos.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Depurar peticiones web.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-jwt')">
+                <h3>Inspector de JWT</h3>
+                <p>Pega un token JWT y descubre qué información oculta en su interior.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Entender la autenticación moderna.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-timestamp')">
+                <h3>Conversor de Timestamp</h3>
+                <p>Convierte fechas normales a formato Unix (segundos desde 1970) y viceversa.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis forense y logs.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-ua')">
+                <h3>Analizador User-Agent</h3>
+                <p>Descubre qué sistema operativo, navegador y motor está usando tu dispositivo.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Pruebas de compatibilidad web.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-http-headers')">
+                <h3>Inspector de Cabeceras HTTP</h3>
+                <p>Analiza las cabeceras de seguridad de cualquier sitio web.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Auditar configuraciones web.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-ssl')">
+                <h3>Analizador SSL/TLS</h3>
+                <p>Comprueba la validez del certificado SSL y la conexión segura de un dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Verificar seguridad de servidores.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-uuid')">
+                <h3>Generador de UUID</h3>
+                <p>Crea identificadores únicos universales (v4) para tus pruebas de APIs.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Desarrollo de software seguro.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-regex')">
+                <h3>Probador de Expresiones Regulares</h3>
+                <p>Prueba patrones de búsqueda (Regex) en tiempo real para validación.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Programación y filtrado de datos.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-json')">
+                <h3>Formateador JSON</h3>
+                <p>Valida y formatea documentos JSON para que sean legibles por humanos.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis de APIs y logs.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-robots')">
+                <h3>Analizador de Robots.txt</h3>
+                <p>Descubre qué directorios y archivos está intentando ocultar un sitio web.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Reconocimiento web (OSINT).</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-wifi')">
+                <h3>Analizador de Red Wi-Fi</h3>
+                <p>Analiza la calidad y seguridad de tu conexión actual, detecta si usas WPA2 o WPA3 y comprueba tu velocidad.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Saber si tu red doméstica es segura.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-dns')">
+                <h3>Fuga de DNS (DNS Leak)</h3>
+                <p>Comprueba si tu proveedor de internet está filtrando tu tráfico real o si tu VPN está funcionando correctamente.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Verificar privacidad.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-password-strength')">
+                <h3>Auditor de Contraseñas</h3>
+                <p>Comprueba en tiempo real cuánto tardaría un hacker en descifrar tu contraseña actual y recibe consejos.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Mejorar tu seguridad personal.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-domain')">
+                <h3>Reconocimiento de Dominio</h3>
+                <p>Descubre la IP del servidor, el proveedor de hosting y los servidores de correo (MX) de cualquier dominio.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: OSINT de infraestructura.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-email')">
+                <h3>Validador de Correo Electrónico</h3>
+                <p>Verifica si un correo electrónico tiene un formato válido y si el dominio asociado realmente existe.</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Limpieza de bases de datos.</p>
+            </div>
+            <div class="card" onclick="abrirModal('modal-mac')">
+                <h3>Buscador de Fabricante (MAC)</h3>
+                <p>Introduce una dirección MAC y descubre a qué fabricante pertenece el dispositivo (Apple, Samsung, Intel, etc.).</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis de redes locales.</p>
+            </div>
+        </div>
     </main>
 
-    <footer>
-        <div class="support-footer">
-            <h3>☕ Apoya el Proyecto</h3>
-            <p style="margin-bottom: 20px;">Si te ha sido útil, puedes invitarme a un café o enviar cripto.</p>
-            <a href="https://www.paypal.biz/ldesiem" target="_blank" rel="noopener noreferrer" class="paypal-btn">Donar con PayPal</a>
-            <div class="crypto-list">
-                <button class="crypto-item" onclick="copiarAlPortapapeles('bc1qncwax6ehsrhhphgsvdypy0nhpa2848mjkth320', 'BTC')">BTC</button>
-                <button class="crypto-item" onclick="copiarAlPortapapeles('0x671233AE15A16ff6424e831504CB6C749345B08D', 'ETH')">ETH</button>
-                <button class="crypto-item" onclick="copiarAlPortapapeles('7iVeci47L9mLKouKEQB9siiSdG3QCESDrPnQgrD7xMx', 'SOL')">SOL</button>
-            </div>
-        </div>
-        <div class="social-links">
-            <a href="https://x.com/eLDeSiempre_TTV" target="_blank" rel="noopener noreferrer"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-            <a href="https://www.instagram.com/__eldesiempre__/" target="_blank" rel="noopener noreferrer"><svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-            <a href="https://www.youtube.com/@eLDeSiempreOfficial" target="_blank" rel="noopener noreferrer"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-        </div>
-        <div class="legal-links">
-            <a href="#" onclick="mostrarAvisoLegal(event)">Aviso Legal</a>
-            <a href="#" onclick="mostrarAvisoLegal(event)">Privacidad (RGPD)</a>
-            <a href="#" onclick="mostrarAvisoLegal(event)">Cookies</a>
-        </div>
-        <p style="margin-top: 20px;">&copy; 2026 eLDeSiempre.es</p>
-    </footer>
-
-    <div class="modal-overlay" id="modal-legal" role="dialog" aria-modal="true">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-legal')">×</button>
-            <h2>Información Legal y RGPD</h2>
-            <div style="font-size: 0.92rem; line-height: 1.7; color: var(--text-main);">
-                <h3>1. Aviso Legal</h3>
-                <p>Este sitio web es un proyecto personal sin ánimo de lucro. El titular es el administrador de eLDeSiempre.es. El contenido es meramente educativo.</p>
-                <h3>2. Política de Privacidad (RGPD)</h3>
-                <p>Los datos del formulario de contacto se usan exclusivamente para responderte. Los datos de registro se usan para gestionar tu cuenta. Puedes ejercer tus derechos enviando un correo a <strong>contacto@eldesiempre.es</strong>.</p>
-                <h3>3. Política de Cookies</h3>
-                <p>Esta web utiliza cookies técnicas (para el inicio de sesión) y cookies analíticas (proporcionadas por Matomo, alojado en nuestros propios servidores). Puedes rechazar las analíticas sin que afecte al funcionamiento.</p>
-                <h3>4. Auditoría de Uso Interno</h3>
-                <p>Para garantizar la seguridad, registramos el uso de las herramientas y formularios públicos. Estos registros incluyen IP, fecha/hora y acción realizada. Los registros se envían a un canal privado de Discord y no se comparten con terceros. Conservación máxima: 90 días.</p>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="modal-osint"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-osint')">×</button><h2>OSINT Framework</h2><iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 4px;"></iframe></div></div>
+    <div class="modal-overlay" id="modal-dorks"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-dorks')">×</button><h2>Generador de Dorks Avanzado</h2><label style="color: var(--neon-blue); font-size: 0.9rem;">Dominio o URL Objetivo:</label><input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com"><div style="display: flex; gap: 10px; margin-bottom: 15px;"><div style="flex: 1;"><label style="color: var(--neon-blue); font-size: 0.9rem;">Tipo:</label><select id="dork-type" class="tool-input" style="margin-bottom: 0;"><option value="pdf">PDF</option><option value="doc OR docx">Word</option><option value="xls OR xlsx">Excel</option><option value="env">.env</option><option value="sql">SQL</option><option value="log">Log</option></select></div><div style="flex: 1;"><label style="color: var(--neon-blue); font-size: 0.9rem;">Filtro:</label><select id="dork-extra" class="tool-input" style="margin-bottom: 0;"><option value="">Ninguno</option><option value="inurl:admin">Admin</option><option value="intext:password">Contraseñas</option><option value="intitle:index.of">Directorios</option></select></div></div><div style="display: flex; gap: 10px;"><button class="btn-primary" style="flex: 2;" onclick="generarDork()">Generar</button><button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarDorks()">Limpiar</button></div><div id="dork-result" class="tool-result"></div></div></div>
+    <div class="modal-overlay" id="modal-exif"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-exif')">×</button><h2>Analizador EXIF</h2><input type="file" id="exif-input" accept="image/*" class="tool-input"><div id="exif-result" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-pass"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-pass')">×</button><h2>Generador de Contraseñas</h2><div class="gen-controls"><label><input type="checkbox" id="chk-mayus" checked> Mayúsculas</label><label><input type="checkbox" id="chk-minus" checked> Minúsculas</label><label><input type="checkbox" id="chk-nums" checked> Números</label><label><input type="checkbox" id="chk-symbols" checked> Símbolos</label></div><div class="gen-slider-container"><input type="range" id="slider-longitud" min="4" max="60" value="16" oninput="document.getElementById('slider-valor').innerText = this.value"><span class="gen-slider-value" id="slider-valor">16</span></div><div style="display: flex; gap: 10px;"><button class="btn-primary" style="flex: 2;" onclick="generarPassword()">Generar</button><button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarPassword()">Limpiar</button></div><div id="resultado-password" class="tool-result"></div></div></div>
+    <div class="modal-overlay" id="modal-hash"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-hash')">×</button><h2>Analizador de Hash</h2><input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash..."><div style="display: flex; gap: 10px;"><button class="btn-primary" style="flex: 2;" onclick="analizarHash()">Analizar</button><button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarHash()">Limpiar</button></div><div id="resultado-hash" class="tool-result"></div></div></div>
+    <div class="modal-overlay" id="modal-ip"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-ip')">×</button><h2>Buscador de IP / OSINT</h2><input type="text" id="ip-input" class="tool-input" placeholder="Ej: 8.8.8.8"><div style="display: flex; gap: 10px;"><button class="btn-primary" style="flex: 2;" onclick="buscarIP()">Analizar</button><button class="btn-secondary" style="flex: 1; margin: 0;" onclick="limpiarIP()">Limpiar</button></div><div id="resultado-ip" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-base64"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-base64')">×</button><h2>Codificador Base64</h2><div style="display: flex; gap: 10px; margin-bottom: 15px;"><button class="btn-primary" style="flex: 1; margin: 0;" onclick="procesarBase64('codificar')">Codificar</button><button class="btn-secondary" style="flex: 1; margin: 0;" onclick="procesarBase64('decodificar')">Decodificar</button></div><textarea id="base64-input" class="tool-input" placeholder="Texto..." rows="5" style="resize: vertical;"></textarea><div id="base64-result" class="tool-result" style="text-align: left; font-family: monospace;"></div></div></div>
+    <div class="modal-overlay" id="modal-jwt"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-jwt')">×</button><h2>Inspector de JWT</h2><input type="text" id="jwt-input" class="tool-input" placeholder="Pega el token..."><button class="btn-primary" style="width: 100%;" onclick="analizarJWT()">Analizar</button><div id="jwt-result" class="tool-result" style="text-align: left; font-family: monospace; word-break: break-all;"></div></div></div>
+    <div class="modal-overlay" id="modal-timestamp"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-timestamp')">×</button><h2>Conversor de Timestamp</h2><label style="color: var(--neon-blue); font-size: 0.9rem;">Fecha normal:</label><input type="datetime-local" id="ts-date-input" class="tool-input"><button class="btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="convertirFechaATimestamp()">Convertir a Timestamp</button><label style="color: var(--neon-blue); font-size: 0.9rem;">Timestamp (Unix):</label><input type="number" id="ts-input" class="tool-input" placeholder="Ej: 1710514200"><button class="btn-secondary" style="width: 100%;" onclick="convertirTimestampAFecha()">Convertir a Fecha</button><div id="ts-result" class="tool-result"></div></div></div>
+    <div class="modal-overlay" id="modal-ua"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-ua')">×</button><h2>Analizador User-Agent</h2><p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Información de tu navegador:</p><div id="ua-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-http-headers"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-http-headers')">×</button><h2>Inspector de Cabeceras HTTP</h2><input type="url" id="header-url" class="tool-input" placeholder="Ej: https://eldesiempre.es"><button class="btn-primary" style="width: 100%;" onclick="analizarHeaders()">Analizar</button><div id="header-result" class="tool-result" style="text-align: left; font-size: 0.9rem; word-break: break-all;"></div></div></div>
+    <div class="modal-overlay" id="modal-ssl"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-ssl')">×</button><h2>Analizador SSL/TLS</h2><input type="url" id="ssl-url" class="tool-input" placeholder="Ej: https://eldesiempre.es"><button class="btn-primary" style="width: 100%;" onclick="analizarSSL()">Analizar</button><div id="ssl-result" class="tool-result" style="text-align: left; font-size: 0.9rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-uuid"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-uuid')">×</button><h2>Generador de UUID</h2><button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="generarUUID()">Generar Nuevo UUID</button><div id="uuid-result" class="tool-result" style="font-size: 1.2rem; padding: 20px;"></div></div></div>
+    <div class="modal-overlay" id="modal-regex"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-regex')">×</button><h2>Probador de Regex</h2><label style="color: var(--neon-blue); font-size: 0.9rem;">Patrón:</label><input type="text" id="regex-pattern" class="tool-input" placeholder="Ej: [a-z]+@[a-z]+\.[a-z]{2,}"><label style="color: var(--neon-blue); font-size: 0.9rem;">Texto:</label><input type="text" id="regex-text" class="tool-input" placeholder="Ej: mi_correo@dominio.com" oninput="probarRegex()"><div id="regex-result" class="tool-result"></div></div></div>
+    <div class="modal-overlay" id="modal-json"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-json')">×</button><h2>Formateador JSON</h2><textarea id="json-input" class="tool-input" rows="6" placeholder='Ej: {"nombre":"admin","activo":true}'></textarea><button class="btn-primary" style="width: 100%;" onclick="formatearJSON()">Formatear</button><div id="json-result" class="tool-result" style="text-align: left; font-family: monospace;"></div></div></div>
+    <div class="modal-overlay" id="modal-robots"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-robots')">×</button><h2>Analizador de Robots.txt</h2><input type="url" id="robots-url" class="tool-input" placeholder="Ej: https://google.com"><button class="btn-primary" style="width: 100%;" onclick="analizarRobots()">Ver</button><div id="robots-result" class="tool-result" style="text-align: left; font-size: 0.9rem; white-space: pre-wrap; font-family: monospace;"></div></div></div>
+    <div class="modal-overlay" id="modal-wifi"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-wifi')">×</button><h2>Analizador de Red Wi-Fi</h2><button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="analizarWifi()">Analizar mi conexión</button><div id="wifi-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-dns"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-dns')">×</button><h2>Fuga de DNS</h2><button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="analizarDNS()">Comprobar mi DNS</button><div id="dns-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-password-strength"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-password-strength')">×</button><h2>Auditor de Contraseñas</h2><input type="text" id="pass-audit-input" class="tool-input" placeholder="Escribe una contraseña..." oninput="auditarPassword()"><div id="pass-audit-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-domain"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-domain')">×</button><h2>Reconocimiento de Dominio</h2><input type="text" id="domain-input" class="tool-input" placeholder="Ej: eldesiempre.es"><button class="btn-primary" style="width: 100%;" onclick="analizarDominio()">Analizar Dominio</button><div id="domain-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-email"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-email')">×</button><h2>Validador de Correo</h2><input type="email" id="email-input" class="tool-input" placeholder="Ej: correo@dominio.com"><button class="btn-primary" style="width: 100%;" onclick="validarEmail()">Validar</button><div id="email-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
+    <div class="modal-overlay" id="modal-mac"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-mac')">×</button><h2>Buscador de Fabricante (MAC)</h2><input type="text" id="mac-input" class="tool-input" placeholder="Ej: 00:1A:2B:3C:4D:5E"><button class="btn-primary" style="width: 100%;" onclick="analizarMAC()">Buscar Fabricante</button><div id="mac-result" class="tool-result" style="text-align: left; font-size: 0.95rem;"></div></div></div>
 
     <script src="app.js"></script>
+    <script src="herramientas.js"></script>
 </body>
 </html>
