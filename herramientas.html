@@ -144,6 +144,136 @@
                 <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: Análisis de redes locales.</p>
             </div>
         </div>
+
+        <h2 style="margin-top: 50px;">Canarytokens (Señuelos de Detección)</h2>
+        <p style="margin-bottom: 20px; font-size: 0.95rem; color: var(--text-main);">Genera trampas invisibles. Si un atacante interactúa con ellas, recibirás una alerta. Haz clic en el tipo de token que quieras crear.</p>
+        
+        <div class="canary-grid">
+            <div class="canary-card" onclick="abrirCanarytoken('Web bug', 'Recibirás una alerta cuando alguien visite tu URL.')">
+                <h4>🪲 Web bug</h4>
+                <p>Alerta cuando un atacante visita tu URL.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('DNS', 'Recibirás una alerta cuando alguien resuelva tu nombre DNS.')">
+                <h4>🌐 DNS</h4>
+                <p>Alerta cuando alguien resuelve tu nombre DNS.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Redirección rápida', 'Alerta cuando visiten tu URL y los redirige.')">
+                <h4>⏩ Redirección rápida</h4>
+                <p>Alerta y redirige al atacante.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Redirección lenta', 'Alerta cuando visiten tu URL, redirige y recopila info.')">
+                <h4>⏳ Redirección lenta</h4>
+                <p>Alerta, redirige y recopila más información.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Infraestructura de AWS', 'Alerta cuando exploren tu infraestructura de AWS.')">
+                <h4>☁️ AWS Infra</h4>
+                <p>Alerta si exploran tu infraestructura AWS.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Claves de AWS', 'Alerta cuando usen tu clave API de AWS.')">
+                <h4>🔑 Claves de AWS</h4>
+                <p>Alerta si usan tu clave API de AWS.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Certificado de inicio de sesión de Azure', 'Alerta cuando usen tu certificado de Azure.')">
+                <h4>🔷 Azure Login</h4>
+                <p>Alerta si usan tu certificado de Azure.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Inicio de sesión con Azure Entra ID', 'Alerta cuando intenten phishing en tu cuenta Entra ID.')">
+                <h4>🔐 Azure Entra ID</h4>
+                <p>Alerta ante intentos de phishing.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Kubeconfig', 'Alerta cuando usen tu Kubeconfig.')">
+                <h4>☸️ Kubeconfig</h4>
+                <p>Alerta si usan tu configuración de Kubernetes.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('WireGuard VPN', 'Alerta cuando usen tu configuración de WireGuard.')">
+                <h4>🛡️ WireGuard VPN</h4>
+                <p>Alerta si usan tu configuración VPN.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('MySQL', 'Alerta cuando accedan a tu copia de seguridad de MySQL.')">
+                <h4>🐬 MySQL</h4>
+                <p>Alerta si acceden a tu backup de MySQL.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Microsoft SQL Server', 'Alerta cuando accedan a tu base de datos MS SQL.')">
+                <h4>🗄️ MS SQL Server</h4>
+                <p>Alerta si acceden a tu base de datos MS SQL.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Microsoft Word', 'Alerta cuando abran tu documento de Word.')">
+                <h4>📄 Microsoft Word</h4>
+                <p>Alerta si abren tu documento Word.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Microsoft Excel', 'Alerta cuando abran tu documento de Excel.')">
+                <h4>📊 Microsoft Excel</h4>
+                <p>Alerta si abren tu documento Excel.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Acrobat Reader PDF', 'Alerta cuando abran tu PDF en Acrobat Reader.')">
+                <h4>📕 PDF (Acrobat)</h4>
+                <p>Alerta si abren tu PDF en Acrobat.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('EXE/binario personalizado', 'Alerta cuando ejecuten tu archivo EXE o DLL.')">
+                <h4>⚙️ EXE / Binario</h4>
+                <p>Alerta si ejecutan tu archivo EXE o DLL.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Carpeta de Windows', 'Alerta cuando accedan a tu carpeta de Windows.')">
+                <h4>📁 Carpeta de Windows</h4>
+                <p>Alerta si acceden a tu carpeta de Windows.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Sistema de archivos falso de Windows', 'Alerta cuando accedan a un archivo en el sistema falso.')">
+                <h4>💽 Sistema de Archivos Falso</h4>
+                <p>Alerta si acceden a tu sistema de archivos falso.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Carpeta de red', 'Alerta cuando accedan a una carpeta de red mapeada (WebDAV).')">
+                <h4>🖧 Carpeta de Red</h4>
+                <p>Alerta si acceden a una carpeta WebDAV.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Sitio web clonado en JS', 'Alerta cuando clonen tu sitio web usando JavaScript.')">
+                <h4>💻 Sitio Clonado (JS)</h4>
+                <p>Alerta si clonan tu web con JavaScript.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Sitio web clonado con CSS', 'Alerta cuando clonen tu sitio web usando CSS.')">
+                <h4>🎨 Sitio Clonado (CSS)</h4>
+                <p>Alerta si clonan tu web con CSS.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Código QR', 'Alerta cuando alguien acceda a tu código QR.')">
+                <h4>📱 Código QR</h4>
+                <p>Alerta si alguien escanea tu código QR.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Imagen web', 'Alerta cuando alguien vea una imagen que hayas subido.')">
+                <h4>🖼️ Imagen Web</h4>
+                <p>Alerta si alguien ve tu imagen.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Imagen SVG', 'Alerta cuando carguen un archivo SVG.')">
+                <h4>🌄 Imagen SVG</h4>
+                <p>Alerta si cargan tu archivo SVG.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Aplicación SAML IdP', 'Alerta cuando abran una aplicación falsa desde el panel de control de tu proveedor de identidad.')">
+                <h4>🏢 SAML IdP</h4>
+                <p>Alerta si abren una app falsa de tu IdP.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Dirección de correo electrónico único', 'Alerta cuando envíen un correo a esta dirección única.')">
+                <h4>📧 Email Único</h4>
+                <p>Alerta si envían un correo a esta dirección.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Tarjeta de crédito', 'Alerta cuando intenten usar tu tarjeta de crédito.')">
+                <h4>💳 Tarjeta de Crédito</h4>
+                <p>Alerta si intentan usar tu tarjeta.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('SVN', 'Alerta cuando extraigan datos de un repositorio SVN.')">
+                <h4>📦 SVN</h4>
+                <p>Alerta si extraen datos de tu repositorio.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Log4shell', 'Alerta cuando una línea de log4j sea vulnerable.')">
+                <h4>🐞 Log4shell</h4>
+                <p>Alerta si detectan CVE-2021-44228.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Comando sensible', 'Alerta cuando se ejecute un comando sospechoso de Windows.')">
+                <h4>⌨️ Comando Sensible</h4>
+                <p>Alerta si ejecutan un comando sospechoso.</p>
+            </div>
+            <div class="canary-card" onclick="abrirCanarytoken('Configuración de MCP', 'Alerta cuando usen tu configuración de MCP.')">
+                <h4>⚙️ Configuración MCP</h4>
+                <p>Alerta si usan tu configuración MCP.</p>
+            </div>
+        </div>
     </main>
 
     <div class="modal-overlay" id="modal-osint"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-osint')">×</button><h2>OSINT Framework</h2><iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 4px;"></iframe></div></div>
