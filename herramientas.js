@@ -7,6 +7,7 @@ function generarDork() {
     let query = `site:${dominio}`;
     if (filtroExtra) { query += ` ${filtroExtra}`; }
     query += ` filetype:${tipoArchivo}`;
+    
     document.getElementById('dork-result').innerHTML = `
         <div style="background: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-top: 15px;">
             <p style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 10px;">Dork generado:</p>
