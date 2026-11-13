@@ -395,6 +395,28 @@ async function solicitarReset() {
     } catch (e) { mostrarToast("Error de conexión.", "error"); }
 }
 
+async function enviarReset() {
+    const email = document.getElementById('forgot-email').value;
+    if (!email) {
+        mostrarToast("Introduce tu correo electrónico.", "error");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-forgot');
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
+    }
+}
+
 async function toggle2FAEmail() {
     const btn = document.getElementById('btn-2fa-email');
     const estaActivo = btn.innerText === 'Desactivar';
