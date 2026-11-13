@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Accede a nuestro directorio curado de cursos, libros, laboratorios y referentes de hacking ético. Todo lo que necesitas para especializarte.">
+    <meta name="description" content="Gestiona tu perfil en eLDeSiempre, actualiza tus habilidades y configura la verificación en dos pasos (2FA) para proteger tu cuenta.">
     <meta property="og:site_name" content="eLDeSiempre">
-    <meta property="og:title" content="Directorio de Recursos de Ciberseguridad">
-    <meta property="og:description" content="Los mejores enlaces y herramientas para aprender hacking ético en español.">
+    <meta property="og:title" content="Mi Perfil">
+    <meta property="og:description" content="Gestiona tu cuenta y configura tu seguridad.">
     <meta property="og:image" content="https://eldesiempre.es/assets/portada.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://eldesiempre.es/recursos.html">
+    <meta property="og:url" content="https://eldesiempre.es/perfil.html">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@eLDeSiempre_TTV">
-    <meta name="twitter:title" content="Directorio de Recursos de Ciberseguridad">
-    <meta name="twitter:description" content="Los mejores enlaces y herramientas para aprender hacking ético en español.">
+    <meta name="twitter:title" content="Mi Perfil">
+    <meta name="twitter:description" content="Gestiona tu cuenta y configura tu seguridad.">
     <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
     <meta name="theme-color" content="#0d1117">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://matomo.eldesiempre.es https://api.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com;">
-    <title>Directorio de Recursos</title>
+    <title>Mi Perfil</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -33,18 +33,78 @@
         </div>
         <nav>
             <button class="nav-btn" onclick="window.location.href='herramientas.html'">Herramientas</button>
-            <button class="nav-btn active" onclick="window.location.href='recursos.html'">Recursos</button>
+            <button class="nav-btn" onclick="window.location.href='recursos.html'">Recursos</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
-            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
+            <button class="nav-btn active" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
             <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
             <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
             <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
         </nav>
     </header>
 
-    <main class="container" id="contenedor-recursos" style="display: block;">
+    <main class="container" style="display: none;">
+        <h2>Mi Perfil Profesional</h2>
+        <div class="profile-card">
+            <h2 style="color: var(--neon-green); text-align: center; border: none; margin-bottom: 10px;">@<span id="perfil-usuario">usuario</span></h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Bienvenido de nuevo, <strong id="perfil-nombre" style="color: var(--text-bright);">Nombre</strong>.</p>
+            
+            <form class="profile-form" id="form-perfil" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="perfil-bio">Biografía</label>
+                    <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit; min-height: 100px;"></textarea>
+                </div>
+                <div>
+                    <label for="perfil-habilidades">Habilidades</label>
+                    <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit;">
+                </div>
+                <div>
+                    <label for="perfil-github">GitHub (URL)</label>
+                    <input type="url" id="perfil-github" placeholder="https://github.com/..." style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); color: var(--text-bright); border-radius: 6px; font-family: inherit;">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
+            </form>
+
+            <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <h3 style="color: var(--text-bright); margin-bottom: 15px;">Seguridad</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">¿Quieres cambiar tu contraseña?</p>
+                    <button class="btn-secondary" onclick="solicitarReset()" style="margin-top: 5px;">Enviar enlace de cambio</button>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--text-bright);">2FA por Email</strong>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Recibe un código en tu correo al iniciar sesión.</p>
+                    </div>
+                    <button id="btn-2fa-email" class="btn-secondary" onclick="toggle2FAEmail()">Activar</button>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--text-bright);">App Autenticadora</strong>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Usa Google Authenticator o Authy.</p>
+                    </div>
+                    <button id="btn-2fa-totp" class="btn-secondary" onclick="iniciar2FATOTP()">Configurar</button>
+                </div>
+            </div>
+
+            <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord" style="margin-top: 30px;">Unirse al Discord</a>
+        </div>
     </main>
-    
+
+    <div class="modal-overlay" id="modal-totp">
+        <div class="modal-content" style="text-align: center;">
+            <button class="close-btn" onclick="cerrarModal('modal-totp')">×</button>
+            <h2>Configurar Autenticador</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 15px;">Escanea este código con tu app:</p>
+            <div id="qr-container" style="background: white; padding: 10px; display: inline-block; margin-bottom: 15px; border-radius: 8px;"></div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">O introduce el código manual: <code id="secret-text" style="color: var(--neon-green);"></code></p>
+            <input type="text" id="totp-codigo" class="tool-input" placeholder="Código de 6 dígitos" maxlength="6">
+            <button class="btn-primary" onclick="confirmar2FATOTP()" style="width: 100%;">Verificar y Activar</button>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
