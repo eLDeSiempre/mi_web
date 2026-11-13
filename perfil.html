@@ -49,9 +49,46 @@
                 <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
             </form>
 
-            <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord">Unirse al Discord</a>
+            <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <h3 style="color: var(--text-bright); margin-bottom: 15px;">Seguridad</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">¿Quieres cambiar tu contraseña?</p>
+                    <button class="btn-secondary" onclick="solicitarReset()" style="margin-top: 5px;">Enviar enlace de cambio</button>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--text-bright);">2FA por Email</strong>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Recibe un código en tu correo al iniciar sesión.</p>
+                    </div>
+                    <button id="btn-2fa-email" class="btn-secondary" onclick="toggle2FAEmail()">Activar</button>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--text-bright);">App Autenticadora</strong>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Usa Google Authenticator o Authy.</p>
+                    </div>
+                    <button id="btn-2fa-totp" class="btn-secondary" onclick="iniciar2FATOTP()">Configurar</button>
+                </div>
+            </div>
+
+            <a href="https://discord.gg/EakygHQwUu" target="_blank" class="btn-discord" style="margin-top: 30px;">Unirse al Discord</a>
         </div>
     </main>
+
+    <div class="modal-overlay" id="modal-totp">
+        <div class="modal-content" style="text-align: center;">
+            <button class="close-btn" onclick="cerrarModal('modal-totp')">×</button>
+            <h2>Configurar Autenticador</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 15px;">Escanea este código con tu app:</p>
+            <div id="qr-container" style="background: white; padding: 10px; display: inline-block; margin-bottom: 15px;"></div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">O introduce el código manual: <code id="secret-text" style="color: var(--neon-green);"></code></p>
+            <input type="text" id="totp-codigo" class="tool-input" placeholder="Código de 6 dígitos" maxlength="6">
+            <button class="btn-primary" onclick="confirmar2FATOTP()" style="width: 100%;">Verificar y Activar</button>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
