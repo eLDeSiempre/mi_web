@@ -21,6 +21,22 @@ function inicializarTema() {
     }
 }
 
+function comprobarDisclaimer() {
+    const modal = document.getElementById('disclaimer-modal');
+    if (!modal) return;
+    if (localStorage.getItem('disclaimerAceptado') === 'true') {
+        modal.style.display = 'none';
+        document.body.classList.remove('locked');
+        if (!localStorage.getItem('cookiesAceptadas')) {
+            const banner = document.getElementById('cookie-banner');
+            if(banner) banner.style.display = 'flex';
+        }
+    } else {
+        modal.style.display = 'flex';
+        document.body.classList.add('locked');
+    }
+}
+
 function abrirModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.add('active'); }
 function cerrarModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.remove('active'); }
 function mostrarAvisoLegal(e) { if (e) e.preventDefault(); abrirModal('modal-legal'); }
@@ -340,6 +356,7 @@ document.getElementById('form-perfil')?.addEventListener('submit', async (e) => 
 
 window.onload = async () => {
     inicializarTema();
+    comprobarDisclaimer();
     await comprobarSesion();
     protegerContenidoPrivado();
     if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
