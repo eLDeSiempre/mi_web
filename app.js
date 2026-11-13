@@ -396,16 +396,25 @@ async function solicitarReset() {
 }
 
 async function toggle2FAEmail() {
+    const btn = document.getElementById('btn-2fa-email');
+    const estaActivo = btn.innerText === 'Desactivar';
+    const nuevoEstado = !estaActivo;
+
     try {
         const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ activo: true })
+            body: JSON.stringify({ activo: nuevoEstado }),
+            credentials: 'include'
         });
         const result = await response.json();
         mostrarToast(result.message, result.success ? 'success' : 'error');
-        if(result.success) document.getElementById('btn-2fa-email').innerText = 'Desactivar';
-    } catch (e) { mostrarToast("Error", "error"); }
+        if (result.success) {
+            btn.innerText = nuevoEstado ? 'Desactivar' : 'Activar';
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
+    }
 }
 
 async function iniciar2FATOTP() {
