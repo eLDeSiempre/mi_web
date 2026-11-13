@@ -23,6 +23,13 @@
     </script>
 </head>
 <body class="locked">
+    <script>
+        if (localStorage.getItem('disclaimerAceptado') === 'true') {
+            document.body.classList.remove('locked');
+            document.write('<style>#disclaimer-modal { display: none !important; }</style>');
+        }
+    </script>
+
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     <div id="toast-container" role="status" aria-live="polite"></div>
 
