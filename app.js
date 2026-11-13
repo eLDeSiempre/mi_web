@@ -444,7 +444,7 @@ async function iniciar2FATOTP() {
         const response = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
         const result = await response.json();
         if (result.success) {
-            document.getElementById('qr-container').innerHTML = result.qr_svg;
+            document.getElementById('qr-container').innerHTML = `<img src="${result.qr_svg}" alt="Código QR" style="width: 100%; max-width: 200px; height: auto;">`;
             document.getElementById('secret-text').innerText = result.secret;
             abrirModal('modal-totp');
         } else {
