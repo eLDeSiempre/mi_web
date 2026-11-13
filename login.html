@@ -38,6 +38,9 @@
             <div class="form-field">
                 <label for="login-contrasena">Contraseña</label>
                 <input type="password" id="login-contrasena" placeholder="••••••••" required autocomplete="current-password">
+                <div style="text-align: right; margin-top: 5px;">
+                    <a href="#" onclick="abrirModal('modal-forgot'); return false;" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">¿Olvidaste tu contraseña?</a>
+                </div>
             </div>
             <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
             <p style="text-align: center; margin-top: 20px;">¿No tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Regístrate aquí</a></p>
@@ -72,6 +75,19 @@
             <p style="margin-bottom: 20px; color: var(--text-muted);">Introduce el código de 6 dígitos.</p>
             <input type="text" id="2fa-codigo" class="tool-input" placeholder="000000" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
             <button class="btn-primary" style="width: 100%;" onclick="verificar2FALogin()">Verificar</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-forgot">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <button class="close-btn" onclick="cerrarModal('modal-forgot')">×</button>
+            <h2>Recuperar Contraseña</h2>
+            <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.9rem;">Introduce tu correo y te enviaremos un enlace para restablecerla.</p>
+            <div class="form-field" style="text-align: left;">
+                <label for="forgot-email">Correo Electrónico</label>
+                <input type="email" id="forgot-email" class="tool-input" placeholder="tu@correo.com">
+            </div>
+            <button class="btn-primary" style="width: 100%;" onclick="enviarReset()">Enviar Enlace</button>
         </div>
     </div>
 
