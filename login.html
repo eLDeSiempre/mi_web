@@ -65,6 +65,16 @@
             <p style="text-align: center; margin-top: 20px;">¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForms(event)" style="color: var(--neon-blue); font-weight: bold; text-decoration: none;">Inicia Sesión</a></p>
         </form>
     </main>
+
+    <div class="modal-overlay" id="modal-2fa">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h2>Verificación en 2 Pasos</h2>
+            <p style="margin-bottom: 20px; color: var(--text-muted);">Introduce el código de 6 dígitos.</p>
+            <input type="text" id="2fa-codigo" class="tool-input" placeholder="000000" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+            <button class="btn-primary" style="width: 100%;" onclick="verificar2FALogin()">Verificar</button>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
