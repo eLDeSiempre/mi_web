@@ -1,5 +1,6 @@
 const API_URL = 'https://api.eldesiempre.es';
 let usuarioLogueado = null;
+let temp2FAMetodo = null;
 
 function inicializarTema() {
     const temaGuardado = localStorage.getItem('tema');
@@ -18,6 +19,22 @@ function inicializarTema() {
                 btnToggle.innerText = '🌙';
             }
         });
+    }
+}
+
+function comprobarDisclaimer() {
+    const modal = document.getElementById('disclaimer-modal');
+    if (!modal) return;
+    if (localStorage.getItem('disclaimerAceptado') === 'true') {
+        modal.style.display = 'none';
+        document.body.classList.remove('locked');
+        if (!localStorage.getItem('cookiesAceptadas')) {
+            const banner = document.getElementById('cookie-banner');
+            if(banner) banner.style.display = 'flex';
+        }
+    } else {
+        modal.style.display = 'flex';
+        document.body.classList.add('locked');
     }
 }
 
@@ -271,11 +288,37 @@ document.getElementById('form-login')?.addEventListener('submit', async (e) => {
         const response = await fetch(`${API_URL}/login.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
         const result = await response.json();
         if (result.success) {
-            mostrarToast('Bienvenido ' + result.nombre, 'success');
-            setTimeout(() => window.location.href = 'recursos.html', 1000);
+            if (result.requiere_2fa) {
+                temp2FAMetodo = result.requiere_2fa;
+                mostrarToast(result.message, 'success');
+                abrirModal('modal-2fa');
+            } else {
+                mostrarToast('Bienvenido ' + result.nombre, 'success');
+                setTimeout(() => window.location.href = 'recursos.html', 1000);
+            }
         } else { mostrarToast('Error: ' + result.message, 'error'); }
     } catch (error) { mostrarToast('Error de conexión.', 'error'); }
 });
+
+async function verificar2FALogin() {
+    const codigo = document.getElementById('2fa-codigo').value;
+    if (!codigo) { mostrarToast("Introduce el código.", "error"); return; }
+    try {
+        const response = await fetch(`${API_URL}/verificar_2fa_login.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: codigo, metodo: temp2FAMetodo }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if (result.success) {
+            mostrarToast('Login exitoso.', 'success');
+            setTimeout(() => window.location.href = 'recursos.html', 1000);
+        } else {
+            mostrarToast(result.message, 'error');
+        }
+    } catch (error) { mostrarToast("Error de conexión.", "error"); }
+}
 
 document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -338,8 +381,69 @@ document.getElementById('form-perfil')?.addEventListener('submit', async (e) => 
     } catch(e) { mostrarToast('Error de conexión.', 'error'); }
 });
 
+async function solicitarReset() {
+    const email = prompt("Confirma tu correo electrónico para recibir el enlace:");
+    if (!email) return;
+    try {
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+    } catch (e) { mostrarToast("Error de conexión.", "error"); }
+}
+
+async function toggle2FAEmail() {
+    try {
+        const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ activo: true })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if(result.success) document.getElementById('btn-2fa-email').innerText = 'Desactivar';
+    } catch (e) { mostrarToast("Error", "error"); }
+}
+
+async function iniciar2FATOTP() {
+    try {
+        const response = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('qr-container').innerHTML = result.qr_svg;
+            document.getElementById('secret-text').innerText = result.secret;
+            abrirModal('modal-totp');
+        } else {
+            mostrarToast(result.message, "error");
+        }
+    } catch (e) { mostrarToast("Error al generar QR.", "error"); }
+}
+
+async function confirmar2FATOTP() {
+    const codigo = document.getElementById('totp-codigo').value;
+    try {
+        const response = await fetch(`${API_URL}/confirmar_2fa_totp.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: codigo }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-totp');
+            document.getElementById('btn-2fa-totp').innerText = 'Desactivar';
+            document.getElementById('btn-2fa-totp').onclick = () => { mostrarToast("Función de desactivar pendiente", "error"); };
+        }
+    } catch (e) { mostrarToast("Error", "error"); }
+}
+
 window.onload = async () => {
     inicializarTema();
+    comprobarDisclaimer();
     await comprobarSesion();
     protegerContenidoPrivado();
     if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
