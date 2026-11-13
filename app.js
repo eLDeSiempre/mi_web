@@ -349,9 +349,13 @@ async function cargarPerfil() {
     const bioInput = document.getElementById('perfil-bio');
     const habInput = document.getElementById('perfil-habilidades');
     const gitInput = document.getElementById('perfil-github');
+    const btn2FAEmail = document.getElementById('btn-2fa-email');
+    const btn2FATOTP = document.getElementById('btn-2fa-totp');
+
     if (!userSpan || !usuarioLogueado) return;
     userSpan.innerText = usuarioLogueado.usuario;
     nameSpan.innerText = usuarioLogueado.nombre;
+    
     try {
         const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
         const result = await response.json();
@@ -359,6 +363,21 @@ async function cargarPerfil() {
             if(bioInput) bioInput.value = result.data.bio || '';
             if(habInput) habInput.value = result.data.habilidades || '';
             if(gitInput) gitInput.value = result.data.github || '';
+            
+            if (btn2FAEmail) {
+                if (result.data.twofa_email_activo) {
+                    btn2FAEmail.innerText = 'Contactar Soporte';
+                    btn2FAEmail.onclick = () => window.location.href = 'contacto.html';
+                } else {
+                    btn2FAEmail.innerText = 'Activar';
+                    btn2FAEmail.onclick = toggle2FAEmail;
+                }
+            }
+
+            if (btn2FATOTP && result.data.twofa_totp_activo) {
+                btn2FATOTP.innerText = 'Contactar Soporte';
+                btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
+            }
         }
     } catch(e) {}
 }
@@ -418,21 +437,19 @@ async function enviarReset() {
 }
 
 async function toggle2FAEmail() {
-    const btn = document.getElementById('btn-2fa-email');
-    const estaActivo = btn.innerText === 'Desactivar';
-    const nuevoEstado = !estaActivo;
-
     try {
         const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ activo: nuevoEstado }),
+            body: JSON.stringify({ activo: true }),
             credentials: 'include'
         });
         const result = await response.json();
         mostrarToast(result.message, result.success ? 'success' : 'error');
         if (result.success) {
-            btn.innerText = nuevoEstado ? 'Desactivar' : 'Activar';
+            const btn = document.getElementById('btn-2fa-email');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
         }
     } catch (e) { 
         mostrarToast("Error de conexión.", "error"); 
@@ -466,8 +483,9 @@ async function confirmar2FATOTP() {
         mostrarToast(result.message, result.success ? 'success' : 'error');
         if (result.success) {
             cerrarModal('modal-totp');
-            document.getElementById('btn-2fa-totp').innerText = 'Desactivar';
-            document.getElementById('btn-2fa-totp').onclick = () => { mostrarToast("Función de desactivar pendiente", "error"); };
+            const btn = document.getElementById('btn-2fa-totp');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
         }
     } catch (e) { mostrarToast("Error", "error"); }
 }
