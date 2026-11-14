@@ -426,6 +426,48 @@ async function analizarMAC() {
     }
 }
 
+function generarPayload() {
+    const tipo = document.getElementById('payload-tipo').value;
+    const input = document.getElementById('payload-input').value;
+    const res = document.getElementById('payload-result');
+    if (!input) { res.innerText = "Introduce un texto o URL."; return; }
+    let payload = "";
+    if (tipo === 'xss') payload = `<script>alert('${input}')</script>`;
+    else if (tipo === 'sqli') payload = `' OR '1'='1' --`;
+    else if (tipo === 'lfi') payload = `../../../../etc/passwd`;
+    res.innerHTML = `<code>${payload}</code>`;
+    logHerramienta("Payloads", "Generar", tipo, payload);
+}
+
+async function buscarCVE() {
+    const query = document.getElementById('cve-input').value.trim();
+    const res = document.getElementById('cve-result');
+    if (!query) { res.innerText = "Introduce un término (ej: Apache, WordPress)."; return; }
+    res.innerHTML = "Buscando...";
+    try {
+        const response = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(query)}&resultsPerPage=5`);
+        const data = await response.json();
+        if (data.vulnerabilities && data.vulnerabilities.length > 0) {
+            let html = "<ul style='list-style: none; padding: 0;'>";
+            data.vulnerabilities.forEach(v => {
+                const cve = v.cve;
+                const desc = cve.descriptions.find(d => d.lang === 'en')?.value || 'Sin descripción';
+                html += `<li style="margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px;">
+                    <strong style="color: var(--neon-blue);">${cve.id}</strong><br>
+                    <span style="font-size: 0.85rem;">${desc.substring(0, 150)}...</span>
+                </li>`;
+            });
+            html += "</ul>";
+            res.innerHTML = html;
+            logHerramienta("CVE", "Buscar", query, "Resultados encontrados");
+        } else {
+            res.innerHTML = "No se encontraron CVEs.";
+        }
+    } catch (e) {
+        res.innerHTML = `<span style="color: var(--danger);">Error al conectar con la base de datos NVD.</span>`;
+    }
+}
+
 function abrirCanarytoken(tipo, descripcion) {
     mostrarToast(`Abriendo Canarytokens. Selecciona "${tipo}" en la web oficial.`, 'success');
     logHerramienta("Canarytokens", "Crear", tipo, descripcion);
