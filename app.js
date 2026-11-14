@@ -402,8 +402,7 @@ async function cargarBiblioteca() {
             desc: "Herramientas para simular ataques, encontrar vulnerabilidades y explotar sistemas.",
             herramientas: [
                 { id: 'dorks', titulo: 'Generador de Dorks', desc: 'Trucos de búsqueda avanzada en Google para encontrar archivos expuestos.', ideal: 'Encontrar documentos filtrados.' },
-                { id: 'payloads', titulo: 'Generador de Payloads', desc: 'Crea payloads básicos para pruebas de inyección (XSS, SQLi).', ideal: 'Pruebas de concepto rápidas.' },
-                { id: 'cve', titulo: 'Buscador de CVEs', desc: 'Consulta la base de datos de vulnerabilidades conocidas.', ideal: 'Investigar fallos de seguridad.' }
+                { id: 'payloads', titulo: 'Generador de Payloads', desc: 'Crea payloads básicos para pruebas de inyección (XSS, SQLi).', ideal: 'Pruebas de concepto rápidas.' }
             ]
         },
         "blue-team": {
@@ -475,7 +474,12 @@ async function cargarBiblioteca() {
         "blue-team-rec": { titulo: "Blue Team & Forense", icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
         "osint-rec": { titulo: "OSINT e Inteligencia", icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
         "sistemas": { titulo: "Sistemas Operativos", icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
-        "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
+        "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] },
+        "metodos": { titulo: "Métodos y Metodologías", icon: "📋", desc: "Metodologías de auditoría, pentesting y marcos de trabajo.", ids: [101, 102, 103] },
+        "iot": { titulo: "IoT y Hardware", icon: "🔌", desc: "Internet de las Cosas, dispositivos embebidos y hacking de hardware.", ids: [104, 105, 106] },
+        "redes-rec": { titulo: "Redes y Protocolos", icon: "🌐", desc: "Protocolos, análisis de tráfico y arquitecturas de red.", ids: [107, 108, 109] },
+        "wifi-rec": { titulo: "Wi-Fi y Radiofrecuencia", icon: "📡", desc: "Hacking de redes inalámbricas, SDR y radiofrecuencia.", ids: [110, 111, 112] },
+        "programacion": { titulo: "Programación y Desarrollo", icon: "💻", desc: "Lenguajes, scripts y desarrollo de herramientas propias.", ids: [113, 114, 115] }
     };
 
     if (!tipo && !categoriaActual) {
@@ -493,6 +497,12 @@ async function cargarBiblioteca() {
                 <h3>Directorio de Recursos</h3>
                 <p>Enlaces seleccionados a plataformas de formación, bibliografía, laboratorios y referentes del sector.</p>
                 <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Ver Directorio</span>
+            </a>
+            <a href="biblioteca.html?tipo=cve" class="folder" style="border-color: var(--neon-gold);">
+                <div class="folder-icon" style="font-size: 3rem;">🚨</div>
+                <h3>CVE en Tiempo Real</h3>
+                <p>Últimas vulnerabilidades y publicaciones oficiales de seguridad actualizadas automáticamente.</p>
+                <span class="folder-badge" style="background: var(--neon-gold); color: var(--bg-color);">Ver Alertas</span>
             </a>
         </div>`;
         contenedor.innerHTML = html;
@@ -574,7 +584,7 @@ async function cargarBiblioteca() {
             const result = await response.json();
 
             if (result.success) {
-                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)));
+                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)) || (categoriaActual === "metodos" && r.categoria_id == 10) || (categoriaActual === "iot" && r.categoria_id == 11) || (categoriaActual === "redes-rec" && r.categoria_id == 12) || (categoriaActual === "wifi-rec" && r.categoria_id == 13) || (categoriaActual === "programacion" && r.categoria_id == 14));
 
                 let html = `
                     <div class="breadcrumb">
@@ -621,6 +631,59 @@ async function cargarBiblioteca() {
             contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
         }
         return;
+    }
+
+    if (tipo === 'cve') {
+        let html = `
+            <div class="breadcrumb">
+                <a href="biblioteca.html">Biblioteca</a> / <span>CVE en Tiempo Real</span>
+            </div>
+            <div class="category-header">
+                <h2>🚨 Alertas de Vulnerabilidad</h2>
+                <p>Últimas publicaciones oficiales de CVE (Common Vulnerabilities and Exposures).</p>
+            </div>
+            <div id="cve-lista" style="display: flex; flex-direction: column; gap: 15px;">
+                <p style="text-align: center; color: var(--text-muted);">Cargando alertas...</p>
+            </div>
+        `;
+        contenedor.innerHTML = html;
+        cargarCVEEnTiempoReal();
+        return;
+    }
+}
+
+async function cargarCVEEnTiempoReal() {
+    const lista = document.getElementById('cve-lista');
+    if (!lista) return;
+
+    try {
+        const response = await fetch('https://cve.circl.lu/api/last/20');
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            let html = '';
+            data.forEach(cve => {
+                const desc = cve.summary ? cve.summary.substring(0, 200) + '...' : 'Sin descripción disponible.';
+                const fecha = cve.Published ? new Date(cve.Published).toLocaleDateString() : 'Fecha desconocida';
+                html += `
+                    <div class="resource-item" style="border-left: 4px solid var(--danger);">
+                        <div class="resource-header">
+                            <span class="resource-title" style="color: var(--danger);">${cve.id}</span>
+                            <span class="badge badge-sistema">${fecha}</span>
+                        </div>
+                        <div class="resource-desc">${desc}</div>
+                        <div class="resource-actions">
+                            <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ver detalles en NVD]</a>
+                        </div>
+                    </div>
+                `;
+            });
+            lista.innerHTML = html;
+        } else {
+            lista.innerHTML = `<p style="text-align: center; color: var(--text-muted);">No hay alertas disponibles en este momento.</p>`;
+        }
+    } catch (error) {
+        lista.innerHTML = `<p style="text-align: center; color: var(--danger);">Error al cargar las alertas. Inténtalo más tarde.</p>`;
     }
 }
 
