@@ -92,35 +92,49 @@
         </div>
 
         <section style="margin-top: 50px;">
-            <h2>Rutas de Aprendizaje (Desde Cero)</h2>
-            <div class="grid-cards" style="margin-top: 20px;">
-                <article class="card" onclick="window.location.href='guia.html?id=introduccion-internet'">
-                    <h3>Nivel 1: ¿Qué es Internet?</h3>
+            <h2>Rutas de Aprendizaje (Filtra por Nivel)</h2>
+            
+            <div class="filter-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="btn-secondary active-filter" onclick="filtrarNivel('todos', this)">Todos</button>
+                <button class="btn-secondary" onclick="filtrarNivel('principiante', this)">Principiante</button>
+                <button class="btn-secondary" onclick="filtrarNivel('intermedio', this)">Intermedio</button>
+                <button class="btn-secondary" onclick="filtrarNivel('avanzado', this)">Avanzado</button>
+            </div>
+
+            <div class="grid-cards" id="lista-guias" style="margin-top: 20px;">
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=introduccion-internet'">
+                    <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
+                    <h3>¿Qué es Internet?</h3>
                     <p>El punto de partida. Entiende cómo viajan los datos, qué es una IP y cómo funciona la web antes de intentar hackearla.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
                 </article>
-                <article class="card" onclick="window.location.href='guia.html?id=modelo-osi-redes'">
-                    <h3>Nivel 2: El Modelo OSI</h3>
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=comandos-linux'">
+                    <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
+                    <h3>Supervivencia en Linux</h3>
+                    <p>Domina la terminal. Aprende los comandos básicos que usarás en el 90% de las herramientas de hacking ético.</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
+                </article>
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=modelo-osi-redes'">
+                    <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
+                    <h3>El Modelo OSI</h3>
                     <p>Las 7 capas de la red. Aprende dónde actúa cada ataque (IP, MAC, puertos) y por qué es la base de todo en ciberseguridad.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
-                <article class="card" onclick="window.location.href='guia.html?id=redes-inalambricas'">
-                    <h3>Nivel 3: Wi-Fi y Bluetooth</h3>
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=redes-inalambricas'">
+                    <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
+                    <h3>Wi-Fi y Bluetooth</h3>
                     <p>Domina el espectro radioeléctrico. Aprende sobre protocolos WPA2/WPA3, ataques de desautenticación y vulnerabilidades Bluetooth.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Explorar →</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
-                <article class="card" onclick="window.location.href='guia.html?id=comandos-linux'">
-                    <h3>Nivel 4: Supervivencia en Linux</h3>
-                    <p>Domina la terminal. Aprende los comandos básicos que usarás en el 90% de las herramientas de hacking ético.</p>
-                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Continuar →</p>
-                </article>
-                <article class="card" onclick="window.location.href='guia.html?id=hacking-etico-redes'">
-                    <h3>Nivel 5: Escaneo de Redes</h3>
+                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=hacking-etico-redes'">
+                    <span class="badge badge-sistema" style="margin-bottom: 10px; display: inline-block;">Avanzado</span>
+                    <h3>Escaneo de Redes</h3>
                     <p>Tu primer paso como hacker. Descubre cómo usar Nmap para encontrar dispositivos y puertos abiertos en una red.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Requisito: Login →</p>
                 </article>
-                <article class="card" onclick="window.location.href='guia.html?id=red-team-pentesting'">
-                    <h3>Nivel Final: Red Team</h3>
+                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=red-team-pentesting'">
+                    <span class="badge badge-sistema" style="margin-bottom: 10px; display: inline-block;">Avanzado</span>
+                    <h3>Red Team</h3>
                     <p>El nivel experto. Aprende a comprometer entornos corporativos avanzados con Active Directory.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Requisito: Login →</p>
                 </article>
@@ -172,5 +186,20 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        function filtrarNivel(nivel, btn) {
+            document.querySelectorAll('.filter-container button').forEach(b => b.classList.remove('active-filter'));
+            btn.classList.add('active-filter');
+            
+            const items = document.querySelectorAll('.guia-item');
+            items.forEach(item => {
+                if (nivel === 'todos' || item.getAttribute('data-nivel') === nivel) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
