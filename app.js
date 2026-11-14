@@ -1394,14 +1394,36 @@ async function cargarCVE() {
     if (!body) return;
     try {
         const res = await fetch('https://cve.circl.lu/api/last/20');
-        const data = await res.json();
-        if (!Array.isArray(data) || !data.length) {
+        const rawData = await res.json();
+        
+        if (!Array.isArray(rawData) || !rawData.length) {
             body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No hay alertas disponibles.</p>';
             return;
         }
 
+        // Normalizar los datos porque la API mezcla formatos (CVE JSON 5.x, OSV, CSAF)
+        const data = rawData.map(item => {
+            let id = item.id || item.cveMetadata?.cveId;
+            let summary = item.summary || item.details || 'Sin descripción.';
+            let published = item.Published || item.published || item.cveMetadata?.datePublished;
+
+            // Si viene en formato CVE JSON 5.x (containers.cna)
+            if (item.containers?.cna) {
+                const cna = item.containers.cna;
+                if (cna.descriptions && cna.descriptions.length > 0) {
+                    summary = cna.descriptions.find(d => d.lang === 'en')?.value || cna.descriptions[0].value;
+                }
+                if (cna.metrics && cna.metrics.length > 0) {
+                    // Podríamos extraer el CVSS, pero por ahora solo la descripción
+                }
+            }
+            
+            return { id, summary, published };
+        }).filter(item => item.id); // Eliminar los que no tengan ID
+
         const vistos = JSON.parse(localStorage.getItem('cve_vistos') || '[]');
         const nuevos = data.map(c => c.id).filter(id => !vistos.includes(id));
+        
         if (nuevos.length > 0) {
             actualizarContadorCVE(nuevos.length);
             document.getElementById('cve-bubble')?.classList.add('pulse');
@@ -1410,7 +1432,7 @@ async function cargarCVE() {
 
         body.innerHTML = data.map(cve => {
             const desc = cve.summary ? cve.summary.substring(0, 160) + '…' : 'Sin descripción.';
-            const fecha = cve.Published ? new Date(cve.Published).toLocaleDateString('es-ES') : '—';
+            const fecha = cve.published ? new Date(cve.published).toLocaleDateString('es-ES') : '—';
             return `
                 <div class="cve-item">
                     <div class="cve-item-header">
@@ -1422,7 +1444,8 @@ async function cargarCVE() {
                 </div>
             `;
         }).join('');
-    } catch {
+    } catch (err) {
+        console.error('Error al cargar CVEs:', err);
         body.innerHTML = '<p style="text-align:center;color:var(--danger);font-size:0.85rem;">Error al cargar alertas.</p>';
     }
 }
