@@ -212,7 +212,7 @@ function logHerramienta(herramienta, accion, input = '', output = '') {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ herramienta, accion, input, output }),
         credentials: 'include'
-    }).catch(() => {});
+    }).catch(err => console.warn('logHerramienta falló:', err));
 }
 
 async function comprobarSesion() {
@@ -267,7 +267,11 @@ function getBadgeClass(tipo) {
 }
 
 async function votarRecurso(id, btn) {
-    if (!usuarioLogueado) { mostrarToast('Inicia sesión para votar.', 'error'); return; }
+    if (!usuarioLogueado) {
+        mostrarToast('Inicia sesión para votar.', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1200);
+        return;
+    }
     try {
         const res = await fetch(`${API_URL}/votar.php`, {
             method: 'POST',
@@ -279,8 +283,13 @@ async function votarRecurso(id, btn) {
         if (result.success) {
             btn.classList.toggle('votado', result.votado);
             btn.querySelector('span').innerText = result.votos;
-        } else mostrarToast(result.message, 'error');
-    } catch { mostrarToast('Error al votar.', 'error'); }
+        } else {
+            mostrarToast(result.message || 'No se pudo votar.', 'error');
+        }
+    } catch (err) {
+        console.error('Error al votar:', err);
+        mostrarToast('Error al votar.', 'error');
+    }
 }
 
 function breadcrumb(items) {
@@ -360,15 +369,18 @@ async function renderDetalleCategoria(contenedor, seccion, categoria) {
 
     try {
         const res = await fetch(`${API_URL}/obtener_recursos.php`, { credentials: 'include' });
-        if (!res.ok) throw new Error('red');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const result = await res.json();
-        if (!result.success) throw new Error('api');
+        if (!result.success) throw new Error(result.message || 'API error');
 
         const recursos = result.data.find(c => c.slug === categoria)?.recursos ?? [];
 
         const items = recursos.map(r => {
             const badge = r.tipo ? `<span class="badge ${getBadgeClass(r.tipo)}">${r.tipo}</span>` : '';
             const votado = result.votos.includes(Number(r.id)) ? 'votado' : '';
+            const botonVoto = usuarioLogueado
+                ? `<button class="btn-voto ${votado}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>`
+                : `<a href="login.html" class="btn-voto" style="text-decoration:none;">⭐ <span>${r.votos || 0}</span></a>`;
             return `
                 <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
                     <div class="resource-header">
@@ -381,7 +393,7 @@ async function renderDetalleCategoria(contenedor, seccion, categoria) {
                     </div>
                     <div class="resource-actions">
                         <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
-                        <button class="btn-voto ${votado}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
+                        ${botonVoto}
                     </div>
                 </li>
             `;
@@ -400,11 +412,17 @@ async function renderDetalleCategoria(contenedor, seccion, categoria) {
                 <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
             </div>
             <ul class="resource-list" id="lista-recursos">
-                ${items || '<li style="text-align:center;padding:20px;">No hay recursos en esta categoría.</li>'}
+                ${items || `<li style="text-align:center;padding:20px;color:var(--text-muted);">No hay recursos en esta categoría todavía.</li>`}
             </ul>
         `;
-    } catch {
-        contenedor.innerHTML = '<p style="color: var(--danger);">Error al cargar los recursos.</p>';
+    } catch (err) {
+        console.error('Error cargando recursos:', err);
+        contenedor.innerHTML = `
+            <p style="color: var(--danger);">Error al cargar los recursos.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 10px;">
+                Comprueba que has iniciado sesión y que el servidor responde.
+            </p>
+        `;
     }
 }
 
