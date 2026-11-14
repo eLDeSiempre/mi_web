@@ -485,14 +485,14 @@ async function cargarBiblioteca() {
             <a href="biblioteca.html?tipo=herramientas" class="folder" style="border-color: var(--neon-blue);">
                 <div class="folder-icon" style="font-size: 3rem;">🛠️</div>
                 <h3>Laboratorio de Herramientas</h3>
-                <p>Utilidades interactivas para OSINT, Redes, Pentesting y análisis.</p>
-                <span class="folder-badge" style="background: var(--neon-blue); color: var(--bg-color);">Explorar Herramientas</span>
+                <p>Utilidades interactivas y generadores para realizar análisis, pruebas y conversiones en tiempo real.</p>
+                <span class="folder-badge" style="background: var(--neon-blue); color: var(--bg-color);">Abrir Laboratorio</span>
             </a>
             <a href="biblioteca.html?tipo=recursos" class="folder" style="border-color: var(--neon-green);">
                 <div class="folder-icon" style="font-size: 3rem;">📚</div>
                 <h3>Directorio de Recursos</h3>
-                <p>Cursos, libros, plataformas y referentes del hacking ético en español.</p>
-                <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Explorar Recursos</span>
+                <p>Enlaces seleccionados a plataformas de formación, bibliografía, laboratorios y referentes del sector.</p>
+                <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Ver Directorio</span>
             </a>
         </div>`;
         contenedor.innerHTML = html;
