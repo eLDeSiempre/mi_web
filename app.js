@@ -8,6 +8,196 @@ const NAV_ITEMS = [
     { label: 'Contacto', href: 'contacto.html', key: 'contacto' }
 ];
 
+const GUIAS = {
+    'introduccion-ciberseguridad': {
+        titulo: 'Introducción a la Ciberseguridad',
+        nivel: 'Principiante',
+        requiere_login: 0,
+        contenido: `
+            <h2>¿Qué es la ciberseguridad?</h2>
+            <p>La ciberseguridad protege sistemas, redes, dispositivos y datos frente a ataques digitales. Se basa en la <strong>tríada CIA</strong>:</p>
+            <ul>
+                <li><strong>Confidencialidad:</strong> solo personas autorizadas acceden a la información.</li>
+                <li><strong>Integridad:</strong> los datos no se modifican sin autorización.</li>
+                <li><strong>Disponibilidad:</strong> los sistemas están accesibles cuando se necesitan.</li>
+            </ul>
+            <h2>Tipos de atacantes</h2>
+            <ul>
+                <li><strong>Black hat:</strong> actúan ilegalmente por beneficio propio.</li>
+                <li><strong>White hat:</strong> hackers éticos con permiso.</li>
+                <li><strong>Grey hat:</strong> entre ambos, sin permiso pero sin malicia.</li>
+                <li><strong>Script kiddie:</strong> usan herramientas sin entenderlas.</li>
+            </ul>
+            <h2>Vectores de ataque comunes</h2>
+            <ol>
+                <li><strong>Phishing:</strong> engaño por email o web.</li>
+                <li><strong>Malware:</strong> virus, troyanos, ransomware.</li>
+                <li><strong>Fuerza bruta:</strong> probar contraseñas.</li>
+                <li><strong>Ingeniería social:</strong> manipular personas.</li>
+            </ol>
+        `
+    },
+    'introduccion-internet': {
+        titulo: '¿Qué es Internet?',
+        nivel: 'Principiante',
+        requiere_login: 0,
+        contenido: `
+            <h2>El viaje de un paquete</h2>
+            <p>Internet es una red de redes. Cuando envías un mensaje, este se divide en paquetes que viajan por routers hasta su destino.</p>
+            <h2>Direcciones IP</h2>
+            <p>Cada dispositivo tiene una IP (como una dirección postal). IPv4 usa 4 números (ej: 192.168.1.1). IPv6 es el futuro y usa hexadecimal.</p>
+            <h2>El DNS</h2>
+            <p>Es la guía telefónica de Internet. Traduce nombres como <code>google.com</code> a direcciones IP como <code>142.250.184.14</code>.</p>
+            <h2>HTTP vs HTTPS</h2>
+            <p>HTTP transmite datos en texto plano. HTTPS añade una capa de cifrado (TLS) que protege la información.</p>
+        `
+    },
+    'comandos-linux': {
+        titulo: 'Supervivencia en Linux',
+        nivel: 'Fácil',
+        requiere_login: 0,
+        contenido: `
+            <h2>Comandos esenciales</h2>
+            <p>El hacking ético se hace en la terminal. Aprende estos comandos:</p>
+            <ul>
+                <li><code>ls</code>: Lista archivos.</li>
+                <li><code>cd</code>: Cambia de directorio.</li>
+                <li><code>pwd</code>: Muestra la ruta actual.</li>
+                <li><code>cat</code>: Muestra el contenido de un archivo.</li>
+                <li><code>grep</code>: Busca texto dentro de archivos.</li>
+                <li><code>chmod</code>: Cambia permisos de archivos.</li>
+                <li><code>sudo</code>: Ejecuta comandos como superusuario.</li>
+            </ul>
+            <h2>Gestión de paquetes</h2>
+            <p>En Kali/Debian usa <code>apt update && apt upgrade</code>. En Arch usa <code>pacman -Syu</code>.</p>
+        `
+    },
+    'redes-basico': {
+        titulo: 'Redes para Hackers',
+        nivel: 'Principiante',
+        requiere_login: 0,
+        contenido: `
+            <h2>Direcciones IP y Máscaras</h2>
+            <p>La máscara <code>/24</code> (255.255.255.0) define la red. El resto son hosts.</p>
+            <h2>Puertos comunes</h2>
+            <ul>
+                <li><strong>21:</strong> FTP</li>
+                <li><strong>22:</strong> SSH</li>
+                <li><strong>80:</strong> HTTP</li>
+                <li><strong>443:</strong> HTTPS</li>
+                <li><strong>3306:</strong> MySQL</li>
+            </ul>
+            <h2>TCP vs UDP</h2>
+            <p>TCP garantiza la entrega (handshake de 3 vías). UDP es más rápido pero no garantiza entrega.</p>
+        `
+    },
+    'ctf-para-principiantes': {
+        titulo: 'CTFs: Tu primer paso práctico',
+        nivel: 'Intermedio',
+        requiere_login: 0,
+        contenido: `
+            <h2>¿Qué es un CTF?</h2>
+            <p>Capture The Flag (CTF) son competiciones de hacking ético donde debes encontrar "banderas" (textos ocultos) resolviendo retos de seguridad.</p>
+            <h2>Plataformas recomendadas</h2>
+            <ul>
+                <li><strong>OverTheWire:</strong> Ideal para empezar. Bandit es el nivel más básico para aprender Linux y comandos.</li>
+                <li><strong>TryHackMe:</strong> Salas guiadas paso a paso. Perfecto para principiantes.</li>
+                <li><strong>Hack The Box:</strong> Más avanzado, máquinas sin guía (retiradas).</li>
+                <li><strong>PicoCTF:</strong> Organizado por Carnegie Mellon, enfocado a estudiantes.</li>
+            </ul>
+            <h2>¿Cómo empezar?</h2>
+            <p>Conéctate por SSH a OverTheWire Bandit. Usa comandos básicos de Linux para leer archivos y encontrar la contraseña del siguiente nivel.</p>
+            <p>Comando de ejemplo: <code>ssh bandit0@bandit.labs.overthewire.org -p 2220</code></p>
+        `
+    },
+    'overthewire-wargames': {
+        titulo: 'OverTheWire: Wargames',
+        nivel: 'Intermedio',
+        requiere_login: 0,
+        contenido: `
+            <h2>El camino del hacker</h2>
+            <p>OverTheWire ofrece una serie de wargames (juegos de guerra) para practicar habilidades reales.</p>
+            <h2>Bandit (Nivel 0-34)</h2>
+            <p>Enseña comandos básicos de Linux, manejo de archivos, permisos y búsquedas.</p>
+            <h2>Natas (Web)</h2>
+            <p>Retos de seguridad web. Aprenderás sobre inyección SQL, XSS, LFI y más.</p>
+            <h2>Leviathan y Krypton</h2>
+            <p>Criptografía y binarios. Para cuando ya domines lo básico.</p>
+            <h2>Recursos</h2>
+            <p>Visita <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">overthewire.org</a> y empieza por Bandit.</p>
+        `
+    },
+    'modelo-osi-redes': {
+        titulo: 'El Modelo OSI',
+        nivel: 'Intermedio',
+        requiere_login: 0,
+        contenido: `
+            <h2>Las 7 capas de la red</h2>
+            <ol>
+                <li><strong>Física:</strong> Cables, señales eléctricas.</li>
+                <li><strong>Enlace de datos:</strong> MAC addresses, switches.</li>
+                <li><strong>Red:</strong> IPs, routers.</li>
+                <li><strong>Transporte:</strong> TCP/UDP, puertos.</li>
+                <li><strong>Sesión:</strong> Gestión de conexiones.</li>
+                <li><strong>Presentación:</strong> Cifrado, formatos.</li>
+                <li><strong>Aplicación:</strong> HTTP, DNS, FTP.</li>
+            </ol>
+            <p>Los ataques ocurren en diferentes capas. Un ataque ARP Spoofing está en la capa 2. Un ataque HTTP en la capa 7.</p>
+        `
+    },
+    'redes-inalambricas': {
+        titulo: 'Hacking Wi-Fi y Bluetooth',
+        nivel: 'Intermedio',
+        requiere_login: 0,
+        contenido: `
+            <h2>Wi-Fi</h2>
+            <p>Protocolos WEP (obsoleto), WPA2 (común) y WPA3 (seguro). Los ataques más comunes son deautenticación y handshake capture.</p>
+            <h2>Herramientas</h2>
+            <ul>
+                <li><strong>Aircrack-ng:</strong> Suite para capturar y crackear handshakes.</li>
+                <li><strong>Wifite:</strong> Automatiza ataques Wi-Fi.</li>
+            </ul>
+            <h2>Bluetooth</h2>
+            <p>Ataques como Bluejacking (envío de mensajes no deseados) y Bluesnarfing (robo de datos).</p>
+        `
+    },
+    'hacking-etico-redes': {
+        titulo: 'Escaneo de Redes con Nmap',
+        nivel: 'Avanzado',
+        requiere_login: 1,
+        contenido: `
+            <h2>¿Qué es Nmap?</h2>
+            <p>Network Mapper es la herramienta estándar para descubrir hosts y servicios en una red.</p>
+            <h2>Comandos básicos</h2>
+            <ul>
+                <li><code>nmap -sS -p- 192.168.1.1</code>: Escaneo SYN de todos los puertos.</li>
+                <li><code>nmap -sV 192.168.1.1</code>: Detecta versiones de servicios.</li>
+                <li><code>nmap -O 192.168.1.1</code>: Intenta detectar el sistema operativo.</li>
+                <li><code>nmap -A 192.168.1.1</code>: Escaneo agresivo (todo).</li>
+            </ul>
+            <h2>Ética</h2>
+            <p>Nunca escanees redes que no te pertenezcan o para las que no tengas permiso explícito.</p>
+        `
+    },
+    'red-team-pentesting': {
+        titulo: 'Red Team: Active Directory',
+        nivel: 'Experto',
+        requiere_login: 1,
+        contenido: `
+            <h2>Active Directory (AD)</h2>
+            <p>El directorio de identidades de Windows. Es el objetivo principal en entornos corporativos.</p>
+            <h2>Ataques comunes</h2>
+            <ul>
+                <li><strong>Kerberoasting:</strong> Extraer tickets de servicio y crackearlos offline.</li>
+                <li><strong>Pass-the-Hash:</strong> Usar hashes NTLM para autenticarse sin contraseña.</li>
+                <li><strong>BloodHound:</strong> Herramienta para mapear relaciones en AD y encontrar caminos de ataque.</li>
+            </ul>
+            <h2>Herramientas</h2>
+            <p>Impacket, Mimikatz, CrackMapExec, BloodHound.</p>
+        `
+    }
+};
+
 const SECCIONES_BIBLIOTECA = {
     herramientas: {
         titulo: 'Laboratorio de Herramientas',
@@ -1073,6 +1263,74 @@ function abrirCanarytoken(tipo, descripcion) {
     logHerramienta('Canarytokens', tipo, descripcion, 'abierto');
 }
 
+async function cargarGuia() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const guiaId = urlParams.get('id');
+    const tituloElement = document.getElementById('guia-titulo');
+    const nivelElement = document.getElementById('guia-nivel');
+    const contenidoElement = document.getElementById('guia-contenido');
+
+    if (!guiaId || !tituloElement || !contenidoElement) {
+        if(tituloElement) tituloElement.innerText = "Error";
+        if(contenidoElement) contenidoElement.innerHTML = "<p>No se ha especificado ninguna guía.</p>";
+        return;
+    }
+
+    const guia = GUIAS[guiaId];
+
+    if (guia) {
+        if (guia.requiere_login == 1 && !usuarioLogueado) {
+            tituloElement.innerText = "Contenido Protegido";
+            contenidoElement.innerHTML = `<p>Debes iniciar sesión para leer esta guía.</p><br><a href="login.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a Iniciar Sesión</a>`;
+            return;
+        }
+        
+        document.title = guia.titulo + " | eLDeSiempre.es";
+        tituloElement.innerText = guia.titulo;
+        contenidoElement.innerHTML = guia.contenido;
+        
+        if (nivelElement) {
+            nivelElement.style.display = 'inline-block';
+            nivelElement.innerText = guia.nivel;
+            
+            if(guia.nivel === 'Principiante' || guia.nivel === 'Fácil') nivelElement.className = 'badge badge-curso';
+            else if(guia.nivel === 'Intermedio') nivelElement.className = 'badge badge-lab';
+            else if(guia.nivel === 'Avanzado' || guia.nivel === 'Experto') nivelElement.className = 'badge badge-sistema';
+            else nivelElement.className = 'badge badge-default';
+        }
+    } else {
+        try {
+            const res = await fetch(`${API_URL}/obtener_guia.php?id=${guiaId}`, { credentials: 'include' });
+            const result = await res.json();
+            
+            if (result.success) {
+                document.title = result.data.titulo + " | eLDeSiempre.es";
+                tituloElement.innerText = result.data.titulo;
+                contenidoElement.innerHTML = result.data.contenido;
+                
+                if (nivelElement) {
+                    nivelElement.style.display = 'inline-block';
+                    nivelElement.innerText = result.data.nivel;
+                    if(result.data.nivel === 'Principiante' || result.data.nivel === 'Fácil') nivelElement.className = 'badge badge-curso';
+                    else if(result.data.nivel === 'Intermedio') nivelElement.className = 'badge badge-lab';
+                    else if(result.data.nivel === 'Avanzado' || result.data.nivel === 'Experto') nivelElement.className = 'badge badge-sistema';
+                }
+            } else {
+                if (res.status === 403) {
+                    tituloElement.innerText = "Contenido Protegido";
+                    contenidoElement.innerHTML = `<p>${result.message}</p><br><a href="login.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a Iniciar Sesión</a>`;
+                } else {
+                    tituloElement.innerText = "Guía no encontrada";
+                    contenidoElement.innerHTML = "<p>La guía que buscas no existe o ha sido eliminada.</p>";
+                }
+            }
+        } catch {
+            tituloElement.innerText = "Error de conexión";
+            contenidoElement.innerHTML = "<p>No se pudo cargar la guía. Inténtalo más tarde.</p>";
+        }
+    }
+}
+
 function inicializarBurbujaCVE() {
     if (document.getElementById('cve-bubble')) return;
 
@@ -1178,6 +1436,7 @@ window.addEventListener('load', async () => {
 
     if (window.location.pathname.includes('biblioteca.html')) cargarBiblioteca();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
+    if (window.location.pathname.includes('guia.html')) cargarGuia();
 
     inicializarBurbujaCVE();
 
