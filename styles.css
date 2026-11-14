@@ -228,3 +228,31 @@ footer { text-align: center; padding: 40px 5%; border-top: 1px solid var(--borde
     display: block;
     margin-top: 5px;
 }
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+.breadcrumb a {
+    color: var(--neon-blue);
+    text-decoration: none;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+.breadcrumb span {
+    color: var(--neon-green);
+    font-weight: bold;
+}
+nav .nav-btn.active {
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+}
+header .logo-container {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
