@@ -101,11 +101,6 @@ const SECCIONES_BIBLIOTECA = {
             'wifi-rec':      { titulo: 'Wi-Fi y Radiofrecuencia',     icono: '📡', descripcion: 'Hacking inalámbrico, SDR y radiofrecuencia.' },
             'programacion':  { titulo: 'Programación y Desarrollo',   icono: '💻', descripcion: 'Lenguajes, scripts y desarrollo de herramientas.' }
         }
-    },
-    cve: {
-        titulo: 'CVE en Tiempo Real',
-        icono: '🚨',
-        descripcion: 'Últimas vulnerabilidades publicadas oficialmente.'
     }
 };
 
@@ -116,15 +111,14 @@ function inicializarTema() {
     const guardado = localStorage.getItem('tema');
     const btn = document.getElementById('theme-toggle');
     if (guardado === 'light') document.body.classList.add('light-mode');
-    if (btn) {
-        btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        btn.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const light = document.body.classList.contains('light-mode');
-            localStorage.setItem('tema', light ? 'light' : 'dark');
-            btn.innerText = light ? '☀️' : '🌙';
-        });
-    }
+    if (!btn) return;
+    btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const light = document.body.classList.contains('light-mode');
+        localStorage.setItem('tema', light ? 'light' : 'dark');
+        btn.innerText = light ? '☀️' : '🌙';
+    });
 }
 
 function renderHeader(activeKey = '') {
@@ -244,8 +238,7 @@ function comprobarAcceso(url) {
 
 function protegerContenidoPrivado() {
     const path = window.location.pathname;
-    const privadas = ['biblioteca.html', 'perfil.html'];
-    if (!privadas.some(p => path.includes(p))) return;
+    if (!['biblioteca.html', 'perfil.html'].some(p => path.includes(p))) return;
     if (window.location.search.includes('cat=')) return;
     const main = document.querySelector('main.container');
     if (!main) return;
@@ -307,7 +300,6 @@ async function cargarBiblioteca() {
     const categoria = params.get('cat');
 
     if (!seccion) return renderIndiceBiblioteca(contenedor);
-    if (seccion === 'cve') return renderCVE(contenedor);
     if (!SECCIONES_BIBLIOTECA[seccion]) {
         contenedor.innerHTML = '<p>Sección no encontrada.</p>';
         return;
@@ -441,51 +433,6 @@ function renderHerramientas(contenedor, data, categoria) {
     `;
 }
 
-async function renderCVE(contenedor) {
-    contenedor.innerHTML = `
-        ${breadcrumb([
-            { label: 'Inicio', href: 'index.html' },
-            { label: 'Biblioteca', href: 'biblioteca.html' },
-            { label: 'CVE en Tiempo Real' }
-        ])}
-        <div class="category-header">
-            <h2>🚨 Alertas de Vulnerabilidad</h2>
-            <p>Últimas publicaciones oficiales de CVE (Common Vulnerabilities and Exposures).</p>
-        </div>
-        <div id="cve-lista" style="display: flex; flex-direction: column; gap: 15px;">
-            <p style="text-align: center; color: var(--text-muted);">Cargando alertas...</p>
-        </div>
-    `;
-
-    try {
-        const res = await fetch('https://cve.circl.lu/api/last/20');
-        const data = await res.json();
-        const lista = document.getElementById('cve-lista');
-        if (!Array.isArray(data) || !data.length) {
-            lista.innerHTML = '<p style="text-align:center;color:var(--text-muted);">No hay alertas disponibles.</p>';
-            return;
-        }
-        lista.innerHTML = data.map(cve => {
-            const desc = cve.summary ? cve.summary.substring(0, 200) + '…' : 'Sin descripción.';
-            const fecha = cve.Published ? new Date(cve.Published).toLocaleDateString('es-ES') : 'Fecha desconocida';
-            return `
-                <div class="resource-item" style="border-left: 4px solid var(--danger);">
-                    <div class="resource-header">
-                        <span class="resource-title" style="color: var(--danger);">${cve.id}</span>
-                        <span class="badge badge-sistema">${fecha}</span>
-                    </div>
-                    <div class="resource-desc">${desc}</div>
-                    <div class="resource-actions">
-                        <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ver en NVD]</a>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    } catch {
-        document.getElementById('cve-lista').innerHTML = '<p style="text-align:center;color:var(--danger);">Error al cargar las alertas.</p>';
-    }
-}
-
 function filtrarHerramientas() {
     const q = document.getElementById('buscador-herramientas').value.toLowerCase();
     document.querySelectorAll('#lista-herramientas .card').forEach(el => {
@@ -539,9 +486,11 @@ async function cargarPerfil() {
     } catch {}
 }
 
-async function solicitarReset() {
-    const email = prompt('Confirma tu correo electrónico:');
-    if (!email) return;
+async function solicitarReset(email = null) {
+    if (!email) {
+        email = prompt('Confirma tu correo electrónico:');
+        if (!email) return;
+    }
     try {
         const res = await fetch(`${API_URL}/solicitar_reset.php`, {
             method: 'POST',
@@ -550,22 +499,16 @@ async function solicitarReset() {
         });
         const result = await res.json();
         mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success && document.getElementById('modal-forgot')) {
+            cerrarModal('modal-forgot');
+        }
     } catch { mostrarToast('Error de conexión.', 'error'); }
 }
 
 async function enviarReset() {
     const email = document.getElementById('forgot-email')?.value;
     if (!email) { mostrarToast('Introduce tu correo.', 'error'); return; }
-    try {
-        const res = await fetch(`${API_URL}/solicitar_reset.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const result = await res.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) cerrarModal('modal-forgot');
-    } catch { mostrarToast('Error de conexión.', 'error'); }
+    await solicitarReset(email);
 }
 
 async function toggle2FAEmail() {
@@ -740,8 +683,8 @@ document.getElementById('exif-input')?.addEventListener('change', function(e) {
         }
         html += '</ul>';
         result.innerHTML = html;
+        logHerramienta('Analizador EXIF', 'Analizar', file.name, 'metadatos extraídos');
     });
-    logHerramienta('Analizador EXIF', 'Analizar', file.name, 'metadatos extraídos');
 });
 
 function generarPassword() {
@@ -876,9 +819,8 @@ function convertirTimestampAFecha() {
 document.getElementById('modal-ua')?.addEventListener('click', () => {
     const result = document.getElementById('ua-result');
     if (result && !result.innerHTML) {
-        const ua = navigator.userAgent;
         result.innerHTML = `
-            <p><strong>User-Agent:</strong> ${ua}</p>
+            <p><strong>User-Agent:</strong> ${navigator.userAgent}</p>
             <p><strong>Plataforma:</strong> ${navigator.platform}</p>
             <p><strong>Idioma:</strong> ${navigator.language}</p>
             <p><strong>Pantalla:</strong> ${screen.width}x${screen.height}</p>
@@ -904,7 +846,7 @@ async function analizarHeaders() {
     }
 }
 
-async function analizarSSL() {
+function analizarSSL() {
     const url = document.getElementById('ssl-url').value.trim();
     const result = document.getElementById('ssl-result');
     if (!url) { result.innerText = 'Introduce una URL.'; return; }
@@ -1071,12 +1013,10 @@ function generarPayload() {
     const input = document.getElementById('payload-input').value.trim();
     const result = document.getElementById('payload-result');
     if (!input) { result.innerText = 'Introduce un texto o URL.'; return; }
-
     let payload = '';
     if (tipo === 'xss') payload = `<script>alert('XSS')</script>`;
     else if (tipo === 'sqli') payload = `' OR '1'='1`;
     else if (tipo === 'lfi') payload = `../../../../etc/passwd`;
-
     result.innerText = payload;
     logHerramienta('Generador de Payloads', tipo, input, payload);
 }
@@ -1117,6 +1057,102 @@ function abrirCanarytoken(tipo, descripcion) {
     logHerramienta('Canarytokens', tipo, descripcion, 'abierto');
 }
 
+function inicializarBurbujaCVE() {
+    if (document.getElementById('cve-bubble')) return;
+
+    const bubble = document.createElement('button');
+    bubble.id = 'cve-bubble';
+    bubble.className = 'cve-bubble';
+    bubble.setAttribute('aria-label', 'Alertas CVE');
+    bubble.innerHTML = `🚨<span class="cve-bubble-count" id="cve-bubble-count" style="display:none;">0</span>`;
+    document.body.appendChild(bubble);
+
+    const panel = document.createElement('div');
+    panel.id = 'cve-panel';
+    panel.className = 'cve-panel';
+    panel.innerHTML = `
+        <div class="cve-panel-header">
+            <h3>🚨 Alertas CVE</h3>
+            <button type="button" onclick="cerrarPanelCVE()" aria-label="Cerrar">×</button>
+        </div>
+        <div class="cve-panel-body" id="cve-panel-body">
+            <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Cargando...</p>
+        </div>
+        <div class="cve-panel-footer">
+            Últimas 20 · Fuente: <a href="https://cve.circl.lu" target="_blank" rel="noopener noreferrer" style="color:var(--neon-blue);">CIRCL</a>
+        </div>
+    `;
+    document.body.appendChild(panel);
+
+    bubble.addEventListener('click', togglePanelCVE);
+    cargarCVE();
+}
+
+function togglePanelCVE() {
+    const panel = document.getElementById('cve-panel');
+    const bubble = document.getElementById('cve-bubble');
+    if (!panel || !bubble) return;
+    const abierto = panel.classList.toggle('open');
+    if (abierto) {
+        bubble.classList.remove('pulse');
+        localStorage.setItem('cve_vistos', JSON.stringify([]));
+        actualizarContadorCVE(0);
+    }
+}
+
+function cerrarPanelCVE() {
+    document.getElementById('cve-panel')?.classList.remove('open');
+}
+
+function actualizarContadorCVE(n) {
+    const count = document.getElementById('cve-bubble-count');
+    if (!count) return;
+    if (n > 0) {
+        count.innerText = n > 99 ? '99+' : n;
+        count.style.display = 'flex';
+    } else {
+        count.style.display = 'none';
+    }
+}
+
+async function cargarCVE() {
+    const body = document.getElementById('cve-panel-body');
+    if (!body) return;
+    try {
+        const res = await fetch('https://cve.circl.lu/api/last/20');
+        const data = await res.json();
+        if (!Array.isArray(data) || !data.length) {
+            body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No hay alertas disponibles.</p>';
+            return;
+        }
+
+        const vistos = JSON.parse(localStorage.getItem('cve_vistos') || '[]');
+        const nuevos = data.map(c => c.id).filter(id => !vistos.includes(id));
+        if (nuevos.length > 0) {
+            actualizarContadorCVE(nuevos.length);
+            document.getElementById('cve-bubble')?.classList.add('pulse');
+            localStorage.setItem('cve_vistos', JSON.stringify(data.map(c => c.id)));
+        }
+
+        body.innerHTML = data.map(cve => {
+            const desc = cve.summary ? cve.summary.substring(0, 160) + '…' : 'Sin descripción.';
+            const fecha = cve.Published ? new Date(cve.Published).toLocaleDateString('es-ES') : '—';
+            return `
+                <div class="cve-item">
+                    <div class="cve-item-header">
+                        <span class="cve-item-id">${cve.id}</span>
+                        <span class="cve-item-date">${fecha}</span>
+                    </div>
+                    <div class="cve-item-desc">${desc}</div>
+                    <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="cve-item-link">Ver en NVD →</a>
+                </div>
+            `;
+        }).join('');
+    } catch {
+        body.innerHTML = '<p style="text-align:center;color:var(--danger);font-size:0.85rem;">Error al cargar alertas.</p>';
+    }
+}
+
 window.addEventListener('load', async () => {
     await comprobarSesion();
     const activeKey = document.body.dataset.nav || '';
@@ -1126,6 +1162,8 @@ window.addEventListener('load', async () => {
 
     if (window.location.pathname.includes('biblioteca.html')) cargarBiblioteca();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
+
+    inicializarBurbujaCVE();
 
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, {
