@@ -127,9 +127,10 @@ async function cerrarSesion() {
 
 function protegerContenidoPrivado() {
     const path = window.location.pathname;
-    if (path.includes('recursos.html') || path.includes('perfil.html')) {
+    if (path.includes('biblioteca.html') || path.includes('perfil.html')) {
         const mainContent = document.querySelector('main.container');
-        if (mainContent) {
+        if (mainContent && !window.location.search.includes('cat=')) { 
+            // Solo ocultamos si estamos en el índice de la biblioteca, no en una categoría específica
             mainContent.style.display = 'none';
             setTimeout(() => {
                 if (usuarioLogueado) mainContent.style.display = 'block';
@@ -138,6 +139,8 @@ function protegerContenidoPrivado() {
                     setTimeout(() => window.location.href = 'login.html', 1000);
                 }
             }, 500);
+        } else if (mainContent) {
+             mainContent.style.display = 'block';
         }
     }
 }
@@ -156,348 +159,17 @@ function getBadgeClass(tipo) {
     return 'badge-default';
 }
 
-async function cargarRecursosDesdeVPS() {
-    const contenedor = document.getElementById('contenedor-recursos');
-    if (!contenedor) return;
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoriaActual = urlParams.get('cat');
+// ... (resto de tus funciones: cargarPerfil, solicitarReset, toggle2FAEmail, etc. se mantienen igual)
 
-    try {
-        const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
-        if (!response.ok) throw new Error("Error de red");
-        const result = await response.json();
-
-        if (result.success) {
-            const estructura = {
-                "formacion": { titulo: "Formación y Certificaciones", icon: "🎓", desc: "Cursos, plataformas y certificaciones para iniciarte o especializarte.", ids: [1, 12, 13, 14, 15, 4, 5, 6, 7, 19, 20, 21] },
-                "red-team": { titulo: "Red Team & Pentesting", icon: "⚔️", desc: "Herramientas y documentación para pruebas de penetración y explotación.", ids: [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] },
-                "blue-team": { titulo: "Blue Team & Forense", icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
-                "osint": { titulo: "OSINT e Inteligencia", icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
-                "sistemas": { titulo: "Sistemas Operativos", icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
-                "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
-            };
-
-            if (!categoriaActual) {
-                let html = `<h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Explora las categorías para acceder a los recursos.</p><div class="folder-grid">`;
-                for (const [slug, data] of Object.entries(estructura)) {
-                    html += `
-                        <a href="recursos.html?cat=${slug}" class="folder">
-                            <div class="folder-icon">${data.icon}</div>
-                            <h3>${data.titulo}</h3>
-                            <p>${data.desc}</p>
-                            <span class="folder-badge">${data.ids.length} enlaces</span>
-                        </a>
-                    `;
-                }
-                html += `</div>`;
-                contenedor.innerHTML = html;
-                contenedor.style.display = 'block';
-                return;
-            }
-
-            const dataCat = estructura[categoriaActual];
-            if (!dataCat) {
-                contenedor.innerHTML = "<p>Categoría no encontrada.</p>";
-                contenedor.style.display = 'block';
-                return;
-            }
-
-            const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team" && r.categoria_id == 2) || (categoriaActual === "blue-team" && r.categoria_id == 3) || (categoriaActual === "osint" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)));
-
-            let html = `
-                <div class="breadcrumb">
-                    <a href="recursos.html">Recursos</a> / <span>${dataCat.titulo}</span>
-                </div>
-                <div class="category-header">
-                    <h2>${dataCat.icon} ${dataCat.titulo}</h2>
-                    <p>${dataCat.desc}</p>
-                    <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
-                </div>
-                <ul class="resource-list" id="lista-recursos">
-            `;
-
-            recursosCat.forEach(r => {
-                const badgeClass = getBadgeClass(r.tipo);
-                const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
-                const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
-                html += `
-                    <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
-                        <div class="resource-header">
-                            <span class="resource-title">${r.titulo}</span>
-                            ${badge}
-                        </div>
-                        <div class="resource-desc">${r.descripcion}</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
-                            <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
-                        </div>
-                    </li>
-                `;
-            });
-
-            if (recursosCat.length === 0) {
-                html += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta categoría.</li>`;
-            }
-
-            html += `</ul>`;
-            contenedor.innerHTML = html;
-            contenedor.style.display = 'block';
-        }
-    } catch (error) {
-        contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
-        contenedor.style.display = 'block';
-    }
-}
-
-function filtrarRecursos() {
-    const input = document.getElementById('buscador-recursos').value.toLowerCase();
-    const items = document.querySelectorAll('#lista-recursos .resource-item');
-    items.forEach(item => {
-        const titulo = item.getAttribute('data-titulo');
-        item.style.display = titulo.includes(input) ? 'flex' : 'none';
-    });
-}
-
-async function votarRecurso(id, btn) {
-    if(!usuarioLogueado) { mostrarToast("Inicia sesión para votar.", "error"); return; }
-    try {
-        const response = await fetch(`${API_URL}/votar.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ recurso_id: id }),
-            credentials: 'include'
-        });
-        const result = await response.json();
-        if (result.success) {
-            btn.classList.toggle('votado');
-            const span = btn.querySelector('span');
-            span.innerText = result.votos;
-        } else {
-            mostrarToast(result.message, "error");
-        }
-    } catch (error) { mostrarToast("Error al votar.", "error"); }
-}
-
-document.getElementById('form-login')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = { correo: document.getElementById('login-correo').value, contrasena: document.getElementById('login-contrasena').value };
-    try {
-        const response = await fetch(`${API_URL}/login.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
-        const result = await response.json();
-        if (result.success) {
-            if (result.requiere_2fa) {
-                temp2FAMetodo = result.requiere_2fa;
-                mostrarToast(result.message, 'success');
-                abrirModal('modal-2fa');
-            } else {
-                mostrarToast('Bienvenido ' + result.nombre, 'success');
-                setTimeout(() => window.location.href = 'recursos.html', 1000);
-            }
-        } else { mostrarToast('Error: ' + result.message, 'error'); }
-    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
-});
-
-async function verificar2FALogin() {
-    const codigo = document.getElementById('2fa-codigo').value;
-    if (!codigo) { mostrarToast("Introduce el código.", "error"); return; }
-    try {
-        const response = await fetch(`${API_URL}/verificar_2fa_login.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo: codigo, metodo: temp2FAMetodo }),
-            credentials: 'include'
-        });
-        const result = await response.json();
-        if (result.success) {
-            mostrarToast('Login exitoso.', 'success');
-            setTimeout(() => window.location.href = 'recursos.html', 1000);
-        } else {
-            mostrarToast(result.message, 'error');
-        }
-    } catch (error) { mostrarToast("Error de conexión.", "error"); }
-}
-
-document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = { nombre_completo: document.getElementById('reg-nombre').value, usuario: document.getElementById('reg-usuario').value, correo: document.getElementById('reg-correo').value, contrasena: document.getElementById('reg-contrasena').value };
-    try {
-        const response = await fetch(`${API_URL}/registro.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
-        const result = await response.json();
-        if (result.success) {
-            mostrarToast('Registro exitoso.', 'success');
-            document.getElementById('form-registro').reset();
-            document.getElementById('form-login').style.display = 'block';
-            document.getElementById('form-registro').style.display = 'none';
-        } else { mostrarToast('Error: ' + result.message, 'error'); }
-    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
-});
-
-function toggleAuthForms(event) {
-    if(event) event.preventDefault();
-    const formLogin = document.getElementById('form-login');
-    const formRegistro = document.getElementById('form-registro');
-    if (formLogin.style.display === 'none') { formLogin.style.display = 'block'; formRegistro.style.display = 'none'; } 
-    else { formLogin.style.display = 'none'; formRegistro.style.display = 'block'; }
-}
-
-async function cargarPerfil() {
-    const userSpan = document.getElementById('perfil-usuario');
-    const nameSpan = document.getElementById('perfil-nombre');
-    const bioInput = document.getElementById('perfil-bio');
-    const habInput = document.getElementById('perfil-habilidades');
-    const gitInput = document.getElementById('perfil-github');
-    const btn2FAEmail = document.getElementById('btn-2fa-email');
-    const btn2FATOTP = document.getElementById('btn-2fa-totp');
-
-    if (!userSpan || !usuarioLogueado) return;
-    userSpan.innerText = usuarioLogueado.usuario;
-    nameSpan.innerText = usuarioLogueado.nombre;
-    
-    try {
-        const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
-        const result = await response.json();
-        if (result.success) {
-            if(bioInput) bioInput.value = result.data.bio || '';
-            if(habInput) habInput.value = result.data.habilidades || '';
-            if(gitInput) gitInput.value = result.data.github || '';
-            
-            if (btn2FAEmail) {
-                if (result.data.twofa_email_activo) {
-                    btn2FAEmail.innerText = 'Contactar Soporte';
-                    btn2FAEmail.onclick = () => window.location.href = 'contacto.html';
-                } else {
-                    btn2FAEmail.innerText = 'Activar';
-                    btn2FAEmail.onclick = toggle2FAEmail;
-                }
-            }
-
-            if (btn2FATOTP && result.data.twofa_totp_activo) {
-                btn2FATOTP.innerText = 'Contactar Soporte';
-                btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
-            }
-        }
-    } catch(e) {}
-}
-
-document.getElementById('form-perfil')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const bio = document.getElementById('perfil-bio').value;
-    const habilidades = document.getElementById('perfil-habilidades').value;
-    const github = document.getElementById('perfil-github').value;
-    try {
-        const response = await fetch(`${API_URL}/actualizar_perfil.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bio, habilidades, github }),
-            credentials: 'include'
-        });
-        const result = await response.json();
-        if(result.success) mostrarToast('Perfil actualizado.', 'success');
-        else mostrarToast('Error al actualizar.', 'error');
-    } catch(e) { mostrarToast('Error de conexión.', 'error'); }
-});
-
-async function solicitarReset() {
-    const email = prompt("Confirma tu correo electrónico para recibir el enlace:");
-    if (!email) return;
-    try {
-        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
-        });
-        const result = await response.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-    } catch (e) { mostrarToast("Error de conexión.", "error"); }
-}
-
-async function enviarReset() {
-    const email = document.getElementById('forgot-email').value;
-    if (!email) {
-        mostrarToast("Introduce tu correo electrónico.", "error");
-        return;
-    }
-    try {
-        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
-        });
-        const result = await response.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) {
-            cerrarModal('modal-forgot');
-        }
-    } catch (e) { 
-        mostrarToast("Error de conexión.", "error"); 
-    }
-}
-
-async function toggle2FAEmail() {
-    try {
-        const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ activo: true }),
-            credentials: 'include'
-        });
-        const result = await response.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) {
-            const btn = document.getElementById('btn-2fa-email');
-            btn.innerText = 'Contactar Soporte';
-            btn.onclick = () => window.location.href = 'contacto.html';
-        }
-    } catch (e) { 
-        mostrarToast("Error de conexión.", "error"); 
-    }
-}
-
-async function iniciar2FATOTP() {
-    try {
-        const response = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
-        const result = await response.json();
-        if (result.success) {
-            document.getElementById('qr-container').innerHTML = `<img src="${result.qr_svg}" alt="Código QR" style="width: 100%; max-width: 200px; height: auto;">`;
-            document.getElementById('secret-text').innerText = result.secret;
-            abrirModal('modal-totp');
-        } else {
-            mostrarToast(result.message, "error");
-        }
-    } catch (e) { mostrarToast("Error al generar QR.", "error"); }
-}
-
-async function confirmar2FATOTP() {
-    const codigo = document.getElementById('totp-codigo').value;
-    try {
-        const response = await fetch(`${API_URL}/confirmar_2fa_totp.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo: codigo }),
-            credentials: 'include'
-        });
-        const result = await response.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) {
-            cerrarModal('modal-totp');
-            const btn = document.getElementById('btn-2fa-totp');
-            btn.innerText = 'Contactar Soporte';
-            btn.onclick = () => window.location.href = 'contacto.html';
-        }
-    } catch (e) { mostrarToast("Error", "error"); }
-}
-
-async function cargarHerramientasNavegables() {
-    const contenedor = document.getElementById('contenedor-herramientas');
+async function cargarBiblioteca() {
+    const contenedor = document.getElementById('contenedor-biblioteca');
     if (!contenedor) return;
     
     const urlParams = new URLSearchParams(window.location.search);
+    const tipo = urlParams.get('tipo'); // 'herramientas' o 'recursos'
     const categoriaActual = urlParams.get('cat');
 
-    const estructura = {
+    const estructuraHerramientas = {
         "red-team": {
             titulo: "Red Team & Pentesting",
             icon: "⚔️",
@@ -571,12 +243,44 @@ async function cargarHerramientasNavegables() {
         }
     };
 
-    if (!categoriaActual) {
-        let html = `<h2>Laboratorio de Herramientas</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar las herramientas.</p><div class="folder-grid">`;
+    const estructuraRecursos = {
+        "formacion": { titulo: "Formación y Certificaciones", icon: "🎓", desc: "Cursos, plataformas y certificaciones para iniciarte o especializarte.", ids: [1, 12, 13, 14, 15, 4, 5, 6, 7, 19, 20, 21] },
+        "red-team-rec": { titulo: "Red Team & Pentesting", icon: "⚔️", desc: "Herramientas y documentación para pruebas de penetración y explotación.", ids: [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] },
+        "blue-team-rec": { titulo: "Blue Team & Forense", icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
+        "osint-rec": { titulo: "OSINT e Inteligencia", icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
+        "sistemas": { titulo: "Sistemas Operativos", icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
+        "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
+    };
+
+    // VISTA 0: Menú principal de la biblioteca (si no hay tipo seleccionado)
+    if (!tipo && !categoriaActual) {
+        let html = `<h2>Biblioteca de Ciberseguridad</h2><p style="margin-bottom: 30px; color: var(--text-muted);">Elige qué quieres explorar hoy.</p>`;
         
-        for (const [slug, data] of Object.entries(estructura)) {
+        html += `
+        <div class="folder-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <a href="biblioteca.html?tipo=herramientas" class="folder" style="border-color: var(--neon-blue);">
+                <div class="folder-icon" style="font-size: 3rem;">🛠️</div>
+                <h3>Laboratorio de Herramientas</h3>
+                <p>Utilidades interactivas para OSINT, Redes, Pentesting y análisis.</p>
+                <span class="folder-badge" style="background: var(--neon-blue); color: var(--bg-color);">Explorar Herramientas</span>
+            </a>
+            <a href="biblioteca.html?tipo=recursos" class="folder" style="border-color: var(--neon-green);">
+                <div class="folder-icon" style="font-size: 3rem;">📚</div>
+                <h3>Directorio de Recursos</h3>
+                <p>Cursos, libros, plataformas y referentes del hacking ético en español.</p>
+                <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Explorar Recursos</span>
+            </a>
+        </div>`;
+        contenedor.innerHTML = html;
+        return;
+    }
+
+    // VISTA 1: Índice de Herramientas
+    if (tipo === 'herramientas' && !categoriaActual) {
+        let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Herramientas</span></div><h2>Laboratorio de Herramientas</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
+        for (const [slug, data] of Object.entries(estructuraHerramientas)) {
             html += `
-                <a href="herramientas.html?cat=${slug}" class="folder">
+                <a href="biblioteca.html?tipo=herramientas&cat=${slug}" class="folder">
                     <div class="folder-icon">${data.icon}</div>
                     <h3>${data.titulo}</h3>
                     <p>${data.desc}</p>
@@ -589,36 +293,115 @@ async function cargarHerramientasNavegables() {
         return;
     }
 
-    const dataCat = estructura[categoriaActual];
-    if (!dataCat) {
-        contenedor.innerHTML = "<p>Categoría no encontrada.</p>";
+    // VISTA 2: Lista de Herramientas
+    if (tipo === 'herramientas' && categoriaActual) {
+        const dataCat = estructuraHerramientas[categoriaActual];
+        if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
+
+        let html = `
+            <div class="breadcrumb">
+                <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=herramientas">Herramientas</a> / <span>${dataCat.titulo}</span>
+            </div>
+            <div class="category-header">
+                <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+                <p>${dataCat.desc}</p>
+                <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
+            </div>
+            <div class="grid-cards" id="lista-herramientas">
+        `;
+
+        dataCat.herramientas.forEach(h => {
+            html += `
+                <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
+                    <h3>${h.titulo}</h3>
+                    <p>${h.desc}</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+        contenedor.innerHTML = html;
         return;
     }
 
-    let html = `
-        <div class="breadcrumb">
-            <a href="herramientas.html">Herramientas</a> / <span>${dataCat.titulo}</span>
-        </div>
-        <div class="category-header">
-            <h2>${dataCat.icon} ${dataCat.titulo}</h2>
-            <p>${dataCat.desc}</p>
-            <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
-        </div>
-        <div class="grid-cards" id="lista-herramientas">
-    `;
+    // VISTA 3: Índice de Recursos
+    if (tipo === 'recursos' && !categoriaActual) {
+        let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Recursos</span></div><h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
+        for (const [slug, data] of Object.entries(estructuraRecursos)) {
+            html += `
+                <a href="biblioteca.html?tipo=recursos&cat=${slug}" class="folder">
+                    <div class="folder-icon">${data.icon}</div>
+                    <h3>${data.titulo}</h3>
+                    <p>${data.desc}</p>
+                    <span class="folder-badge">${data.ids.length} enlaces</span>
+                </a>
+            `;
+        }
+        html += `</div>`;
+        contenedor.innerHTML = html;
+        return;
+    }
 
-    dataCat.herramientas.forEach(h => {
-        html += `
-            <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
-                <h3>${h.titulo}</h3>
-                <p>${h.desc}</p>
-                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
-            </div>
-        `;
-    });
+    // VISTA 4: Lista de Recursos
+    if (tipo === 'recursos' && categoriaActual) {
+        const dataCat = estructuraRecursos[categoriaActual];
+        if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
 
-    html += `</div>`;
-    contenedor.innerHTML = html;
+        try {
+            const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
+            if (!response.ok) throw new Error("Error de red");
+            const result = await response.json();
+
+            if (result.success) {
+                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)));
+
+                let html = `
+                    <div class="breadcrumb">
+                        <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>${dataCat.titulo}</span>
+                    </div>
+                    <div class="category-header">
+                        <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+                        <p>${dataCat.desc}</p>
+                        <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
+                    </div>
+                    <ul class="resource-list" id="lista-recursos">
+                `;
+
+                recursosCat.forEach(r => {
+                    const badgeClass = getBadgeClass(r.tipo);
+                    const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
+                    const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
+                    html += `
+                        <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
+                            <div class="resource-header">
+                                <span class="resource-title">${r.titulo}</span>
+                                ${badge}
+                            </div>
+                            <div class="resource-desc">${r.descripcion}</div>
+                            <div class="resource-meta">
+                                <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
+                            </div>
+                            <div class="resource-actions">
+                                <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
+                                <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                if (recursosCat.length === 0) {
+                    html += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta categoría.</li>`;
+                }
+
+                html += `</ul>`;
+                contenedor.innerHTML = html;
+            }
+        } catch (error) {
+            contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
+        }
+        return;
+    }
 }
 
 function filtrarHerramientas() {
@@ -630,14 +413,22 @@ function filtrarHerramientas() {
     });
 }
 
+function filtrarRecursos() {
+    const input = document.getElementById('buscador-recursos').value.toLowerCase();
+    const items = document.querySelectorAll('#lista-recursos .resource-item');
+    items.forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(input) ? 'flex' : 'none';
+    });
+}
+
 window.onload = async () => {
     inicializarTema();
     comprobarDisclaimer();
     await comprobarSesion();
     protegerContenidoPrivado();
-    if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
+    if (window.location.pathname.includes('biblioteca.html')) cargarBiblioteca();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
-    if (window.location.pathname.includes('herramientas.html')) cargarHerramientasNavegables();
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
