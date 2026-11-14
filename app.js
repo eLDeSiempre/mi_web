@@ -490,6 +490,146 @@ async function confirmar2FATOTP() {
     } catch (e) { mostrarToast("Error", "error"); }
 }
 
+async function cargarHerramientasNavegables() {
+    const contenedor = document.getElementById('contenedor-herramientas');
+    if (!contenedor) return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoriaActual = urlParams.get('cat');
+
+    const estructura = {
+        "red-team": {
+            titulo: "Red Team & Pentesting",
+            icon: "⚔️",
+            desc: "Herramientas para simular ataques, encontrar vulnerabilidades y explotar sistemas.",
+            herramientas: [
+                { id: 'dorks', titulo: 'Generador de Dorks', desc: 'Trucos de búsqueda avanzada en Google para encontrar archivos expuestos.', ideal: 'Encontrar documentos filtrados.' },
+                { id: 'payloads', titulo: 'Generador de Payloads', desc: 'Crea payloads básicos para pruebas de inyección (XSS, SQLi).', ideal: 'Pruebas de concepto rápidas.' },
+                { id: 'cve', titulo: 'Buscador de CVEs', desc: 'Consulta la base de datos de vulnerabilidades conocidas.', ideal: 'Investigar fallos de seguridad.' }
+            ]
+        },
+        "blue-team": {
+            titulo: "Blue Team & Forense",
+            icon: "🛡️",
+            desc: "Herramientas para defensa, análisis de malware y respuesta a incidentes.",
+            herramientas: [
+                { id: 'hash', titulo: 'Analizador de Hash', desc: 'Identifica el tipo de hash (MD5, SHA-1, SHA-256) y busca su origen.', ideal: 'Análisis de integridad.' },
+                { id: 'ssl', titulo: 'Analizador SSL/TLS', desc: 'Comprueba la validez del certificado SSL de un dominio.', ideal: 'Auditar seguridad de servidores.' },
+                { id: 'http-headers', titulo: 'Inspector de Cabeceras HTTP', desc: 'Analiza las cabeceras de seguridad de cualquier sitio web.', ideal: 'Auditar configuraciones web.' }
+            ]
+        },
+        "osint": {
+            titulo: "OSINT e Inteligencia",
+            icon: "🕵️",
+            desc: "Recopila información de fuentes abiertas para investigaciones.",
+            herramientas: [
+                { id: 'osint', titulo: 'OSINT Framework', desc: 'Árbol genealógico de internet. Muestra dónde buscar información pública.', ideal: 'Investigar antecedentes.' },
+                { id: 'ip', titulo: 'Buscador de IP / OSINT', desc: 'Descubre el país, ciudad y proveedor de una dirección IP o dominio.', ideal: 'Rastrear origen de una visita.' },
+                { id: 'domain', titulo: 'Reconocimiento de Dominio', desc: 'Descubre la IP, hosting y servidores de correo (MX) de un dominio.', ideal: 'OSINT de infraestructura.' },
+                { id: 'mac', titulo: 'Buscador de Fabricante (MAC)', desc: 'Introduce una MAC y descubre a qué fabricante pertenece.', ideal: 'Análisis de redes locales.' },
+                { id: 'email', titulo: 'Validador de Correo', desc: 'Verifica si un correo tiene formato válido y si el dominio existe.', ideal: 'Limpieza de bases de datos.' }
+            ]
+        },
+        "utilidades": {
+            titulo: "Utilidades y Análisis",
+            icon: "🧰",
+            desc: "Herramientas para análisis de datos, criptografía y conversión.",
+            herramientas: [
+                { id: 'exif', titulo: 'Analizador EXIF', desc: 'Extrae datos ocultos de imágenes (hora, modelo del móvil, GPS).', ideal: 'Saber si una foto revela tu ubicación.' },
+                { id: 'pass', titulo: 'Generador de Contraseñas', desc: 'Crea contraseñas súper seguras y aleatorias.', ideal: 'Proteger tus cuentas.' },
+                { id: 'pass-strength', titulo: 'Auditor de Contraseñas', desc: 'Comprueba cuánto tardaría un hacker en descifrar tu contraseña.', ideal: 'Mejorar tu seguridad personal.' },
+                { id: 'base64', titulo: 'Codificador Base64', desc: 'Convierte texto a Base64 o viceversa.', ideal: 'Depurar peticiones web.' },
+                { id: 'jwt', titulo: 'Inspector de JWT', desc: 'Pega un token JWT y descubre qué información oculta.', ideal: 'Entender autenticación moderna.' },
+                { id: 'json', titulo: 'Formateador JSON', desc: 'Valida y formatea documentos JSON para que sean legibles.', ideal: 'Análisis de APIs y logs.' },
+                { id: 'regex', titulo: 'Probador de Regex', desc: 'Prueba patrones de búsqueda (Regex) en tiempo real.', ideal: 'Programación y filtrado de datos.' },
+                { id: 'timestamp', titulo: 'Conversor de Timestamp', desc: 'Convierte fechas normales a formato Unix y viceversa.', ideal: 'Análisis forense y logs.' },
+                { id: 'uuid', titulo: 'Generador de UUID', desc: 'Crea identificadores únicos universales (v4).', ideal: 'Desarrollo de software seguro.' }
+            ]
+        },
+        "redes": {
+            titulo: "Redes y Comunicaciones",
+            icon: "🌐",
+            desc: "Analiza la seguridad de tu conexión y protocolos de red.",
+            herramientas: [
+                { id: 'wifi', titulo: 'Analizador de Red Wi-Fi', desc: 'Analiza la calidad y seguridad de tu conexión actual.', ideal: 'Saber si tu red doméstica es segura.' },
+                { id: 'dns', titulo: 'Fuga de DNS (DNS Leak)', desc: 'Comprueba si tu proveedor filtra tu tráfico real.', ideal: 'Verificar privacidad de VPN.' },
+                { id: 'robots', titulo: 'Analizador de Robots.txt', desc: 'Descubre qué directorios intenta ocultar un sitio web.', ideal: 'Reconocimiento web (OSINT).' },
+                { id: 'ua', titulo: 'Analizador User-Agent', desc: 'Descubre qué sistema operativo y navegador usas.', ideal: 'Pruebas de compatibilidad web.' }
+            ]
+        },
+        "senuelos": {
+            titulo: "Canarytokens (Señuelos)",
+            icon: "🪤",
+            desc: "Genera trampas invisibles. Si un atacante interactúa, recibirás una alerta.",
+            herramientas: [
+                { id: 'web-bug', titulo: 'Web bug', desc: 'Alerta cuando un atacante visita tu URL.', ideal: 'Detectar escaneos web.' },
+                { id: 'dns-token', titulo: 'DNS Token', desc: 'Alerta cuando alguien resuelve tu nombre DNS.', ideal: 'Detectar reconocimiento de dominio.' },
+                { id: 'aws-token', titulo: 'Claves de AWS', desc: 'Alerta si usan tu clave API de AWS falsa.', ideal: 'Detectar accesos a la nube.' },
+                { id: 'word-token', titulo: 'Documento Word', desc: 'Alerta si abren un documento Word señuelo.', ideal: 'Detectar phishing interno.' },
+                { id: 'qr-token', titulo: 'Código QR', desc: 'Alerta si alguien escanea tu código QR.', ideal: 'Campañas de concienciación.' }
+            ]
+        }
+    };
+
+    if (!categoriaActual) {
+        let html = `<h2>Laboratorio de Herramientas</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar las herramientas.</p><div class="folder-grid">`;
+        
+        for (const [slug, data] of Object.entries(estructura)) {
+            html += `
+                <a href="herramientas.html?cat=${slug}" class="folder">
+                    <div class="folder-icon">${data.icon}</div>
+                    <h3>${data.titulo}</h3>
+                    <p>${data.desc}</p>
+                    <span class="folder-badge">${data.herramientas.length} herramientas</span>
+                </a>
+            `;
+        }
+        html += `</div>`;
+        contenedor.innerHTML = html;
+        return;
+    }
+
+    const dataCat = estructura[categoriaActual];
+    if (!dataCat) {
+        contenedor.innerHTML = "<p>Categoría no encontrada.</p>";
+        return;
+    }
+
+    let html = `
+        <div class="breadcrumb">
+            <a href="herramientas.html">Herramientas</a> / <span>${dataCat.titulo}</span>
+        </div>
+        <div class="category-header">
+            <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+            <p>${dataCat.desc}</p>
+            <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
+        </div>
+        <div class="grid-cards" id="lista-herramientas">
+    `;
+
+    dataCat.herramientas.forEach(h => {
+        html += `
+            <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
+                <h3>${h.titulo}</h3>
+                <p>${h.desc}</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    contenedor.innerHTML = html;
+}
+
+function filtrarHerramientas() {
+    const input = document.getElementById('buscador-herramientas').value.toLowerCase();
+    const items = document.querySelectorAll('#lista-herramientas .card');
+    items.forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(input) ? 'flex' : 'none';
+    });
+}
+
 window.onload = async () => {
     inicializarTema();
     comprobarDisclaimer();
@@ -497,6 +637,7 @@ window.onload = async () => {
     protegerContenidoPrivado();
     if (window.location.pathname.includes('recursos.html')) cargarRecursosDesdeVPS();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
+    if (window.location.pathname.includes('herramientas.html')) cargarHerramientasNavegables();
     if (!sessionStorage.getItem('visita_alertada')) {
         fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
