@@ -89,117 +89,15 @@ const SECCIONES_BIBLIOTECA = {
         icono: '📖',
         descripcion: 'Enlaces seleccionados a formación, bibliografía, laboratorios y referentes.',
         categorias: {
-            'formacion': {
-                titulo: 'Formación y Certificaciones',
-                icono: '🎓',
-                descripcion: 'Cursos, plataformas y certificaciones para iniciarte o especializarte.',
-                items: [
-                    { id: 1, titulo: 'INCIBE Academia', descripcion: 'Cursos gratuitos y certificados del Instituto Nacional de Ciberseguridad de España. Desde nivel ciudadano hasta profesional.', url: 'https://www.incibe.es/academia', tipo: 'curso', ideal_para: 'Formación oficial y gratuita.' },
-                    { id: 12, titulo: 'Cisco Networking Academy', descripcion: 'Cursos gratuitos de ciberseguridad (Introducción, Fundamentos, Hacker Ético) con laboratorios prácticos.', url: 'https://www.netacad.com/es/courses/cybersecurity', tipo: 'curso', ideal_para: 'Empezar desde cero con base sólida.' },
-                    { id: 13, titulo: 'Hack4u (S4vitar)', descripcion: 'Plataforma de formación práctica en hacking ético en español. Calidad comparable a OSCP.', url: 'https://hack4u.io/', tipo: 'curso', ideal_para: 'Pentesting avanzado y preparación de certs.' },
-                    { id: 14, titulo: 'The Hackers Labs', descripcion: 'Plataforma española con más de 120 retos prácticos de hacking (Web, AD, OSINT, Reversing). Totalmente gratis.', url: 'https://thehackerslabs.com/', tipo: 'laboratorio', ideal_para: 'Practicar con retos reales en español.' }
-                ]
-            },
-            'red-team-rec': {
-                titulo: 'Red Team & Pentesting',
-                icono: '⚔️',
-                descripcion: 'Herramientas y documentación para pruebas de penetración.',
-                items: [
-                    { id: 2, titulo: 'Hack The Box (HTB)', descripcion: 'Plataforma de referencia mundial para pentesting. Máquinas retiradas con writeups en español por S4vitar.', url: 'https://www.hackthebox.com/', tipo: 'herramienta', ideal_para: 'Practicar pentesting realista.' },
-                    { id: 23, titulo: 'DockerLabs', descripcion: 'Máquinas vulnerables ligeras (Docker) creadas por El Pingüino de Mario. Gratis y sin suscripciones.', url: 'https://dockerlabs.es/', tipo: 'laboratorio', ideal_para: 'Practicar localmente sin VMs pesadas.' },
-                    { id: 25, titulo: 'Metasploit Framework', descripcion: 'El framework de explotación más usado. Documentación oficial y módulos.', url: 'https://www.metasploit.com/', tipo: 'herramienta', ideal_para: 'Explotación y post-explotación.' },
-                    { id: 26, titulo: 'PayloadsAllTheThings', descripcion: 'Repositorio con payloads y bypasses para SQLi, XSS, SSRF, LFI y más.', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings', tipo: 'documentación', ideal_para: 'Consultar payloads en pruebas.' }
-                ]
-            },
-            'blue-team-rec': {
-                titulo: 'Blue Team & Forense',
-                icono: '🛡️',
-                descripcion: 'Defensa, análisis forense y respuesta a incidentes.',
-                items: [
-                    { id: 3, titulo: 'Blue Team Labs Online', descripcion: 'Plataforma de retos de seguridad defensiva, forense y análisis de malware.', url: 'https://blueteamlabs.online/', tipo: 'laboratorio', ideal_para: 'Entrenar defensa y forense.' },
-                    { id: 35, titulo: 'Volatility Foundation', descripcion: 'Framework open-source para análisis forense de memoria RAM. Documentación y plugins.', url: 'https://www.volatilityfoundation.org/', tipo: 'herramienta', ideal_para: 'Análisis forense de memoria.' },
-                    { id: 36, titulo: 'Wireshark', descripcion: 'Analizador de tráfico de red. Documentación oficial y guías de uso.', url: 'https://www.wireshark.org/', tipo: 'herramienta', ideal_para: 'Análisis de tráfico y protocolos.' }
-                ]
-            },
-            'osint-rec': {
-                titulo: 'OSINT e Inteligencia',
-                icono: '🕵️',
-                descripcion: 'Inteligencia de fuentes abiertas para investigar.',
-                items: [
-                    { id: 41, titulo: 'OSINT Framework', descripcion: 'Mapa visual interactivo de herramientas y fuentes de información pública.', url: 'https://osintframework.com/', tipo: 'herramienta', ideal_para: 'Saber por dónde empezar una investigación.' },
-                    { id: 42, titulo: 'Shodan', descripcion: 'Motor de búsqueda de dispositivos conectados a Internet. Encuentra servidores, cámaras, ICS expuestos.', url: 'https://www.shodan.io/', tipo: 'herramienta', ideal_para: 'Reconocimiento de infraestructura expuesta.' },
-                    { id: 44, titulo: 'Have I Been Pwned', descripcion: 'Comprueba si tu correo o contraseña ha aparecido en filtraciones de datos conocidas.', url: 'https://haveibeenpwned.com/', tipo: 'herramienta', ideal_para: 'Verificar credenciales comprometidas.' },
-                    { id: 45, titulo: 'theHarvester', descripcion: 'Herramienta de recolección de emails, subdominios, hosts y nombres de fuentes públicas.', url: 'https://github.com/laramies/theHarvester', tipo: 'herramienta', ideal_para: 'Reconocimiento pasivo de dominios.' },
-                    { id: 46, titulo: 'SpiderFoot', descripcion: 'Herramienta de automatización OSINT con más de 200 módulos de recolección de datos.', url: 'https://www.spiderfoot.net/', tipo: 'herramienta', ideal_para: 'Recopilación automatizada de inteligencia.' }
-                ]
-            },
-            'sistemas': {
-                titulo: 'Sistemas Operativos',
-                icono: '💻',
-                descripcion: 'Distribuciones Linux y entornos de seguridad.',
-                items: [
-                    { id: 58, titulo: 'Kali Linux', descripcion: 'Distribución de referencia para pentesting. Documentación oficial y guías de instalación.', url: 'https://www.kali.org/', tipo: 'sistema', ideal_para: 'Entorno principal de pentesting.' },
-                    { id: 59, titulo: 'Parrot Security OS', descripcion: 'Distribución ligera orientada a seguridad, anonimato y desarrollo.', url: 'https://parrotsec.org/', tipo: 'sistema', ideal_para: 'Alternativa a Kali con enfoque en privacidad.' },
-                    { id: 60, titulo: 'Tails', descripcion: 'Sistema operativo amnésico que se ejecuta desde USB y enruta todo el tráfico por Tor.', url: 'https://tails.net/', tipo: 'sistema', ideal_para: 'Máximo anonimato y privacidad.' }
-                ]
-            },
-            'libros': {
-                titulo: 'Referentes y Libros',
-                icono: '📚',
-                descripcion: 'Hackers destacados y bibliografía en español.',
-                items: [
-                    { id: 71, titulo: '0xWord (Editorial)', descripcion: 'Editorial de referencia en ciberseguridad en español. Más de 70 títulos de profesionales activos.', url: 'https://0xword.com/', tipo: 'libro', ideal_para: 'Comprar libros técnicos en español.' },
-                    { id: 72, titulo: 'Flu Project (Pablo González)', descripcion: 'Blog histórico de ciberseguridad en español, fundado por Pablo González. Artículos y recursos.', url: 'https://www.flu-project.com/', tipo: 'blog', ideal_para: 'Aprender de la experiencia de referentes.' },
-                    { id: 73, titulo: 'El Lado del Mal (Chema Alonso)', descripcion: 'Blog personal de Chema Alonso con artículos técnicos y divulgación de seguridad.', url: 'https://www.elladodelmal.com/', tipo: 'blog', ideal_para: 'Divulgación y opinión de un referente.' },
-                    { id: 74, titulo: 'La Biblia Negra del Ethical Hacking', descripcion: 'Libro gratuito (PDF/GitHub) de Alejandro G. Vera. Compendio de herramientas y técnicas ofensivas.', url: 'https://github.com/AlejandroG Vera/La-Biblia-Negra-del-Ethical-Hacking', tipo: 'libro', ideal_para: 'Iniciarse en hacking ético sin coste.' }
-                ]
-            },
-            'metodos': {
-                titulo: 'Métodos y Metodologías',
-                icono: '📋',
-                descripcion: 'Metodologías de auditoría y pentesting.',
-                items: [
-                    { id: 101, titulo: 'OWASP Testing Guide', descripcion: 'Guía completa y actualizada de pruebas de seguridad en aplicaciones web.', url: 'https://owasp.org/www-project-web-security-testing-guide/', tipo: 'documentación', ideal_para: 'Metodología de pentesting web.' },
-                    { id: 102, titulo: 'PTES (Penetration Testing Execution Standard)', descripcion: 'Estándar de ejecución de pruebas de penetración, desde el alcance hasta el reporte.', url: 'http://www.pentest-standard.org/', tipo: 'documentación', ideal_para: 'Estructurar un pentesting profesional.' },
-                    { id: 103, titulo: 'MITRE ATT&CK', descripcion: 'Base de conocimiento de tácticas y técnicas de atacantes reales, usada para defensa y red team.', url: 'https://attack.mitre.org/', tipo: 'documentación', ideal_para: 'Entender el comportamiento de atacantes.' }
-                ]
-            },
-            'iot': {
-                titulo: 'IoT y Hardware',
-                icono: '🔌',
-                descripcion: 'Internet de las Cosas y hacking de hardware.',
-                items: [
-                    { id: 104, titulo: 'OWASP IoT Top 10', descripcion: 'Los 10 riesgos de seguridad más críticos en dispositivos IoT.', url: 'https://owasp.org/www-project-internet-of-things/', tipo: 'documentación', ideal_para: 'Conocer vulnerabilidades comunes en IoT.' },
-                    { id: 105, titulo: 'Exploit Database (Hardware)', descripcion: 'Repositorio de exploits y pruebas de concepto para hardware y firmware.', url: 'https://www.exploit-db.com/', tipo: 'herramienta', ideal_para: 'Buscar exploits de dispositivos específicos.' }
-                ]
-            },
-            'redes-rec': {
-                titulo: 'Redes y Protocolos',
-                icono: '🌐',
-                descripcion: 'Protocolos, análisis de tráfico y arquitecturas.',
-                items: [
-                    { id: 107, titulo: 'Wireshark (Documentación)', descripcion: 'Guía oficial de usuario y referencia de protocolos para el analizador de tráfico.', url: 'https://www.wireshark.org/docs/', tipo: 'documentación', ideal_para: 'Aprender análisis de tráfico en profundidad.' },
-                    { id: 108, titulo: 'Nmap (Libro Oficial)', descripcion: 'Libro de referencia de Nmap, gratuito online. Escaneo de redes y descubrimiento de hosts.', url: 'https://nmap.org/book/', tipo: 'libro', ideal_para: 'Dominar el escaneo de redes.' }
-                ]
-            },
-            'wifi-rec': {
-                titulo: 'Wi-Fi y Radiofrecuencia',
-                icono: '📡',
-                descripcion: 'Hacking inalámbrico, SDR y radiofrecuencia.',
-                items: [
-                    { id: 110, titulo: 'Aircrack-ng', descripcion: 'Suite de herramientas para auditoría de redes Wi-Fi. Documentación y tutoriales.', url: 'https://www.aircrack-ng.org/', tipo: 'herramienta', ideal_para: 'Auditar seguridad de redes inalámbricas.' },
-                    { id: 111, titulo: 'HackRF One', descripcion: 'Hardware de SDR (Software Defined Radio) de bajo coste para experimentación con radiofrecuencia.', url: 'https://greatscottgadgets.com/hackrf/', tipo: 'herramienta', ideal_para: 'Introducirse en SDR y radiofrecuencia.' }
-                ]
-            },
-            'programacion': {
-                titulo: 'Programación y Desarrollo',
-                icono: '💻',
-                descripcion: 'Lenguajes, scripts y desarrollo de herramientas.',
-                items: [
-                    { id: 113, titulo: 'Hacking con Python (0xWord)', descripcion: 'Libro de Daniel Echeverri sobre uso de Python para seguridad ofensiva.', url: 'https://0xword.com/es/libros/73-hacking-con-python.html', tipo: 'libro', ideal_para: 'Automatizar tareas de pentesting con Python.' },
-                    { id: 114, titulo: 'Python para Pentesters (GitHub)', descripcion: 'Repositorio con scripts y recursos para usar Python en pruebas de penetración.', url: 'https://github.com/JohnHammond/ctf-katana', tipo: 'documentación', ideal_para: 'Scripts prácticos para pentesting.' }
-                ]
-            }
+            'formacion':     { titulo: 'Formación y Certificaciones', icono: '🎓', descripcion: 'Cursos, plataformas y certificaciones para iniciarte o especializarte.' },
+            'red-team-rec':  { titulo: 'Red Team & Pentesting',       icono: '⚔️', descripcion: 'Herramientas y documentación para pruebas de penetración.' },
+            'blue-team-rec': { titulo: 'Blue Team & Forense',         icono: '🛡️', descripcion: 'Defensa, análisis forense y respuesta a incidentes.' },
+            'osint-rec':     { titulo: 'OSINT e Inteligencia',        icono: '🕵️', descripcion: 'Inteligencia de fuentes abiertas para investigar.' },
+            'desarrollo':    { titulo: 'Desarrollo Seguro y APIs',    icono: '💻', descripcion: 'Seguridad en aplicaciones web, APIs y bases de datos.' },
+            'sistemas':      { titulo: 'Sistemas Operativos',         icono: '🐧', descripcion: 'Distribuciones Linux y entornos de seguridad.' },
+            'comunidad':     { titulo: 'Comunidad y Noticias',        icono: '📰', descripcion: 'Blogs, foros y medios de referencia en ciberseguridad hispana.' },
+            'referentes':    { titulo: 'Referentes Hispanos',         icono: '⭐', descripcion: 'Profesionales destacados de la ciberseguridad en español.' },
+            'bibliografia':  { titulo: 'Bibliografía en Español',     icono: '📚', descripcion: 'Libros imprescindibles de 0xWord y otros autores.' }
         }
     }
 };
@@ -443,7 +341,7 @@ function renderCategoriasSeccion(contenedor, seccion) {
                 <div class="folder-icon">${c.icono}</div>
                 <h3>${c.titulo}</h3>
                 <p>${c.descripcion}</p>
-                ${count ? `<span class="folder-badge">${count} elementos</span>` : ''}
+                ${count ? `<span class="folder-badge">${count} herramientas</span>` : ''}
             </a>
         `;
     }).join('');
