@@ -130,7 +130,6 @@ function protegerContenidoPrivado() {
     if (path.includes('biblioteca.html') || path.includes('perfil.html')) {
         const mainContent = document.querySelector('main.container');
         if (mainContent && !window.location.search.includes('cat=')) { 
-            // Solo ocultamos si estamos en el índice de la biblioteca, no en una categoría específica
             mainContent.style.display = 'none';
             setTimeout(() => {
                 if (usuarioLogueado) mainContent.style.display = 'block';
@@ -159,14 +158,241 @@ function getBadgeClass(tipo) {
     return 'badge-default';
 }
 
-// ... (resto de tus funciones: cargarPerfil, solicitarReset, toggle2FAEmail, etc. se mantienen igual)
+async function votarRecurso(id, btn) {
+    if(!usuarioLogueado) { mostrarToast("Inicia sesión para votar.", "error"); return; }
+    try {
+        const response = await fetch(`${API_URL}/votar.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recurso_id: id }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if (result.success) {
+            btn.classList.toggle('votado');
+            const span = btn.querySelector('span');
+            span.innerText = result.votos;
+        } else {
+            mostrarToast(result.message, "error");
+        }
+    } catch (error) { mostrarToast("Error al votar.", "error"); }
+}
+
+document.getElementById('form-login')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = { correo: document.getElementById('login-correo').value, contrasena: document.getElementById('login-contrasena').value };
+    try {
+        const response = await fetch(`${API_URL}/login.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            if (result.requiere_2fa) {
+                temp2FAMetodo = result.requiere_2fa;
+                mostrarToast(result.message, 'success');
+                abrirModal('modal-2fa');
+            } else {
+                mostrarToast('Bienvenido ' + result.nombre, 'success');
+                setTimeout(() => window.location.href = 'biblioteca.html', 1000);
+            }
+        } else { mostrarToast('Error: ' + result.message, 'error'); }
+    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
+});
+
+async function verificar2FALogin() {
+    const codigo = document.getElementById('2fa-codigo').value;
+    if (!codigo) { mostrarToast("Introduce el código.", "error"); return; }
+    try {
+        const response = await fetch(`${API_URL}/verificar_2fa_login.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: codigo, metodo: temp2FAMetodo }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if (result.success) {
+            mostrarToast('Login exitoso.', 'success');
+            setTimeout(() => window.location.href = 'biblioteca.html', 1000);
+        } else {
+            mostrarToast(result.message, 'error');
+        }
+    } catch (error) { mostrarToast("Error de conexión.", "error"); }
+}
+
+document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = { nombre_completo: document.getElementById('reg-nombre').value, usuario: document.getElementById('reg-usuario').value, correo: document.getElementById('reg-correo').value, contrasena: document.getElementById('reg-contrasena').value };
+    try {
+        const response = await fetch(`${API_URL}/registro.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            mostrarToast('Registro exitoso.', 'success');
+            document.getElementById('form-registro').reset();
+            document.getElementById('form-login').style.display = 'block';
+            document.getElementById('form-registro').style.display = 'none';
+        } else { mostrarToast('Error: ' + result.message, 'error'); }
+    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
+});
+
+function toggleAuthForms(event) {
+    if(event) event.preventDefault();
+    const formLogin = document.getElementById('form-login');
+    const formRegistro = document.getElementById('form-registro');
+    if (formLogin.style.display === 'none') { formLogin.style.display = 'block'; formRegistro.style.display = 'none'; } 
+    else { formLogin.style.display = 'none'; formRegistro.style.display = 'block'; }
+}
+
+async function cargarPerfil() {
+    const userSpan = document.getElementById('perfil-usuario');
+    const nameSpan = document.getElementById('perfil-nombre');
+    const bioInput = document.getElementById('perfil-bio');
+    const habInput = document.getElementById('perfil-habilidades');
+    const gitInput = document.getElementById('perfil-github');
+    const btn2FAEmail = document.getElementById('btn-2fa-email');
+    const btn2FATOTP = document.getElementById('btn-2fa-totp');
+
+    if (!userSpan || !usuarioLogueado) return;
+    userSpan.innerText = usuarioLogueado.usuario;
+    nameSpan.innerText = usuarioLogueado.nombre;
+    
+    try {
+        const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            if(bioInput) bioInput.value = result.data.bio || '';
+            if(habInput) habInput.value = result.data.habilidades || '';
+            if(gitInput) gitInput.value = result.data.github || '';
+            
+            if (btn2FAEmail) {
+                if (result.data.twofa_email_activo) {
+                    btn2FAEmail.innerText = 'Contactar Soporte';
+                    btn2FAEmail.onclick = () => window.location.href = 'contacto.html';
+                } else {
+                    btn2FAEmail.innerText = 'Activar';
+                    btn2FAEmail.onclick = toggle2FAEmail;
+                }
+            }
+
+            if (btn2FATOTP && result.data.twofa_totp_activo) {
+                btn2FATOTP.innerText = 'Contactar Soporte';
+                btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
+            }
+        }
+    } catch(e) {}
+}
+
+document.getElementById('form-perfil')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const bio = document.getElementById('perfil-bio').value;
+    const habilidades = document.getElementById('perfil-habilidades').value;
+    const github = document.getElementById('perfil-github').value;
+    try {
+        const response = await fetch(`${API_URL}/actualizar_perfil.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bio, habilidades, github }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        if(result.success) mostrarToast('Perfil actualizado.', 'success');
+        else mostrarToast('Error al actualizar.', 'error');
+    } catch(e) { mostrarToast('Error de conexión.', 'error'); }
+});
+
+async function solicitarReset() {
+    const email = prompt("Confirma tu correo electrónico para recibir el enlace:");
+    if (!email) return;
+    try {
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+    } catch (e) { mostrarToast("Error de conexión.", "error"); }
+}
+
+async function enviarReset() {
+    const email = document.getElementById('forgot-email').value;
+    if (!email) {
+        mostrarToast("Introduce tu correo electrónico.", "error");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-forgot');
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
+    }
+}
+
+async function toggle2FAEmail() {
+    try {
+        const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ activo: true }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            const btn = document.getElementById('btn-2fa-email');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
+    }
+}
+
+async function iniciar2FATOTP() {
+    try {
+        const response = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('qr-container').innerHTML = `<img src="${result.qr_svg}" alt="Código QR" style="width: 100%; max-width: 200px; height: auto;">`;
+            document.getElementById('secret-text').innerText = result.secret;
+            abrirModal('modal-totp');
+        } else {
+            mostrarToast(result.message, "error");
+        }
+    } catch (e) { mostrarToast("Error al generar QR.", "error"); }
+}
+
+async function confirmar2FATOTP() {
+    const codigo = document.getElementById('totp-codigo').value;
+    try {
+        const response = await fetch(`${API_URL}/confirmar_2fa_totp.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: codigo }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-totp');
+            const btn = document.getElementById('btn-2fa-totp');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
+        }
+    } catch (e) { mostrarToast("Error", "error"); }
+}
 
 async function cargarBiblioteca() {
     const contenedor = document.getElementById('contenedor-biblioteca');
     if (!contenedor) return;
     
     const urlParams = new URLSearchParams(window.location.search);
-    const tipo = urlParams.get('tipo'); // 'herramientas' o 'recursos'
+    const tipo = urlParams.get('tipo');
     const categoriaActual = urlParams.get('cat');
 
     const estructuraHerramientas = {
@@ -252,10 +478,8 @@ async function cargarBiblioteca() {
         "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] }
     };
 
-    // VISTA 0: Menú principal de la biblioteca (si no hay tipo seleccionado)
     if (!tipo && !categoriaActual) {
         let html = `<h2>Biblioteca de Ciberseguridad</h2><p style="margin-bottom: 30px; color: var(--text-muted);">Elige qué quieres explorar hoy.</p>`;
-        
         html += `
         <div class="folder-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
             <a href="biblioteca.html?tipo=herramientas" class="folder" style="border-color: var(--neon-blue);">
@@ -275,7 +499,6 @@ async function cargarBiblioteca() {
         return;
     }
 
-    // VISTA 1: Índice de Herramientas
     if (tipo === 'herramientas' && !categoriaActual) {
         let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Herramientas</span></div><h2>Laboratorio de Herramientas</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
         for (const [slug, data] of Object.entries(estructuraHerramientas)) {
@@ -293,7 +516,6 @@ async function cargarBiblioteca() {
         return;
     }
 
-    // VISTA 2: Lista de Herramientas
     if (tipo === 'herramientas' && categoriaActual) {
         const dataCat = estructuraHerramientas[categoriaActual];
         if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
@@ -325,7 +547,6 @@ async function cargarBiblioteca() {
         return;
     }
 
-    // VISTA 3: Índice de Recursos
     if (tipo === 'recursos' && !categoriaActual) {
         let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Recursos</span></div><h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
         for (const [slug, data] of Object.entries(estructuraRecursos)) {
@@ -343,7 +564,6 @@ async function cargarBiblioteca() {
         return;
     }
 
-    // VISTA 4: Lista de Recursos
     if (tipo === 'recursos' && categoriaActual) {
         const dataCat = estructuraRecursos[categoriaActual];
         if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
