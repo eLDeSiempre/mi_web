@@ -18,7 +18,7 @@
     <meta name="twitter:description" content="Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético.">
     <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
     <meta name="theme-color" content="#0d1117">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://matomo.eldesiempre.es https://api.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://matomo.eldesiempre.es https://api.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com;">
     <title>Donde la seguridad y el conocimiento se encuentran</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
@@ -35,7 +35,7 @@
       })();
     </script>
 </head>
-<body class="locked">
+<body class="locked" data-nav="inicio">
     <script>
         if (localStorage.getItem('disclaimerAceptado') === 'true') {
             document.body.classList.remove('locked');
@@ -68,20 +68,7 @@
         </div>
     </div>
 
-    <header>
-        <button class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
-            <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </button>
-        <nav>
-            <button class="nav-btn" onclick="window.location.href='biblioteca.html'">Biblioteca</button>
-            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
-            <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
-            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
-            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
-        </nav>
-    </header>
+    <header></header>
 
     <main class="container" id="main-content">
         <div class="hero">
@@ -91,9 +78,9 @@
             <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
         </div>
 
-        <section style="margin-top: 50px;">
+        <section id="rutas" style="margin-top: 50px;">
             <h2>Rutas de Aprendizaje (Filtra por Nivel)</h2>
-            
+
             <div class="filter-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
                 <button class="btn-secondary active-filter" onclick="filtrarNivel('todos', this)">Todos</button>
                 <button class="btn-secondary" onclick="filtrarNivel('principiante', this)">Principiante</button>
@@ -190,14 +177,8 @@
         function filtrarNivel(nivel, btn) {
             document.querySelectorAll('.filter-container button').forEach(b => b.classList.remove('active-filter'));
             btn.classList.add('active-filter');
-            
-            const items = document.querySelectorAll('.guia-item');
-            items.forEach(item => {
-                if (nivel === 'todos' || item.getAttribute('data-nivel') === nivel) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+            document.querySelectorAll('.guia-item').forEach(item => {
+                item.style.display = (nivel === 'todos' || item.getAttribute('data-nivel') === nivel) ? 'flex' : 'none';
             });
         }
     </script>
