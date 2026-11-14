@@ -207,3 +207,24 @@ footer { text-align: center; padding: 40px 5%; border-top: 1px solid var(--borde
     .crypto-item { width: 100%; text-align: center; }
     #cookie-banner { flex-direction: column; text-align: center; }
 }
+
+.card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-main);
+}
+
+.resource-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.resource-ideal {
+    font-size: 0.8rem;
+    color: var(--neon-gold);
+    font-style: italic;
+    display: block;
+    margin-top: 5px;
+}
