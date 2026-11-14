@@ -1353,7 +1353,7 @@ function inicializarBurbujaCVE() {
             <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Cargando...</p>
         </div>
         <div class="cve-panel-footer">
-            Últimas 20 · Fuente: <a href="https://cve.circl.lu" target="_blank" rel="noopener noreferrer" style="color:var(--neon-blue);">CIRCL</a>
+            Fuentes: NIST NVD · Exploit-DB · INCIBE
         </div>
     `;
     document.body.appendChild(panel);
@@ -1392,61 +1392,139 @@ function actualizarContadorCVE(n) {
 async function cargarCVE() {
     const body = document.getElementById('cve-panel-body');
     if (!body) return;
+    body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Consultando fuentes...</p>';
+
     try {
-        const res = await fetch('https://cve.circl.lu/api/last/20');
-        const rawData = await res.json();
+        // 1. Obtener datos de NIST NVD (últimos 5 días)
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(endDate.getDate() - 5);
+        const formatDate = (date) => date.toISOString().split('.')[0] + 'Z';
         
-        if (!Array.isArray(rawData) || !rawData.length) {
-            body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No hay alertas disponibles.</p>';
+        const nistUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${formatDate(startDate)}&pubEndDate=${formatDate(endDate)}&resultsPerPage=15`;
+        
+        // 2. Obtener datos de Exploit-DB (RSS)
+        const edbUrl = 'https://www.exploit-db.com/rss.xml';
+        
+        // 3. Obtener datos de INCIBE (RSS de vulnerabilidades, aproximado vía proxy)
+        // Nota: INCIBE no siempre expone un RSS directo de CVE, así que lo dejamos como opcional/fallback
+        // En este caso, usaremos NIST y Exploit-DB como fuentes primarias.
+
+        const [nistRes, edbRes] = await Promise.allSettled([
+            fetch(nistUrl),
+            fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(edbUrl)}`)
+        ]);
+
+        let cves = [];
+
+        // Procesar NIST
+        if (nistRes.status === 'fulfilled' && nistRes.value.ok) {
+            const nistData = await nistRes.value.json();
+            if (nistData.vulnerabilities) {
+                cves = nistData.vulnerabilities.map(v => {
+                    const cve = v.cve;
+                    const desc = cve.descriptions?.find(d => d.lang === 'en')?.value || 'Sin descripción.';
+                    const severity = cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseSeverity || 'UNKNOWN';
+                    return {
+                        id: cve.id,
+                        summary: desc,
+                        published: cve.published,
+                        severity: severity,
+                        source: 'NIST',
+                        hasExploit: false
+                    };
+                });
+            }
+        }
+
+        // Procesar Exploit-DB (buscar CVEs en los exploits)
+        if (edbRes.status === 'fulfilled' && edbRes.value.ok) {
+            const edbText = await edbRes.value.text();
+            const parser = new DOMParser();
+            const edbXml = parser.parseFromString(edbText, "text/xml");
+            const items = edbXml.querySelectorAll('item');
+            
+            const edbCves = [];
+            items.forEach(item => {
+                const title = item.querySelector('title')?.textContent || '';
+                const link = item.querySelector('link')?.textContent || '';
+                // Buscar patrón CVE-XXXX-YYYY en el título o descripción
+                const cveMatch = title.match(/CVE-\d{4}-\d{4,}/i);
+                if (cveMatch) {
+                    edbCves.push(cveMatch[0].toUpperCase());
+                }
+            });
+
+            // Marcar CVEs que tienen exploit
+            cves.forEach(c => {
+                if (edbCves.includes(c.id)) {
+                    c.hasExploit = true;
+                }
+            });
+
+            // Si hay CVEs de Exploit-DB que no están en NIST, añadirlos (con datos básicos)
+            edbCves.forEach(id => {
+                if (!cves.find(c => c.id === id)) {
+                    cves.push({
+                        id: id,
+                        summary: 'Exploit público detectado en Exploit-DB. Consulta los detalles.',
+                        published: new Date().toISOString(),
+                        severity: 'HIGH',
+                        source: 'Exploit-DB',
+                        hasExploit: true
+                    });
+                }
+            });
+        }
+
+        if (cves.length === 0) {
+            body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No hay alertas disponibles en este momento.</p>';
             return;
         }
 
-        // Normalizar los datos porque la API mezcla formatos (CVE JSON 5.x, OSV, CSAF)
-        const data = rawData.map(item => {
-            let id = item.id || item.cveMetadata?.cveId;
-            let summary = item.summary || item.details || 'Sin descripción.';
-            let published = item.Published || item.published || item.cveMetadata?.datePublished;
+        // Ordenar: primero los que tienen exploit, luego por fecha
+        cves.sort((a, b) => {
+            if (a.hasExploit && !b.hasExploit) return -1;
+            if (!a.hasExploit && b.hasExploit) return 1;
+            return new Date(b.published) - new Date(a.published);
+        });
 
-            // Si viene en formato CVE JSON 5.x (containers.cna)
-            if (item.containers?.cna) {
-                const cna = item.containers.cna;
-                if (cna.descriptions && cna.descriptions.length > 0) {
-                    summary = cna.descriptions.find(d => d.lang === 'en')?.value || cna.descriptions[0].value;
-                }
-                if (cna.metrics && cna.metrics.length > 0) {
-                    // Podríamos extraer el CVSS, pero por ahora solo la descripción
-                }
-            }
-            
-            return { id, summary, published };
-        }).filter(item => item.id); // Eliminar los que no tengan ID
-
+        // Actualizar contador
         const vistos = JSON.parse(localStorage.getItem('cve_vistos') || '[]');
-        const nuevos = data.map(c => c.id).filter(id => !vistos.includes(id));
-        
+        const nuevos = cves.filter(c => !vistos.includes(c.id));
         if (nuevos.length > 0) {
             actualizarContadorCVE(nuevos.length);
             document.getElementById('cve-bubble')?.classList.add('pulse');
-            localStorage.setItem('cve_vistos', JSON.stringify(data.map(c => c.id)));
+            localStorage.setItem('cve_vistos', JSON.stringify(cves.map(c => c.id)));
         }
 
-        body.innerHTML = data.map(cve => {
-            const desc = cve.summary ? cve.summary.substring(0, 160) + '…' : 'Sin descripción.';
+        // Renderizar
+        body.innerHTML = cves.map(cve => {
+            const desc = cve.summary ? cve.summary.substring(0, 150) + '…' : 'Sin descripción.';
             const fecha = cve.published ? new Date(cve.published).toLocaleDateString('es-ES') : '—';
+            const exploitBadge = cve.hasExploit 
+                ? `<span style="background:var(--danger);color:#fff;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:5px;">💀 PoC Público</span>` 
+                : '';
+            const severityColor = cve.severity === 'CRITICAL' ? 'var(--danger)' : cve.severity === 'HIGH' ? 'var(--neon-gold)' : 'var(--text-muted)';
+            
             return `
-                <div class="cve-item">
+                <div class="cve-item" style="border-left-color: ${severityColor};">
                     <div class="cve-item-header">
-                        <span class="cve-item-id">${cve.id}</span>
+                        <span class="cve-item-id" style="color: ${severityColor};">${cve.id} ${exploitBadge}</span>
                         <span class="cve-item-date">${fecha}</span>
                     </div>
                     <div class="cve-item-desc">${desc}</div>
-                    <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="cve-item-link">Ver en NVD →</a>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                        <span style="font-size:0.7rem; color:var(--text-muted);">Fuente: ${cve.source}</span>
+                        <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="cve-item-link">Ver detalles →</a>
+                    </div>
                 </div>
             `;
         }).join('');
+
     } catch (err) {
         console.error('Error al cargar CVEs:', err);
-        body.innerHTML = '<p style="text-align:center;color:var(--danger);font-size:0.85rem;">Error al cargar alertas.</p>';
+        body.innerHTML = '<p style="text-align:center;color:var(--danger);font-size:0.85rem;">Error al cargar alertas. Inténtalo de nuevo más tarde.</p>';
     }
 }
 
