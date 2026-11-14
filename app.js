@@ -89,17 +89,17 @@ const SECCIONES_BIBLIOTECA = {
         icono: '📖',
         descripcion: 'Enlaces seleccionados a formación, bibliografía, laboratorios y referentes.',
         categorias: {
-            'formacion':      { titulo: 'Formación y Certificaciones', icono: '🎓', descripcion: 'Cursos, plataformas y certificaciones para iniciarte o especializarte.' },
-            'red-team-rec':   { titulo: 'Red Team & Pentesting',       icono: '⚔️', descripcion: 'Herramientas y documentación para pruebas de penetración.' },
-            'blue-team-rec':  { titulo: 'Blue Team & Forense',         icono: '🛡️', descripcion: 'Defensa, análisis forense y respuesta a incidentes.' },
-            'osint-rec':      { titulo: 'OSINT e Inteligencia',        icono: '🕵️', descripcion: 'Inteligencia de fuentes abiertas para investigar.' },
-            'sistemas':       { titulo: 'Sistemas Operativos',         icono: '💻', descripcion: 'Distribuciones Linux y entornos de seguridad.' },
-            'libros':         { titulo: 'Referentes y Libros',         icono: '📚', descripcion: 'Hackers destacados y bibliografía en español.' },
-            'metodos':        { titulo: 'Métodos y Metodologías',      icono: '📋', descripcion: 'Metodologías de auditoría y pentesting.' },
-            'iot':            { titulo: 'IoT y Hardware',              icono: '🔌', descripcion: 'Internet de las Cosas y hacking de hardware.' },
-            'redes-rec':      { titulo: 'Redes y Protocolos',          icono: '🌐', descripcion: 'Protocolos, análisis de tráfico y arquitecturas.' },
-            'wifi-rec':       { titulo: 'Wi-Fi y Radiofrecuencia',     icono: '📡', descripcion: 'Hacking inalámbrico, SDR y radiofrecuencia.' },
-            'programacion':   { titulo: 'Programación y Desarrollo',   icono: '💻', descripcion: 'Lenguajes, scripts y desarrollo de herramientas.' }
+            'formacion':     { titulo: 'Formación y Certificaciones', icono: '🎓', descripcion: 'Cursos, plataformas y certificaciones para iniciarte o especializarte.' },
+            'red-team-rec':  { titulo: 'Red Team & Pentesting',       icono: '⚔️', descripcion: 'Herramientas y documentación para pruebas de penetración.' },
+            'blue-team-rec': { titulo: 'Blue Team & Forense',         icono: '🛡️', descripcion: 'Defensa, análisis forense y respuesta a incidentes.' },
+            'osint-rec':     { titulo: 'OSINT e Inteligencia',        icono: '🕵️', descripcion: 'Inteligencia de fuentes abiertas para investigar.' },
+            'sistemas':      { titulo: 'Sistemas Operativos',         icono: '💻', descripcion: 'Distribuciones Linux y entornos de seguridad.' },
+            'libros':        { titulo: 'Referentes y Libros',         icono: '📚', descripcion: 'Hackers destacados y bibliografía en español.' },
+            'metodos':       { titulo: 'Métodos y Metodologías',      icono: '📋', descripcion: 'Metodologías de auditoría y pentesting.' },
+            'iot':           { titulo: 'IoT y Hardware',              icono: '🔌', descripcion: 'Internet de las Cosas y hacking de hardware.' },
+            'redes-rec':     { titulo: 'Redes y Protocolos',          icono: '🌐', descripcion: 'Protocolos, análisis de tráfico y arquitecturas.' },
+            'wifi-rec':      { titulo: 'Wi-Fi y Radiofrecuencia',     icono: '📡', descripcion: 'Hacking inalámbrico, SDR y radiofrecuencia.' },
+            'programacion':  { titulo: 'Programación y Desarrollo',   icono: '💻', descripcion: 'Lenguajes, scripts y desarrollo de herramientas.' }
         }
     },
     cve: {
@@ -226,7 +226,7 @@ async function comprobarSesion() {
         const res = await fetch(`${API_URL}/comprobar_sesion.php`, { credentials: 'include' });
         const result = await res.json();
         if (result.logueado) usuarioLogueado = result;
-    } catch { /* offline */ }
+    } catch {}
 }
 
 async function cerrarSesion() {
@@ -307,13 +307,11 @@ async function cargarBiblioteca() {
     const categoria = params.get('cat');
 
     if (!seccion) return renderIndiceBiblioteca(contenedor);
-
     if (seccion === 'cve') return renderCVE(contenedor);
     if (!SECCIONES_BIBLIOTECA[seccion]) {
         contenedor.innerHTML = '<p>Sección no encontrada.</p>';
         return;
     }
-
     if (!categoria) return renderCategoriasSeccion(contenedor, seccion);
     return renderDetalleCategoria(contenedor, seccion, categoria);
 }
@@ -366,7 +364,6 @@ async function renderDetalleCategoria(contenedor, seccion, categoria) {
         contenedor.innerHTML = '<p>Categoría no encontrada.</p>';
         return;
     }
-
     if (seccion === 'herramientas') return renderHerramientas(contenedor, data, categoria);
 
     try {
@@ -709,6 +706,416 @@ document.getElementById('form-perfil')?.addEventListener('submit', async e => {
         mostrarToast(result.success ? 'Perfil actualizado.' : 'Error al actualizar.', result.success ? 'success' : 'error');
     } catch { mostrarToast('Error de conexión.', 'error'); }
 });
+
+function generarDork() {
+    const dominio = document.getElementById('dork-input').value.trim();
+    const tipo = document.getElementById('dork-type').value;
+    const extra = document.getElementById('dork-extra').value;
+    if (!dominio) { mostrarToast('Introduce un dominio.', 'error'); return; }
+    let dork = `site:${dominio} filetype:${tipo}`;
+    if (extra) dork += ` ${extra}`;
+    document.getElementById('dork-result').innerText = dork;
+    logHerramienta('Generador de Dorks', 'Generar', dominio, dork);
+}
+
+function limpiarDorks() {
+    document.getElementById('dork-input').value = '';
+    document.getElementById('dork-result').innerText = '';
+}
+
+document.getElementById('exif-input')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const result = document.getElementById('exif-result');
+    result.innerHTML = 'Leyendo metadatos...';
+    EXIF.getData(file, function() {
+        const tags = EXIF.getAllTags(this);
+        if (Object.keys(tags).length === 0) {
+            result.innerHTML = 'No se encontraron metadatos EXIF.';
+            return;
+        }
+        let html = '<ul style="list-style:none;padding:0;">';
+        for (const [k, v] of Object.entries(tags)) {
+            html += `<li><strong>${k}:</strong> ${v}</li>`;
+        }
+        html += '</ul>';
+        result.innerHTML = html;
+    });
+    logHerramienta('Analizador EXIF', 'Analizar', file.name, 'metadatos extraídos');
+});
+
+function generarPassword() {
+    const mayus = document.getElementById('chk-mayus').checked;
+    const minus = document.getElementById('chk-minus').checked;
+    const nums = document.getElementById('chk-nums').checked;
+    const syms = document.getElementById('chk-symbols').checked;
+    const longitud = parseInt(document.getElementById('slider-longitud').value, 10);
+
+    let chars = '';
+    if (mayus) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (minus) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (nums) chars += '0123456789';
+    if (syms) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+    if (!chars) { mostrarToast('Selecciona al menos un tipo de carácter.', 'error'); return; }
+
+    let pass = '';
+    const arr = new Uint32Array(longitud);
+    crypto.getRandomValues(arr);
+    for (let i = 0; i < longitud; i++) pass += chars[arr[i] % chars.length];
+
+    document.getElementById('resultado-password').innerText = pass;
+    logHerramienta('Generador de Contraseñas', 'Generar', longitud + ' chars', pass);
+}
+
+function limpiarPassword() {
+    document.getElementById('resultado-password').innerText = '';
+}
+
+function analizarHash() {
+    const hash = document.getElementById('input-hash').value.trim();
+    const result = document.getElementById('resultado-hash');
+    if (!hash) { result.innerText = 'Introduce un hash.'; return; }
+    let tipo = 'Desconocido';
+    if (/^[a-f0-9]{32}$/i.test(hash)) tipo = 'MD5';
+    else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = 'SHA-1';
+    else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = 'SHA-256';
+    else if (/^[a-f0-9]{128}$/i.test(hash)) tipo = 'SHA-512';
+    else if (/^\$2[ayb]\$.{56}$/.test(hash)) tipo = 'Bcrypt';
+    result.innerText = `Algoritmo probable: ${tipo}`;
+    logHerramienta('Analizador de Hash', 'Analizar', hash.substring(0, 20), tipo);
+}
+
+function limpiarHash() {
+    document.getElementById('input-hash').value = '';
+    document.getElementById('resultado-hash').innerText = '';
+}
+
+async function buscarIP() {
+    const ip = document.getElementById('ip-input').value.trim();
+    const result = document.getElementById('resultado-ip');
+    if (!ip) { result.innerText = 'Introduce una IP.'; return; }
+    result.innerText = 'Consultando...';
+    try {
+        const res = await fetch(`https://ipwho.is/${ip}`);
+        const data = await res.json();
+        if (!data.success) { result.innerText = 'No se encontró información.'; return; }
+        result.innerHTML = `
+            <p><strong>IP:</strong> ${data.ip}</p>
+            <p><strong>País:</strong> ${data.country} (${data.country_code})</p>
+            <p><strong>Región:</strong> ${data.region}</p>
+            <p><strong>Ciudad:</strong> ${data.city}</p>
+            <p><strong>ISP:</strong> ${data.connection?.isp || 'N/A'}</p>
+            <p><strong>Organización:</strong> ${data.connection?.org || 'N/A'}</p>
+            <p><strong>Zona horaria:</strong> ${data.timezone?.id || 'N/A'}</p>
+        `;
+        logHerramienta('Buscador de IP', 'Consultar', ip, data.country);
+    } catch {
+        result.innerText = 'Error de conexión.';
+    }
+}
+
+function limpiarIP() {
+    document.getElementById('ip-input').value = '';
+    document.getElementById('resultado-ip').innerHTML = '';
+}
+
+function procesarBase64(accion) {
+    const input = document.getElementById('base64-input').value;
+    const result = document.getElementById('base64-result');
+    if (!input) { result.innerText = 'Introduce texto.'; return; }
+    try {
+        if (accion === 'codificar') {
+            result.innerText = btoa(unescape(encodeURIComponent(input)));
+        } else {
+            result.innerText = decodeURIComponent(escape(atob(input)));
+        }
+        logHerramienta('Codificador Base64', accion, input.substring(0, 30), 'ok');
+    } catch {
+        result.innerText = 'Error al procesar.';
+    }
+}
+
+function analizarJWT() {
+    const token = document.getElementById('jwt-input').value.trim();
+    const result = document.getElementById('jwt-result');
+    if (!token) { result.innerText = 'Introduce un token.'; return; }
+    const partes = token.split('.');
+    if (partes.length !== 3) { result.innerText = 'JWT inválido (debe tener 3 partes).'; return; }
+    try {
+        const header = JSON.parse(atob(partes[0].replace(/-/g, '+').replace(/_/g, '/')));
+        const payload = JSON.parse(atob(partes[1].replace(/-/g, '+').replace(/_/g, '/')));
+        result.innerHTML = `
+            <p><strong>Header:</strong></p>
+            <pre>${JSON.stringify(header, null, 2)}</pre>
+            <p><strong>Payload:</strong></p>
+            <pre>${JSON.stringify(payload, null, 2)}</pre>
+        `;
+        logHerramienta('Inspector de JWT', 'Analizar', 'token', 'ok');
+    } catch {
+        result.innerText = 'Error al decodificar el JWT.';
+    }
+}
+
+function convertirFechaATimestamp() {
+    const fecha = document.getElementById('ts-date-input').value;
+    if (!fecha) return;
+    const ts = Math.floor(new Date(fecha).getTime() / 1000);
+    document.getElementById('ts-result').innerText = `Timestamp: ${ts}`;
+    logHerramienta('Conversor de Timestamp', 'Fecha a Timestamp', fecha, ts);
+}
+
+function convertirTimestampAFecha() {
+    const ts = parseInt(document.getElementById('ts-input').value, 10);
+    if (isNaN(ts)) return;
+    const fecha = new Date(ts * 1000).toISOString();
+    document.getElementById('ts-result').innerText = `Fecha: ${fecha}`;
+    logHerramienta('Conversor de Timestamp', 'Timestamp a Fecha', ts, fecha);
+}
+
+document.getElementById('modal-ua')?.addEventListener('click', () => {
+    const result = document.getElementById('ua-result');
+    if (result && !result.innerHTML) {
+        const ua = navigator.userAgent;
+        result.innerHTML = `
+            <p><strong>User-Agent:</strong> ${ua}</p>
+            <p><strong>Plataforma:</strong> ${navigator.platform}</p>
+            <p><strong>Idioma:</strong> ${navigator.language}</p>
+            <p><strong>Pantalla:</strong> ${screen.width}x${screen.height}</p>
+        `;
+        logHerramienta('Analizador User-Agent', 'Consultar', '', navigator.platform);
+    }
+});
+
+async function analizarHeaders() {
+    const url = document.getElementById('header-url').value.trim();
+    const result = document.getElementById('header-result');
+    if (!url) { result.innerText = 'Introduce una URL.'; return; }
+    result.innerText = 'Analizando...';
+    try {
+        const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, { method: 'HEAD' });
+        let html = '<ul>';
+        res.headers.forEach((v, k) => { html += `<li><strong>${k}:</strong> ${v}</li>`; });
+        html += '</ul>';
+        result.innerHTML = html;
+        logHerramienta('Inspector de Cabeceras HTTP', 'Analizar', url, 'ok');
+    } catch {
+        result.innerText = 'Error al analizar.';
+    }
+}
+
+async function analizarSSL() {
+    const url = document.getElementById('ssl-url').value.trim();
+    const result = document.getElementById('ssl-result');
+    if (!url) { result.innerText = 'Introduce una URL.'; return; }
+    result.innerText = url.startsWith('https://') ? '✓ URL usa HTTPS.' : '✗ URL no usa HTTPS.';
+    logHerramienta('Analizador SSL/TLS', 'Analizar', url, result.innerText);
+}
+
+function generarUUID() {
+    const uuid = crypto.randomUUID();
+    document.getElementById('uuid-result').innerText = uuid;
+    logHerramienta('Generador de UUID', 'Generar', '', uuid);
+}
+
+function probarRegex() {
+    const patron = document.getElementById('regex-pattern').value;
+    const texto = document.getElementById('regex-text').value;
+    const result = document.getElementById('regex-result');
+    if (!patron) { result.innerText = ''; return; }
+    try {
+        const re = new RegExp(patron);
+        const match = re.test(texto);
+        result.innerText = match ? '✓ Coincide' : '✗ No coincide';
+        result.style.color = match ? 'var(--neon-green)' : 'var(--danger)';
+    } catch {
+        result.innerText = 'Patrón inválido.';
+    }
+}
+
+function formatearJSON() {
+    const input = document.getElementById('json-input').value;
+    const result = document.getElementById('json-result');
+    try {
+        const obj = JSON.parse(input);
+        result.innerHTML = `<pre>${JSON.stringify(obj, null, 2)}</pre>`;
+        logHerramienta('Formateador JSON', 'Formatear', input.substring(0, 30), 'ok');
+    } catch {
+        result.innerText = 'JSON inválido.';
+    }
+}
+
+async function analizarRobots() {
+    const url = document.getElementById('robots-url').value.trim();
+    const result = document.getElementById('robots-result');
+    if (!url) { result.innerText = 'Introduce una URL.'; return; }
+    result.innerText = 'Cargando...';
+    try {
+        const full = url.replace(/\/$/, '') + '/robots.txt';
+        const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(full)}`);
+        result.innerText = await res.text();
+        logHerramienta('Analizador de Robots.txt', 'Analizar', url, 'ok');
+    } catch {
+        result.innerText = 'Error al cargar robots.txt.';
+    }
+}
+
+async function analizarWifi() {
+    const result = document.getElementById('wifi-result');
+    result.innerText = 'Analizando...';
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    let html = `<p><strong>Online:</strong> ${navigator.onLine ? 'Sí' : 'No'}</p>`;
+    if (conn) {
+        html += `<p><strong>Tipo efectivo:</strong> ${conn.effectiveType || 'N/A'}</p>`;
+        html += `<p><strong>Downlink:</strong> ${conn.downlink || 'N/A'} Mbps</p>`;
+        html += `<p><strong>RTT:</strong> ${conn.rtt || 'N/A'} ms</p>`;
+    } else {
+        html += '<p>Tu navegador no soporta la API Network Information.</p>';
+    }
+    html += `<p><strong>Protocolo:</strong> ${location.protocol}</p>`;
+    result.innerHTML = html;
+    logHerramienta('Analizador de Red Wi-Fi', 'Analizar', '', 'ok');
+}
+
+async function analizarDNS() {
+    const result = document.getElementById('dns-result');
+    result.innerText = 'Comprobando...';
+    try {
+        const res = await fetch('https://dns.google/resolve?name=example.com&type=A');
+        const data = await res.json();
+        result.innerHTML = `<p><strong>DNS de Google accesible:</strong> Sí</p><p><strong>Respuesta:</strong> ${JSON.stringify(data.Answer || [])}</p>`;
+        logHerramienta('Fuga de DNS', 'Comprobar', '', 'ok');
+    } catch {
+        result.innerText = 'Error al comprobar DNS.';
+    }
+}
+
+function auditarPassword() {
+    const pass = document.getElementById('pass-audit-input').value;
+    const result = document.getElementById('pass-audit-result');
+    if (!pass) { result.innerText = ''; return; }
+    let score = 0;
+    if (pass.length >= 8) score++;
+    if (pass.length >= 12) score++;
+    if (pass.length >= 16) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[a-z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+    let nivel = 'Muy débil';
+    let color = 'var(--danger)';
+    if (score >= 6) { nivel = 'Muy fuerte'; color = 'var(--neon-green)'; }
+    else if (score >= 5) { nivel = 'Fuerte'; color = 'var(--neon-green)'; }
+    else if (score >= 4) { nivel = 'Media'; color = 'var(--neon-gold)'; }
+    else if (score >= 2) { nivel = 'Débil'; color = 'var(--neon-gold)'; }
+
+    result.innerHTML = `<p style="color:${color};"><strong>Fortaleza:</strong> ${nivel} (${score}/7)</p>`;
+    logHerramienta('Auditor de Contraseñas', 'Auditar', pass.length + ' chars', nivel);
+}
+
+async function analizarDominio() {
+    const dominio = document.getElementById('domain-input').value.trim();
+    const result = document.getElementById('domain-result');
+    if (!dominio) { result.innerText = 'Introduce un dominio.'; return; }
+    result.innerText = 'Analizando...';
+    try {
+        const res = await fetch(`https://dns.google/resolve?name=${dominio}&type=A`);
+        const data = await res.json();
+        let html = `<p><strong>Dominio:</strong> ${dominio}</p>`;
+        if (data.Answer) {
+            html += '<p><strong>Registros A:</strong></p><ul>';
+            data.Answer.forEach(a => { html += `<li>${a.data}</li>`; });
+            html += '</ul>';
+        } else {
+            html += '<p>No se encontraron registros A.</p>';
+        }
+        result.innerHTML = html;
+        logHerramienta('Reconocimiento de Dominio', 'Analizar', dominio, 'ok');
+    } catch {
+        result.innerText = 'Error al analizar.';
+    }
+}
+
+function validarEmail() {
+    const email = document.getElementById('email-input').value.trim();
+    const result = document.getElementById('email-result');
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) { result.innerText = 'Introduce un correo.'; return; }
+    if (re.test(email)) {
+        result.innerHTML = `<p style="color: var(--neon-green);">✓ Formato válido</p>`;
+    } else {
+        result.innerHTML = `<p style="color: var(--danger);">✗ Formato inválido</p>`;
+    }
+    logHerramienta('Validador de Correo', 'Validar', email, re.test(email) ? 'válido' : 'inválido');
+}
+
+async function analizarMAC() {
+    const mac = document.getElementById('mac-input').value.trim();
+    const result = document.getElementById('mac-result');
+    if (!mac) { result.innerText = 'Introduce una MAC.'; return; }
+    result.innerText = 'Buscando...';
+    try {
+        const res = await fetch(`https://api.macvendors.com/${encodeURIComponent(mac)}`);
+        if (!res.ok) throw new Error();
+        const fabricante = await res.text();
+        result.innerHTML = `<p><strong>Fabricante:</strong> ${fabricante}</p>`;
+        logHerramienta('Buscador de Fabricante (MAC)', 'Buscar', mac, fabricante);
+    } catch {
+        result.innerText = 'Fabricante no encontrado.';
+    }
+}
+
+function generarPayload() {
+    const tipo = document.getElementById('payload-tipo').value;
+    const input = document.getElementById('payload-input').value.trim();
+    const result = document.getElementById('payload-result');
+    if (!input) { result.innerText = 'Introduce un texto o URL.'; return; }
+
+    let payload = '';
+    if (tipo === 'xss') payload = `<script>alert('XSS')</script>`;
+    else if (tipo === 'sqli') payload = `' OR '1'='1`;
+    else if (tipo === 'lfi') payload = `../../../../etc/passwd`;
+
+    result.innerText = payload;
+    logHerramienta('Generador de Payloads', tipo, input, payload);
+}
+
+async function buscarCVE() {
+    const query = document.getElementById('cve-input').value.trim();
+    const result = document.getElementById('cve-result');
+    if (!query) { result.innerText = 'Introduce un término de búsqueda.'; return; }
+    result.innerText = 'Buscando...';
+    try {
+        const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(query)}&resultsPerPage=5`);
+        const data = await res.json();
+        if (!data.vulnerabilities || !data.vulnerabilities.length) {
+            result.innerText = 'No se encontraron CVEs.';
+            return;
+        }
+        let html = '<ul style="list-style:none;padding:0;">';
+        data.vulnerabilities.forEach(v => {
+            const cve = v.cve;
+            const desc = cve.descriptions?.find(d => d.lang === 'en')?.value || 'Sin descripción.';
+            html += `
+                <li style="margin-bottom:15px;padding:10px;border-left:3px solid var(--danger);">
+                    <strong>${cve.id}</strong><br>
+                    <span style="font-size:0.9rem;">${desc.substring(0, 200)}...</span>
+                </li>
+            `;
+        });
+        html += '</ul>';
+        result.innerHTML = html;
+        logHerramienta('Buscador de CVEs', 'Buscar', query, 'ok');
+    } catch {
+        result.innerText = 'Error al buscar CVEs.';
+    }
+}
+
+function abrirCanarytoken(tipo, descripcion) {
+    window.open('https://canarytokens.org/generate', '_blank', 'noopener');
+    logHerramienta('Canarytokens', tipo, descripcion, 'abierto');
+}
 
 window.addEventListener('load', async () => {
     await comprobarSesion();
